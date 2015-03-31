@@ -1,5 +1,6 @@
 package ru.tp.buy_places;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,8 +21,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import ru.tp.buy_places.activities.Manager;
-
+import static android.view.View.OnClickListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,7 +52,7 @@ public class NavigationDrawerFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d(PREF_FILE_NAME, "OnCreateView");
         mDrawerListView = (ListView)inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
-        profileHeader = inflater.inflate(R.layout.header, container, false);
+        profileHeader = inflater.inflate(R.layout.header, mDrawerListView, false);
         mDrawerListView.addHeaderView(profileHeader);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -71,11 +71,10 @@ public class NavigationDrawerFragment extends Fragment {
                 R.id.image
         };
 
-
         mDrawerListView.setAdapter(new SimpleAdapter(
                 getActivity(),
                 getData(),
-                R.layout.element_navigation,
+                R.layout.item_navigation,
                 from,
                 to
         ));
@@ -85,18 +84,18 @@ public class NavigationDrawerFragment extends Fragment {
         return mDrawerListView;
     }
 
-    public static ArrayList<HashMap<String, Object>> getData(){
-        String TITLES[] = {"Карта",
-                "Мои объекты",
-                "Мои сделки",
-                "Рейтинг",
-                "Настройки"};
-        int ICONS[] = {R.mipmap.ic_map,
+    public ArrayList<HashMap<String, Object>> getData(){
+        final String TITLES[] = new String[]{
+                getString(R.string.maps),
+                getString(R.string.myobjects),
+                getString(R.string.deals),
+                getString(R.string.raiting),
+                getString(R.string.settings)};
+        final int ICONS[] = {R.mipmap.ic_map,
                 R.mipmap.ic_object,
                 R.mipmap.ic_deals,
                 R.mipmap.ic_raiting,
                 R.mipmap.ic_settings};
-
 
         ArrayList<HashMap<String, Object>> list =
                 new ArrayList<>();
@@ -114,12 +113,15 @@ public class NavigationDrawerFragment extends Fragment {
         Toast toast = Toast.makeText(getActivity(),
                 "", Toast.LENGTH_SHORT);
 
-        if (mDrawerLayout != null && position > 0) {
+        if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(containerView);
         }
-        if(position == 0)
-            return;
             switch (position) {
+                case 0:
+                    mCallBacks.showUserInfo();
+                    toast = Toast.makeText(getActivity(),
+                            "Мой кабинет", Toast.LENGTH_SHORT);
+                    break;
                 case 1:
                     toast = Toast.makeText(getActivity(),
                             "Карта", Toast.LENGTH_SHORT);
@@ -130,16 +132,19 @@ public class NavigationDrawerFragment extends Fragment {
                     mCallBacks.showMyObjects();
                     break;
                 case 3:
+                    mCallBacks.showDeals();
                     toast = Toast.makeText(getActivity(),
                             "Мои сделки", Toast.LENGTH_SHORT);
                     break;
                 case 4:
+                    mCallBacks.showRaiting();
                     toast = Toast.makeText(getActivity(),
                             "Рейтинг", Toast.LENGTH_SHORT);
                     break;
                 case 5:
                     toast = Toast.makeText(getActivity(),
                             "Настройки", Toast.LENGTH_SHORT);
+                    mCallBacks.showSettings();
                     break;
             }
         toast.show();
@@ -156,5 +161,21 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout = layout;
     }
 
+    public interface Manager  {
+        public void showMyObjects();
+        public void showDeals();
+        public void showRaiting();
+        public void showSettings();
+        public void showUserInfo();
+    }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallBacks = (Manager) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement Manager.");
+        }
+    }
 }

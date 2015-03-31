@@ -1,5 +1,6 @@
 package ru.tp.buy_places.activities;
 
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -13,15 +14,27 @@ import android.view.MenuItem;
 
 import ru.tp.buy_places.NavigationDrawerFragment;
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.fragments.deals.DealsFragment;
 import ru.tp.buy_places.fragments.myobjects.MyObjectsFragment;
+import ru.tp.buy_places.fragments.raiting.RaitingFragment;
+import ru.tp.buy_places.fragments.settings.SettingFragment;
+import ru.tp.buy_places.fragments.user.UserFragment;
 
-public class MainActivity extends ActionBarActivity implements Manager{
+public class MainActivity extends ActionBarActivity
+        implements NavigationDrawerFragment.Manager,
+        MyObjectsFragment.OnFragmentInteractionListener,
+        DealsFragment.OnFragmentInteractionListener,
+        RaitingFragment.OnFragmentInteractionListener,
+        UserFragment.OnFragmentInteractionListener,
+        SettingFragment.OnFragmentInteractionListener
+{
 
     public static final String MAP_FRAGMENT_TAG = "map";
     public static final String MY_OBJECTS_FRAGMENT_TAG = "objects";
     public static final String DEALS_FRAGMENT_TAG = "deals";
     public static final String RAITING_FRAGMENT_TAG = "raiting";
     public static final String SETTINGS_FRAGMENT_TAG = "settings";
+    private static final String USER_FRAGMENT_TAG = "user";
 
 
     @Override
@@ -69,13 +82,16 @@ public class MainActivity extends ActionBarActivity implements Manager{
                     fragment = new MyObjectsFragment();
                     break;
                 case DEALS_FRAGMENT_TAG:
-
+                    fragment = new DealsFragment();
                     break;
                 case RAITING_FRAGMENT_TAG:
-
+                    fragment = new RaitingFragment();
                     break;
                 case SETTINGS_FRAGMENT_TAG:
-
+                    fragment = new SettingFragment();
+                    break;
+                case USER_FRAGMENT_TAG:
+                    fragment = new UserFragment();
                     break;
 
             }
@@ -88,5 +104,30 @@ public class MainActivity extends ActionBarActivity implements Manager{
     @Override
     public void showMyObjects() {
         setFragment(MY_OBJECTS_FRAGMENT_TAG);
+    }
+
+    @Override
+    public void showDeals() {
+            setFragment(DEALS_FRAGMENT_TAG);
+    }
+
+    @Override
+    public void showRaiting() {
+        setFragment(RAITING_FRAGMENT_TAG);
+    }
+
+    @Override
+    public void showSettings() {
+        setFragment(SETTINGS_FRAGMENT_TAG);
+    }
+
+    @Override
+    public void showUserInfo() {
+        setFragment(USER_FRAGMENT_TAG);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
