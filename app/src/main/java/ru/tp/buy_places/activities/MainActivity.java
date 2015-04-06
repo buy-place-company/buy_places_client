@@ -20,14 +20,12 @@ import ru.tp.buy_places.fragments.raiting.RaitingFragment;
 import ru.tp.buy_places.fragments.settings.SettingFragment;
 import ru.tp.buy_places.fragments.user.UserFragment;
 
-public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.Manager,
+public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.Manager,
         MyObjectsFragment.OnFragmentInteractionListener,
         DealsFragment.OnFragmentInteractionListener,
         RaitingFragment.OnFragmentInteractionListener,
         UserFragment.OnFragmentInteractionListener,
-        SettingFragment.OnFragmentInteractionListener
-{
+        SettingFragment.OnFragmentInteractionListener {
 
     public static final String MAP_FRAGMENT_TAG = "map";
     public static final String MY_OBJECTS_FRAGMENT_TAG = "objects";
@@ -41,16 +39,16 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        DrawerLayout drawerLayout = (DrawerLayout)findViewById(R.id.drawer);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         actionBarDrawerToggle.syncState();
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        NavigationDrawerFragment navDrawer = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.navigation);
-        navDrawer.setUp(R.id.navigation, (DrawerLayout)findViewById(R.id.drawer), toolbar);
+        NavigationDrawerFragment navDrawer = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation);
+        navDrawer.setUp(R.id.navigation, (DrawerLayout) findViewById(R.id.drawer), toolbar);
     }
 
 
@@ -73,8 +71,8 @@ public class MainActivity extends ActionBarActivity
         FragmentManager manager = getSupportFragmentManager();
         Log.d(MY_OBJECTS_FRAGMENT_TAG, "setFragment");
         Fragment fragment = manager.findFragmentByTag(tag);
-        if(fragment == null) {
-            switch(tag) {
+        if (fragment == null) {
+            switch (tag) {
                 case MAP_FRAGMENT_TAG:
 
                     break;
@@ -108,7 +106,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void showDeals() {
-            setFragment(DEALS_FRAGMENT_TAG);
+        setFragment(DEALS_FRAGMENT_TAG);
     }
 
     @Override
