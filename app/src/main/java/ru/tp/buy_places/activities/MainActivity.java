@@ -3,11 +3,11 @@ package ru.tp.buy_places.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import ru.tp.buy_places.NavigationDrawerFragment;
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.fragments.deals.DealsFragment;
+import ru.tp.buy_places.fragments.map.MapFragment;
 import ru.tp.buy_places.fragments.myobjects.MyObjectsFragment;
 import ru.tp.buy_places.fragments.raiting.RaitingFragment;
 import ru.tp.buy_places.fragments.settings.SettingFragment;
@@ -76,7 +77,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         if (fragment == null) {
             switch (tag) {
                 case MAP_FRAGMENT_TAG:
-
+                    fragment = new MapFragment();
                     break;
                 case MY_OBJECTS_FRAGMENT_TAG:
                     fragment = new MyObjectsFragment();
@@ -99,6 +100,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                     .replace(R.id.content, fragment, tag)
                     .commit();
         }
+    }
+
+    @Override
+    public void showMap() {
+        setFragment(MAP_FRAGMENT_TAG);
     }
 
     @Override

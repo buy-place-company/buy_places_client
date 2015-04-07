@@ -2,16 +2,14 @@ package ru.tp.buy_places;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-
-
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -20,8 +18,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import static android.view.View.OnClickListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -125,6 +121,7 @@ public class NavigationDrawerFragment extends Fragment {
                 case 1:
                     toast = Toast.makeText(getActivity(),
                             "Карта", Toast.LENGTH_SHORT);
+                    mCallBacks.showMap();
                     break;
                 case 2:
                     toast = Toast.makeText(getActivity(),
@@ -162,6 +159,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     public interface Manager  {
+        public void showMap();
         public void showMyObjects();
         public void showDeals();
         public void showRaiting();
