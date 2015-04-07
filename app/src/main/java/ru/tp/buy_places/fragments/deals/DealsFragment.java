@@ -22,7 +22,7 @@ import ru.tp.buy_places.R;
 public class DealsFragment extends Fragment {
 
 
-    private DealsPagerAdapter mDealsPagerAdapter;
+    //private DealsPagerAdapter mDealsPagerAdapter;
     private ViewPager mViewPager;
     private OnFragmentInteractionListener mListener;
 
@@ -47,8 +47,8 @@ public class DealsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_deals, container, false);
         mViewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
-        mDealsPagerAdapter = new DealsPagerAdapter(getChildFragmentManager());
-        mViewPager.setAdapter(mDealsPagerAdapter);
+       // mDealsPagerAdapter = new DealsPagerAdapter(getChildFragmentManager());
+       // mViewPager.setAdapter(mDealsPagerAdapter);
         return rootView;
     }
 
