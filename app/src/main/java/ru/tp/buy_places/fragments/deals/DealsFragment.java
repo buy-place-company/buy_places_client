@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.view.SlidingTabLayout;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,9 +23,10 @@ import ru.tp.buy_places.R;
 public class DealsFragment extends Fragment {
 
 
-    //private DealsPagerAdapter mDealsPagerAdapter;
+    private DealsPagerAdapter mDealsPagerAdapter;
     private ViewPager mViewPager;
     private OnFragmentInteractionListener mListener;
+    private SlidingTabLayout mSlidingTabLayout;
 
     public static DealsFragment newInstance() {
         DealsFragment fragment = new DealsFragment();
@@ -46,10 +48,18 @@ public class DealsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_deals, container, false);
-        mViewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
-       // mDealsPagerAdapter = new DealsPagerAdapter(getChildFragmentManager());
-       // mViewPager.setAdapter(mDealsPagerAdapter);
+
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
+        mDealsPagerAdapter = new DealsPagerAdapter(getChildFragmentManager());
+        mViewPager.setAdapter(mDealsPagerAdapter);
+        mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
+        mSlidingTabLayout.setDistributeEvenly(true);
+        mSlidingTabLayout.setViewPager(mViewPager);
     }
 
     @Override
