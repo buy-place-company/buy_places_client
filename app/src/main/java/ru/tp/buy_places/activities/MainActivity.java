@@ -1,5 +1,7 @@
 package ru.tp.buy_places.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -127,5 +129,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
     }
 }
