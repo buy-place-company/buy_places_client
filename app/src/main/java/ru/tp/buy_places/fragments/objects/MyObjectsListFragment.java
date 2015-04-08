@@ -1,13 +1,16 @@
-package ru.tp.buy_places.fragments.myobjects;
+package ru.tp.buy_places.fragments.objects;
 
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -16,15 +19,16 @@ import java.util.HashMap;
 
 import ru.tp.buy_places.R;
 
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MyObjectsFragment.OnFragmentInteractionListener} interface
+ * {@link MyObjectsListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MyObjectsFragment#newInstance} factory method to
+ * Use the {@link MyObjectsListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyObjectsFragment extends Fragment {
+public class MyObjectsListFragment extends Fragment {
 
 
     private OnFragmentInteractionListener mListener;
@@ -34,15 +38,15 @@ public class MyObjectsFragment extends Fragment {
     private static final String IMAGE_FIELD = "image";
 
 
-    public static MyObjectsFragment newInstance(String param1, String param2) {
-        MyObjectsFragment fragment = new MyObjectsFragment();
+    public static MyObjectsListFragment newInstance(String param1, String param2) {
+        MyObjectsListFragment fragment = new MyObjectsListFragment();
         Bundle args = new Bundle();
 
         fragment.setArguments(args);
         return fragment;
     }
 
-    public MyObjectsFragment() {
+    public MyObjectsListFragment() {
         // Required empty public constructor
     }
 
@@ -91,6 +95,16 @@ public class MyObjectsFragment extends Fragment {
         // Inflate the layout for this fragment
         mListView = (ListView) inflater.inflate(R.layout.fragment_my_objects, container, false);
         mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ObjectFragment objectFragment = new ObjectFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content,objectFragment);
+                fragmentTransaction.commit();
+            }
+        });
         return mListView;
     }
 

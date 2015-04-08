@@ -1,4 +1,4 @@
-package ru.tp.buy_places.fragments.raiting;
+package ru.tp.buy_places.fragments.objects;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -8,90 +8,66 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import ru.tp.buy_places.R;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link RaitingFragment.OnFragmentInteractionListener} interface
+ * {@link ObjectFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link RaitingFragment#newInstance} factory method to
+ * Use the {@link ObjectFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RaitingFragment extends Fragment {
+public class ObjectFragment extends Fragment {
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
-
-    private ListView mListView;
-    private SimpleAdapter adapter;
-    private static final String TEXT_FIELD = "text";
-    private static final String IMAGE_FIELD = "image";
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
-    public static RaitingFragment newInstance(String param1, String param2) {
-        RaitingFragment fragment = new RaitingFragment();
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment ObjectFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static ObjectFragment newInstance(String param1, String param2) {
+        ObjectFragment fragment = new ObjectFragment();
         Bundle args = new Bundle();
-
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public RaitingFragment() {
+    public ObjectFragment() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    private void initFragment(){
-        String from[] = new String[]{
-                TEXT_FIELD,
-                IMAGE_FIELD
-        };
-
-        int[] to = new int[] {
-                R.id.textObj,
-                R.id.imageObj
-        };
-
-        adapter = new SimpleAdapter(getActivity(), getData(), R.layout.item_raiting, from, to);
-
-    }
-
-    private ArrayList<HashMap<String, Object>> getData(){
-        final String TITLES[] = new String[]{
-                getString(R.string.petya),
-                getString(R.string.vasya),
-                getString(R.string.gosha)};
-        final int IMAGE = R.mipmap.ic_pupkin;
-        ArrayList<HashMap<String, Object>> list =
-                new ArrayList<>();
-        for (int i = 0; i < TITLES.length; i++) {
-            HashMap<String, Object> element = new HashMap<>();
-            element.put(TEXT_FIELD, TITLES[i]);
-            element.put(IMAGE_FIELD, IMAGE);
-            list.add(element);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        return list;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mListView = (ListView) inflater.inflate(R.layout.fragment_raiting, container, false);
-        mListView.setAdapter(adapter);
-        return mListView;
+        return inflater.inflate(R.layout.fragment_object, container, false);
     }
-
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -103,7 +79,6 @@ public class RaitingFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        initFragment();
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
