@@ -29,6 +29,4 @@ public class MapFragment extends SupportMapFragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
-
-
 }

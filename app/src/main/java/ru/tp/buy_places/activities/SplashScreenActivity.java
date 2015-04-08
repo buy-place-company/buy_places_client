@@ -1,6 +1,5 @@
 package ru.tp.buy_places.activities;
 
-import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.widget.ImageView;
 
 import ru.tp.buy_places.R;
+
 
 public class SplashScreenActivity extends ActionBarActivity {
     @Override

@@ -3,10 +3,7 @@ package ru.tp.buy_places.fragments.objects;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
-
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,10 +96,10 @@ public class MyObjectsListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ObjectFragment objectFragment = new ObjectFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content,objectFragment);
-                fragmentTransaction.commit();
+                getFragmentManager().
+                        beginTransaction().
+                        replace(R.id.content,objectFragment).
+                        commit();
             }
         });
         return mListView;
