@@ -20,12 +20,7 @@ public class NearestPlacesProcessor {
 
 
     public void getNearestPlaces(NearestPlacesProcessorCallback callback) {
-        RestMethod<NearestPlaces> getNearestPlacesMethod = RestMethodFactory.get(mContext)
-                .getRestMethod(Places.CONTENT_URI, RestMethodFactory.Method.GET, null, null);
-        RestMethodResult<NearestPlaces> result = getNearestPlacesMethod.execute();
 
-        updateContentProvider(result);
-        callback.send(result.getStatusCode());
     }
 
     private void updateContentProvider(RestMethodResult<NearestPlaces> result) {
