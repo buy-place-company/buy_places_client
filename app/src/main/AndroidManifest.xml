@@ -44,6 +44,10 @@
             android:exported="false" >
         </provider>
 
+        <service
+            android:name=".BuyItService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>
