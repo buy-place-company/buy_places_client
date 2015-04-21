@@ -1,20 +1,28 @@
 package ru.tp.buy_places.fragments.objects;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.SimpleCursorAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.ServiceHelper;
+
+import static ru.tp.buy_places.content_provider.BuyPlacesContract.Places;
 
 
 /**
@@ -25,12 +33,12 @@ import ru.tp.buy_places.R;
  * Use the {@link MyObjectsListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyObjectsListFragment extends Fragment {
+public class MyObjectsListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
 
     private OnFragmentInteractionListener mListener;
     private ListView mListView;
-    private SimpleAdapter adapter;
+    private CursorAdapter adapter;
     private static final String TEXT_FIELD = "text";
     private static final String IMAGE_FIELD = "image";
 
@@ -50,6 +58,8 @@ public class MyObjectsListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLoaderManager().initLoader(0, null, this);
+        ServiceHelper.get(getActivity()).getNearestObjects();
     }
 
     private void initFragment(){
@@ -62,8 +72,8 @@ public class MyObjectsListFragment extends Fragment {
                 R.id.textObj,
                 R.id.imageObj
         };
-
-        adapter = new SimpleAdapter(getActivity(), getData(), R.layout.item_object, from, to);
+        adapter = new SimpleCursorAdapter(getActivity(), R.layout.item_object, null, new String[]{Places.COLUMN_NAME}, new int[]{R.id.textObj}, 0);
+        //adapter = new SimpleAdapter(getActivity(), getData(), R.layout.item_object, from, to);
 
     }
 
@@ -121,6 +131,21 @@ public class MyObjectsListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(), Places.CONTENT_URI, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        adapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        adapter.swapCursor(null);
     }
 
     /**

@@ -3,7 +3,7 @@ package ru.tp.buy_places;
 /**
  * Created by Ivan on 20.04.2015.
  */
-public class RestMethodResult<T extends Resource> {
+public class RestMethodResult<T> {
     private int statusCode = 0;
     private String statusMsg;
     private T resource;

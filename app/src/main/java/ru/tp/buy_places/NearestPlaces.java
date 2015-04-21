@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Ivan on 19.04.2015.
  */
-public class NearestPlaces implements Resource {
+public class NearestPlaces {
     private List<Place> mNearestPlaces = new ArrayList<>();
 
 

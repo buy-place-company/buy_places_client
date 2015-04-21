@@ -61,7 +61,7 @@ public final class BuyPlacesContract {
                 COLUMN_OWNER + " INTEGER" + "," +
                 COLUMN_PRICE + " INTEGER" + "," +
                 COLUMN_LATITUDE + " REAL" + "," +
-                COLUMN_LONGITUDE + "REAL" + ");";
+                COLUMN_LONGITUDE + " REAL" + ");";
 
         static final String SQL_DROP = "DROP TABLE IF EXISTS " + TABLE_NAME;
 

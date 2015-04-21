@@ -3,10 +3,16 @@ package ru.tp.buy_places;
 import android.content.ContentValues;
 import android.content.Context;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
+import java.util.Scanner;
 
-import static ru.tp.buy_places.content_provider.BuyPlacesContract.*;
+import static ru.tp.buy_places.content_provider.BuyPlacesContract.Places;
 
 /**
  * Created by Ivan on 19.04.2015.
@@ -20,14 +26,30 @@ public class NearestPlacesProcessor {
 
 
     public void getNearestPlaces(NearestPlacesProcessorCallback callback) {
-
+        String URL_ROOT = "http://private-f5e37f-testapi901.apiary-mock.com";
+        JSONObject response = null;
+        try {
+            URL url = new URL(URL_ROOT + "/objects_near");
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            String responseString = "";
+            Scanner scanner = new Scanner(httpURLConnection.getInputStream());
+            while (scanner.hasNextLine())
+                responseString += scanner.nextLine();
+            response = new JSONObject(responseString);
+            httpURLConnection.disconnect();
+        } catch (JSONException | IOException e) {
+            response = null;
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        NearestPlaces nearestPlaces = new NearestPlaces(response.optJSONArray("data"));
+        updateContentProvider(nearestPlaces);
+        callback.send(response.optInt("status"));
     }
 
-    private void updateContentProvider(RestMethodResult<NearestPlaces> result) {
-        NearestPlaces timeline = result.getResource();
-        List<Place> places = timeline.getPlaces();
-
-
+    private void updateContentProvider(NearestPlaces result) {
+        List<Place> places = result.getPlaces();
         for (Place place : places) {
             String id = place.getId();
             long checkinsCount = place.getCheckinsCount();
