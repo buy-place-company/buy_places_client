@@ -1,4 +1,4 @@
-package ru.tp.buy_places;
+package ru.tp.buy_places.service.network;
 
 import android.content.Context;
 
@@ -13,6 +13,8 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
+
+import ru.tp.buy_places.R;
 
 /**
  * Created by Ivan on 22.04.2015.
@@ -114,7 +116,7 @@ public class Request {
     }
 
 
-    enum RequestMethod {
+    public enum RequestMethod {
         GET,
         POST
     }

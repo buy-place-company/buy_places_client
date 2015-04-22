@@ -1,4 +1,4 @@
-package ru.tp.buy_places;
+package ru.tp.buy_places.service.places;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,9 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ru.tp.buy_places.service.Processor;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
-import ru.tp.buy_places.resourses.Place;
-import ru.tp.buy_places.resourses.Places;
+import ru.tp.buy_places.service.resourses.Place;
+import ru.tp.buy_places.service.resourses.Places;
+import ru.tp.buy_places.service.network.Request;
+import ru.tp.buy_places.service.network.Response;
 
 /**
  * Created by Ivan on 19.04.2015.
@@ -22,7 +25,7 @@ public class PlacesProcessor extends Processor {
     private final double mLatitude;
     private final double mLongitude;
 
-    public PlacesProcessor(Context context, OnProcessorResultListener listener, double latitude, double longitude) {
+    PlacesProcessor(Context context, OnProcessorResultListener listener, double latitude, double longitude) {
         super(context, listener);
         mLatitude = latitude;
         mLongitude = longitude;

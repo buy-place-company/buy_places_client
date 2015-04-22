@@ -45,7 +45,7 @@
         </provider>
 
         <service
-            android:name=".BuyItService"
+            android:name=".service.BuyItService"
             android:exported="false" >
         </service>
     </application>

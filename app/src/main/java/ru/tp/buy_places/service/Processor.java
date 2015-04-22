@@ -1,8 +1,11 @@
-package ru.tp.buy_places;
+package ru.tp.buy_places.service;
 
 import android.content.Context;
 
 import org.json.JSONObject;
+
+import ru.tp.buy_places.service.network.Request;
+import ru.tp.buy_places.service.network.Response;
 
 /**
  * Created by Ivan on 22.04.2015.

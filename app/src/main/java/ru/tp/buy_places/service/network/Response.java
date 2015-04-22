@@ -1,6 +1,6 @@
-package ru.tp.buy_places;
+package ru.tp.buy_places.service.network;
 
-import ru.tp.buy_places.resourses.Resource;
+import ru.tp.buy_places.service.resourses.Resource;
 
 /**
  * Created by Ivan on 22.04.2015.

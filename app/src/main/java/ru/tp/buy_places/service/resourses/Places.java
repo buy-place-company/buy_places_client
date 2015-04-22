@@ -1,4 +1,4 @@
-package ru.tp.buy_places.resourses;
+package ru.tp.buy_places.service.resourses;
 
 
 import org.json.JSONArray;

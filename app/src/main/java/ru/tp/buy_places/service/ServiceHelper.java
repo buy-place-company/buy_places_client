@@ -1,4 +1,4 @@
-package ru.tp.buy_places;
+package ru.tp.buy_places.service;
 
 import android.content.Context;
 import android.content.Intent;

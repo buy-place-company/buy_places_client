@@ -1,4 +1,4 @@
-package ru.tp.buy_places;
+package ru.tp.buy_places.service;
 
 /**
  * Created by Ivan on 22.04.2015.
