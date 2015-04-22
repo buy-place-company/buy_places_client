@@ -49,17 +49,14 @@ public class ServiceHelper {
                 handleGetNearestObjectsResponse(resultCode, resultData);
             }
         };
-        Intent intent = new Intent(mContext, BuyItService.class);
-        intent.putExtra(BuyItService.EXTRA_METHOD, BuyItService.Method.GET);
-        intent.putExtra(BuyItService.EXTRA_RESOURCE_TYPE, BuyItService.ResourceType.NEAREST_OBJECTS);
-        intent.putExtra(BuyItService.EXTRA_SERVICE_CALLBACK, serviceCallback);
-        intent.putExtra(EXTRA_REQUEST_ID, requestId);
-        mContext.startService(intent);
+        BuyItService.startGetNearestObjectsService(mContext, serviceCallback, requestId);
         return requestId;
     }
 
+
+
     private void handleGetNearestObjectsResponse(int resultCode, Bundle resultData) {
-        Intent originalRequestIntent = (Intent) resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
+        Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
         if (originalRequestIntent != null) {
             long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
             mPendingRequests.remove(NEAREST_OBJECTS);
