@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import ru.tp.buy_places.NavigationDrawerFragment;
 import ru.tp.buy_places.R;
@@ -32,30 +32,36 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         SettingFragment.OnFragmentInteractionListener,
         ObjectFragment.OnFragmentInteractionListener {
 
-    public static final String MAP_FRAGMENT_TAG = "map";
-    public static final String MY_OBJECTS_FRAGMENT_TAG = "objects";
-    public static final String DEALS_FRAGMENT_TAG = "deals";
-    public static final String RAITING_FRAGMENT_TAG = "raiting";
-    public static final String SETTINGS_FRAGMENT_TAG = "settings";
-    private static final String USER_FRAGMENT_TAG = "user";
+
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
+    private View mDrawerView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("MainActivity", "onCreate");
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        setSupportActionBar(toolbar);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
-        actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
-        actionBarDrawerToggle.syncState();
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        if (toolbar != null)
+            setSupportActionBar(toolbar);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        mDrawerView = findViewById(R.id.navigation);
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
+        mActionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+        mActionBarDrawerToggle.syncState();
+        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        NavigationDrawerFragment navDrawer = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation);
-        navDrawer.setUp(R.id.navigation, (DrawerLayout) findViewById(R.id.drawer), toolbar);
+        showPage(Page.MAP);
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mActionBarDrawerToggle.syncState();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -72,67 +78,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         return super.onOptionsItemSelected(item);
     }
 
-    public void setFragment(String tag) {
-        FragmentManager manager = getSupportFragmentManager();
-        Log.d(MY_OBJECTS_FRAGMENT_TAG, "setFragment");
-        Fragment fragment = manager.findFragmentByTag(tag);
-        if (fragment == null) {
-            switch (tag) {
-                case MAP_FRAGMENT_TAG:
-                    fragment = new MapFragment();
-                    break;
-                case MY_OBJECTS_FRAGMENT_TAG:
-                    fragment = new MyObjectsListFragment();
-                    break;
-                case DEALS_FRAGMENT_TAG:
-                    fragment = new DealsFragment();
-                    break;
-                case RAITING_FRAGMENT_TAG:
-                    fragment = new RaitingFragment();
-                    break;
-                case SETTINGS_FRAGMENT_TAG:
-                    fragment = new SettingFragment();
-                    break;
-                case USER_FRAGMENT_TAG:
-                    fragment = new UserFragment();
-                    break;
 
-            }
-            manager.beginTransaction()
-                    .replace(R.id.content, fragment, tag)
-                    .commit();
-        }
-    }
-
-    @Override
-    public void showMap() {
-        setFragment(MAP_FRAGMENT_TAG);
-    }
-
-    @Override
-    public void showMyObjects() {
-        setFragment(MY_OBJECTS_FRAGMENT_TAG);
-    }
-
-    @Override
-    public void showDeals() {
-        setFragment(DEALS_FRAGMENT_TAG);
-    }
-
-    @Override
-    public void showRaiting() {
-        setFragment(RAITING_FRAGMENT_TAG);
-    }
-
-    @Override
-    public void showSettings() {
-        setFragment(SETTINGS_FRAGMENT_TAG);
-    }
-
-    @Override
-    public void showUserInfo() {
-        setFragment(USER_FRAGMENT_TAG);
-    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -142,5 +88,47 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void onNavigationDrawerItemClick(final Page page) {
+        mDrawerLayout.closeDrawer(mDrawerView);
+        showPage(page);
+    }
+
+    private void showPage(Page page) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(page.name());
+        if (fragment == null) {
+            switch (page) {
+                case MAP:
+                    fragment = new MapFragment();
+                    break;
+                case MY_OBJECTS:
+                    fragment = new MyObjectsListFragment();
+                    break;
+                case DEALS:
+                    fragment = new DealsFragment();
+                    break;
+                case RATING:
+                    fragment = new RaitingFragment();
+                    break;
+                case SETTINGS:
+                    fragment = new SettingFragment();
+                    break;
+                default:
+                    fragment = new MapFragment();
+                    break;
+            }
+            getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment, page.name()).commit();
+        }
+
+    }
+
+    public enum Page {
+        MAP,
+        MY_OBJECTS,
+        DEALS,
+        RATING,
+        SETTINGS
     }
 }

@@ -19,21 +19,27 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import ru.tp.buy_places.R;
 
 import static ru.tp.buy_places.content_provider.BuyPlacesContract.Places;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener, LoaderManager.LoaderCallbacks<Cursor> {
 
+    private ClusterManager<ClusterItem> mClusterManager;
     private MapView mMapView;
     private GoogleMap mGoogleMap;
     private LocationManager mLocationManager;
     private Marker mMyPositionMarker;
+
+
+    private Set<Marker> markers = new HashSet<>();
 
     public MapFragment() {
         // Required empty public constructor
@@ -50,51 +56,69 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         mMapView = (MapView) rootView.findViewById(R.id.map_view);
-        mMapView.getMapAsync(this);
         mMapView.onCreate(savedInstanceState);
         return rootView;
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (mMapView != null)
+            mMapView.getMapAsync(this);
+    }
+
+    @Override
     public void onResume() {
-        super.onStart();
-        mMapView.onResume();
+        super.onResume();
+        if (mMapView != null)
+            mMapView.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mMapView.onPause();
+        if (mMapView != null)
+            mMapView.onPause();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mMapView.onDestroy();
+        if (mMapView != null)
+            mMapView.onDestroy();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mMapView.onLowMemory();
+        if (mMapView != null)
+            mMapView.onLowMemory();
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000*10, 10.f, this);
-        mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude(), mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude())));
-        getLoaderManager().getLoader(0).forceLoad();
+        mClusterManager = new ClusterManager<ClusterItem>(getActivity(), mGoogleMap);
+        if (mLocationManager != null) {
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 10, 10.f, this);
+            Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (lastKnownLocation != null) {
+                //mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
+                mClusterManager.addItem(new MyClusterItem(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
+                mClusterManager.cluster();
+            }
+        }
     }
 
     @Override
     public void onLocationChanged(Location location) {
         if (mGoogleMap != null) {
             if (mMyPositionMarker == null) {
-                mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(location.getLatitude(), location.getLongitude())));
+                //mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(location.getLatitude(), location.getLongitude())));
+                mClusterManager.addItem(new MyClusterItem(location.getLatitude(), location.getLongitude()));
+                mClusterManager.cluster();
             } else {
                 mMyPositionMarker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
             }
@@ -126,7 +150,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         while (data.moveToNext()) {
             double latitude = data.getDouble(data.getColumnIndex(Places.COLUMN_LATITUDE));
             double longitude = data.getDouble(data.getColumnIndex(Places.COLUMN_LONGITUDE));
-            mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)));
+            //mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)));
+            mClusterManager.addItem(new MyClusterItem(latitude, longitude));
+            mClusterManager.cluster();
         }
     }
 
@@ -134,4 +160,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
+
+
+    private class MyClusterItem implements ClusterItem {
+        private final double latitude;
+        private final double longitude;
+
+        private MyClusterItem(double latitude, double longitude) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+
+        @Override
+        public LatLng getPosition() {
+            return new LatLng(latitude, longitude);
+        }
+    }
+
 }
