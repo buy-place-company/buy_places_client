@@ -10,15 +10,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 
@@ -49,6 +54,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MapsInitializer.initialize(getActivity());
         mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         getLoaderManager().initLoader(0, null, this);
     }
@@ -59,6 +65,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         mMapView = (MapView) rootView.findViewById(R.id.map_view);
         mMapView.onCreate(savedInstanceState);
+        Log.e("Availability", Boolean.toString(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity().getApplicationContext()) == ConnectionResult.SUCCESS));
         return rootView;
     }
 
@@ -100,14 +107,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
-        mClusterManager = new ClusterManager<ClusterItem>(getActivity(), mGoogleMap);
+        mClusterManager = new ClusterManager<>(getActivity(), mGoogleMap);
+        mGoogleMap.setOnCameraChangeListener(mClusterManager);
         if (mLocationManager != null) {
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 10, 10.f, this);
             Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (lastKnownLocation != null) {
-                //mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
-                mClusterManager.addItem(new MyClusterItem(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
-                mClusterManager.cluster();
+                mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
             }
         }
     }
@@ -117,8 +123,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         if (mGoogleMap != null) {
             if (mMyPositionMarker == null) {
                 //mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(location.getLatitude(), location.getLongitude())));
-                mClusterManager.addItem(new MyClusterItem(location.getLatitude(), location.getLongitude()));
-                mClusterManager.cluster();
+                //mClusterManager.addItem(new MyClusterItem(location.getLatitude(), location.getLongitude()));
             } else {
                 mMyPositionMarker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
             }
@@ -152,7 +157,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             double longitude = data.getDouble(data.getColumnIndex(Places.COLUMN_LONGITUDE));
             //mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)));
             mClusterManager.addItem(new MyClusterItem(latitude, longitude));
-            mClusterManager.cluster();
         }
     }
 
