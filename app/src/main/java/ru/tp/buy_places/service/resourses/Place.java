@@ -1,4 +1,4 @@
-package ru.tp.buy_places;
+package ru.tp.buy_places.service.resourses;
 
 import org.json.JSONObject;
 

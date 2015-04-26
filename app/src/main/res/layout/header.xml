@@ -38,13 +38,12 @@
 
         </LinearLayout>
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="38dp"
-            android:id="@+id/image"
-            app:border_width="2dp"
-            app:border_color="@android:color/white"/>
+            android:id="@+id/image"/>
 
     </RelativeLayout>

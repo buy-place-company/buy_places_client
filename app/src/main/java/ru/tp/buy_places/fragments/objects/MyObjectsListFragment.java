@@ -1,7 +1,6 @@
 package ru.tp.buy_places.fragments.objects;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,8 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import ru.tp.buy_places.R;
-import ru.tp.buy_places.ServiceHelper;
-import ru.tp.buy_places.activities.ObjectActivity;
+import ru.tp.buy_places.service.ServiceHelper;
 
 import static ru.tp.buy_places.content_provider.BuyPlacesContract.Places;
 
@@ -107,8 +105,11 @@ public class MyObjectsListFragment extends Fragment implements LoaderManager.Loa
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), ObjectActivity.class);
-                startActivity(intent);
+                ObjectFragment objectFragment = new ObjectFragment();
+                getFragmentManager().
+                        beginTransaction().
+                        replace(R.id.content,objectFragment).
+                        commit();
             }
         });
         return mListView;
