@@ -33,4 +33,5 @@
 
     <string name="android_geo_api_key">AIzaSyA6dxz7-vh3yv6TU0ec5lILH3-7QOh1Lbk</string>
     <string name="title_activity_object">ObjectActivity</string>
+    <string name="title_activity_user">UserActivity</string>
 </resources>

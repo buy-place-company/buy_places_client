@@ -48,6 +48,15 @@
             android:name=".BuyItService"
             android:exported="false" >
         </service>
+
+        <activity
+            android:name=".activities.ObjectActivity"
+            android:label="@string/title_activity_object" >
+        </activity>
+        <activity
+            android:name=".activities.UserActivity"
+            android:label="@string/title_activity_user" >
+        </activity>
     </application>
 
 </manifest>

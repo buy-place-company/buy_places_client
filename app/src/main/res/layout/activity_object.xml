@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ru.tp.buy_places.fragments.objects.ObjectFragment">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LVL1"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/text_view_object_level"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_to_map"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/image_view_object"
+        android:src="@drawable/h0"
+        android:layout_below="@+id/button_to_map"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="44dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="МГТУ им Баумана"
+        android:id="@+id/text_view_object_name"
+        android:layout_below="@+id/image_view_object"
+        android:layout_centerHorizontal="true" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/list_view_object"
+        android:layout_marginTop="53dp"
+        android:layout_below="@+id/text_view_object_name"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Улучшить 500"
+        android:id="@+id/button_upgrade"
+        android:layout_alignBottom="@+id/list_view_object"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/text_view_object_level"
+        android:layout_toStartOf="@+id/image_view_object"
+        android:layout_toLeftOf="@+id/image_view_object" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Продать"
+        android:id="@+id/button_sold"
+        android:layout_alignBottom="@+id/list_view_object"
+        android:layout_toLeftOf="@+id/button_to_map"
+        android:layout_alignTop="@+id/button_upgrade"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/image_view_object"
+        android:layout_toEndOf="@+id/image_view_object" />
+
+</RelativeLayout>
