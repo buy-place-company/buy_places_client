@@ -48,5 +48,4 @@
     <string name="android_geo_api_key">AIzaSyA6dxz7-vh3yv6TU0ec5lILH3-7QOh1Lbk</string>
     <string name="title_activity_object">ObjectActivity</string>
     <string name="url_root">http://private-f5e37f-testapi901.apiary-mock.com</string>
-    <string name="title_activity_main_activity2">MainActivity2Activity</string>
 </resources>

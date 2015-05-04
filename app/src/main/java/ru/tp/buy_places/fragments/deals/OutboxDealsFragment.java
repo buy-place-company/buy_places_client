@@ -2,8 +2,6 @@ package ru.tp.buy_places.fragments.deals;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,8 +33,8 @@ public class OutboxDealsFragment extends Fragment {
         };
 
         int[] to = new int[] {
-                R.id.textObj,
-                R.id.imageObj
+                R.id.text,
+                R.id.image
         };
 
         adapter = new SimpleAdapter(getActivity(), getData(), R.layout.item_inbox, from, to);

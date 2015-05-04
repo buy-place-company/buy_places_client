@@ -3,7 +3,6 @@ package ru.tp.buy_places.fragments.deals;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import ru.tp.buy_places.R;
-import ru.tp.buy_places.activities.ObjectActivity;
 
 public class InboxDealsFragment extends Fragment {
 
@@ -36,8 +34,8 @@ public class InboxDealsFragment extends Fragment {
         };
 
         int[] to = new int[] {
-                R.id.text_view_deals,
-                R.id.image_view_deals
+                R.id.text,
+                R.id.image
         };
 
         adapter = new SimpleAdapter(getActivity(), getData(), R.layout.item_inbox, from, to);
@@ -66,8 +64,8 @@ public class InboxDealsFragment extends Fragment {
         initFragment();
     }
 
-    public static InboxDealsFragment newInstance() {
-        InboxDealsFragment fragment = new InboxDealsFragment();
+    public static Fragment newInstance() {
+        Fragment fragment = new InboxDealsFragment();
         return fragment;
     }
 

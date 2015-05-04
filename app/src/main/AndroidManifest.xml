@@ -57,10 +57,6 @@
             android:name=".activities.UserActivity"
             android:label="label" >
         </activity>
-        <activity
-            android:name=".activities.DealsActivity"
-            android:label="@string/title_activity_main_activity2" >
-        </activity>
     </application>
 
 </manifest>
