@@ -19,7 +19,6 @@ import ru.tp.buy_places.R;
 import ru.tp.buy_places.fragments.deals.DealsFragment;
 import ru.tp.buy_places.fragments.map.MapFragment;
 import ru.tp.buy_places.fragments.objects.MyObjectsListFragment;
-import ru.tp.buy_places.fragments.objects.ObjectFragment;
 import ru.tp.buy_places.fragments.raiting.RaitingFragment;
 import ru.tp.buy_places.fragments.settings.SettingFragment;
 import ru.tp.buy_places.fragments.user.UserFragment;
@@ -29,8 +28,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         DealsFragment.OnFragmentInteractionListener,
         RaitingFragment.OnFragmentInteractionListener,
         UserFragment.OnFragmentInteractionListener,
-        SettingFragment.OnFragmentInteractionListener,
-        ObjectFragment.OnFragmentInteractionListener {
+        SettingFragment.OnFragmentInteractionListener {
 
 
     private DrawerLayout mDrawerLayout;
