@@ -60,7 +60,6 @@ public class ServiceHelper {
         if (originalRequestIntent != null) {
             long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
             mPendingRequests.remove(NEAREST_OBJECTS);
-
             Intent result = new Intent(ACTION_REQUEST_RESULT);
             result.putExtra(EXTRA_REQUEST_ID, requestId);
             result.putExtra(EXTRA_RESULT_CODE, resultCode);

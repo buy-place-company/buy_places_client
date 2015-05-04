@@ -55,7 +55,7 @@
         </activity>
         <activity
             android:name=".activities.UserActivity"
-            android:label="@string/title_activity_user" >
+            android:label="label" >
         </activity>
         <activity
             android:name=".activities.DealsActivity"
