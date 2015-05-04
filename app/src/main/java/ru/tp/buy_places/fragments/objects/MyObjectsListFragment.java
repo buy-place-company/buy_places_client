@@ -106,7 +106,7 @@ public class MyObjectsListFragment extends Fragment implements LoaderManager.Loa
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), ObjectActivity.class);
-                getActivity().startActivity(intent);
+                startActivity(intent);
             }
         });
         return mListView;

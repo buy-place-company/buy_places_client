@@ -1,70 +1,96 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="ru.tp.buy_places.fragments.objects.ObjectFragment">
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:background="#AAA"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"/>
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="ru.tp.buy_places.fragments.objects.ObjectFragment">
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LVL1"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/text_view_object_level"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LVL1"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/text_view_user_level"
+                android:layout_alignTop="@+id/text_view_dollar"
+                android:layout_centerHorizontal="true" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/image_view_user"
-        android:src="@drawable/ic_pupkin"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="44dp" />
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/image_view_user"
+                android:src="@mipmap/ic_pupkin"
+                android:layout_below="@+id/text_view_user_level"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Вася Пупкин"
-        android:id="@+id/text_view_user_name"
-        android:layout_below="@+id/image_view_user"
-        android:layout_centerHorizontal="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Вася Пупкин"
+                android:id="@+id/text_view_user_name"
+                android:layout_below="@+id/image_view_user"
+                android:layout_centerHorizontal="true" />
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/list_view_user"
-        android:layout_marginTop="53dp"
-        android:layout_below="@+id/text_view_user_name"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/image_view_dollar"
+                android:src="@mipmap/ic_dollar"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="20dp" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/image_view_user_money"
-        android:src="@drawable/ic_money"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="100"
+                android:id="@+id/text_view_dollar"
+                android:layout_alignBottom="@+id/image_view_dollar"
+                android:layout_toRightOf="@+id/image_view_dollar"
+                android:layout_toEndOf="@+id/image_view_dollar"
+                android:layout_marginLeft="3dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="1000"
-        android:id="@+id/text_view_user_money"
-        android:layout_alignBottom="@+id/text_view_object_level"
-        android:layout_toRightOf="@+id/image_view_user_money"
-        android:layout_toEndOf="@+id/image_view_user_money" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="22"
+                android:id="@+id/text_view_user_object_amount"
+                android:layout_alignBottom="@+id/image_view_dollar"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="20dp" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:layout_alignBottom="@+id/image_view_user_money"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/image_view_user_object_amount"
+                android:layout_alignTop="@+id/text_view_user_object_amount"
+                android:src="@mipmap/ic_object"
+                android:layout_alignBottom="@+id/text_view_user_object_amount"
+                android:layout_toLeftOf="@+id/text_view_user_object_amount" />
 
 
-</RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</android.support.v4.widget.DrawerLayout>
