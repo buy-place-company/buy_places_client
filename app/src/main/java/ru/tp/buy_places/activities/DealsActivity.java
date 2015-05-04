@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import ru.tp.buy_places.R;
 
-public class MainActivity2Activity extends ActionBarActivity {
+public class DealsActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

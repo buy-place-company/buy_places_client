@@ -25,7 +25,7 @@ public class NavigationDrawerListViewAdapter extends BaseAdapter {
         items.add(new NavigationDrawerListViewItem(R.string.maps, R.mipmap.ic_map, MainActivity.Page.MAP));
         items.add(new NavigationDrawerListViewItem(R.string.myobjects, R.mipmap.ic_object, MainActivity.Page.MY_OBJECTS));
         items.add(new NavigationDrawerListViewItem(R.string.deals, R.mipmap.ic_deals, MainActivity.Page.DEALS));
-        items.add(new NavigationDrawerListViewItem(R.string.raiting, R.mipmap.ic_raiting, MainActivity.Page.RATING));
+        items.add(new NavigationDrawerListViewItem(R.string.rating, R.mipmap.ic_raiting, MainActivity.Page.RATING));
         items.add(new NavigationDrawerListViewItem(R.string.settings, R.mipmap.ic_settings, MainActivity.Page.SETTINGS));
     }
     @Override
