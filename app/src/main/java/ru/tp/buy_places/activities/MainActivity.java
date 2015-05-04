@@ -13,13 +13,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import ru.tp.buy_places.NavigationDrawerFragment;
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.fragments.deals.DealsFragment;
 import ru.tp.buy_places.fragments.map.MapFragment;
 import ru.tp.buy_places.fragments.objects.MyObjectsListFragment;
-
 import ru.tp.buy_places.fragments.raiting.RaitingFragment;
 import ru.tp.buy_places.fragments.settings.SettingFragment;
 import ru.tp.buy_places.fragments.user.UserFragment;
@@ -31,11 +29,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         UserFragment.OnFragmentInteractionListener,
         SettingFragment.OnFragmentInteractionListener {
 
-
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private View mDrawerView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
