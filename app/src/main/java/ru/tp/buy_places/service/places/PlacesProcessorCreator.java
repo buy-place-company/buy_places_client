@@ -1,28 +1,32 @@
 package ru.tp.buy_places.service.places;
 
 import android.content.Context;
+import android.location.Location;
 
 import ru.tp.buy_places.service.Processor;
 import ru.tp.buy_places.service.ProcessorCreator;
+
+import static ru.tp.buy_places.service.BuyItService.ObjectsRequestMode;
 
 /**
  * Created by Ivan on 22.04.2015.
  */
 public class PlacesProcessorCreator implements ProcessorCreator {
 
+    private final Location mLocation;
+    private final ObjectsRequestMode mObjectsRequestMode;
     private Context mContext;
     private Processor.OnProcessorResultListener mListener;
-    private double mLatitude;
-    private double mLongitude;
 
-    public PlacesProcessorCreator(Context context, Processor.OnProcessorResultListener listener, double latitude, double longitude) {
+
+    public PlacesProcessorCreator(Context context, Processor.OnProcessorResultListener listener, Location location, ObjectsRequestMode objectsRequestMode) {
         mContext = context;
         mListener = listener;
-        mLatitude = latitude;
-        mLongitude = longitude;
+        mLocation = location;
+        mObjectsRequestMode = objectsRequestMode;
     }
     @Override
     public Processor createProcessor() {
-        return new PlacesProcessor(mContext, mListener, mLatitude, mLongitude);
+        return new PlacesProcessor(mContext, mListener, mLocation, mObjectsRequestMode);
     }
 }

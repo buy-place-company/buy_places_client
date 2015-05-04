@@ -2,6 +2,7 @@ package ru.tp.buy_places.service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 
@@ -40,22 +41,45 @@ public class ServiceHelper {
     }
 
 
-    public long getNearestObjects() {
+    public long getObjectsAroundThePoint(Location location) {
         long requestId = mRequestIdGenerator.incrementAndGet();
         mPendingRequests.put(NEAREST_OBJECTS, requestId);
         ResultReceiver serviceCallback = new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
-                handleGetNearestObjectsResponse(resultCode, resultData);
+                handleGetObjectsAroundThePointResponse(resultCode, resultData);
             }
         };
-        BuyItService.startGetNearestObjectsService(mContext, serviceCallback, requestId);
+        BuyItService.startGetObjectsAroundThePointService(mContext, serviceCallback, requestId, location);
         return requestId;
     }
 
+    public long getObjectsAroundThePlayer(Location location) {
+        long requestId = mRequestIdGenerator.incrementAndGet();
+        mPendingRequests.put(NEAREST_OBJECTS, requestId);
+        ResultReceiver serviceCallback = new ResultReceiver(null) {
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                handleGetObjectsAroundThePlayerResponse(resultCode, resultData);
+            }
+        };
+        BuyItService.startGetObjectsAroundThePlayerService(mContext, serviceCallback, requestId, location);
+        return requestId;
+    }
 
+    private void handleGetObjectsAroundThePlayerResponse(int resultCode, Bundle resultData) {
+        Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
+        if (originalRequestIntent != null) {
+            long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
+            mPendingRequests.remove(NEAREST_OBJECTS);
+            Intent result = new Intent(ACTION_REQUEST_RESULT);
+            result.putExtra(EXTRA_REQUEST_ID, requestId);
+            result.putExtra(EXTRA_RESULT_CODE, resultCode);
+            mContext.sendBroadcast(originalRequestIntent);
+        }
+    }
 
-    private void handleGetNearestObjectsResponse(int resultCode, Bundle resultData) {
+    private void handleGetObjectsAroundThePointResponse(int resultCode, Bundle resultData) {
         Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
         if (originalRequestIntent != null) {
             long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);

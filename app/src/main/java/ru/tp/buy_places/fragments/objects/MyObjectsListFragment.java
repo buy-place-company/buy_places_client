@@ -22,7 +22,6 @@ import java.util.HashMap;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.activities.ObjectActivity;
-import ru.tp.buy_places.service.ServiceHelper;
 
 import static ru.tp.buy_places.content_provider.BuyPlacesContract.Places;
 
@@ -61,7 +60,6 @@ public class MyObjectsListFragment extends Fragment implements LoaderManager.Loa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLoaderManager().initLoader(0, null, this);
-        ServiceHelper.get(getActivity()).getNearestObjects();
     }
 
     private void initFragment(){

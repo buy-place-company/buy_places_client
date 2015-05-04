@@ -10,13 +10,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
@@ -27,10 +24,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.service.ServiceHelper;
 
 import static ru.tp.buy_places.content_provider.BuyPlacesContract.Places;
 
@@ -44,7 +39,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     private Marker mMyPositionMarker;
 
 
-    private Set<Marker> markers = new HashSet<>();
 
     public MapFragment() {
         // Required empty public constructor
@@ -65,7 +59,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         mMapView = (MapView) rootView.findViewById(R.id.map_view);
         mMapView.onCreate(savedInstanceState);
-        Log.e("Availability", Boolean.toString(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity().getApplicationContext()) == ConnectionResult.SUCCESS));
         return rootView;
     }
 
@@ -110,8 +103,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mClusterManager = new ClusterManager<>(getActivity(), mGoogleMap);
         mGoogleMap.setOnCameraChangeListener(mClusterManager);
         if (mLocationManager != null) {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 10, 10.f, this);
-            Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 10, 10.f, this);
+            Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            ServiceHelper.get(getActivity()).getObjectsAroundThePlayer(lastKnownLocation);
             if (lastKnownLocation != null) {
                 mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
             }
