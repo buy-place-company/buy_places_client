@@ -2,6 +2,7 @@ package ru.tp.buy_places.map;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -37,12 +38,14 @@ public class ObjectRenderer extends DefaultClusterRenderer<ObjectItem> {
 
     @Override
     protected void onBeforeClusterItemRendered(ObjectItem item, MarkerOptions markerOptions) {
+        mClusterItemGenerator.setColor(R.style.ClusterItemBackgroundColor);
         Bitmap icon = mClusterItemGenerator.makeIcon();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(item.getName());
     }
 
     @Override
     protected void onBeforeClusterRendered(Cluster<ObjectItem> cluster, MarkerOptions markerOptions) {
+        mIconGenerator.setColor(R.style.ClusterRenderBackgroundColor);
         Bitmap icon = mIconGenerator.makeIcon();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
     }

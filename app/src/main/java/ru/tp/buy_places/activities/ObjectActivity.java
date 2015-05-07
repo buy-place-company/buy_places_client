@@ -1,22 +1,28 @@
 package ru.tp.buy_places.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import ru.tp.buy_places.R;
 
-public class ObjectActivity extends ActionBarActivity {
+public class ObjectActivity extends ActionBarActivity implements OnClickListener
+{
 
+    private Button upgrade;
+    private Button sell;
+
+    public static final String DIALOG = "Сделка";
+   private AlertDialog.Builder ad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +31,48 @@ public class ObjectActivity extends ActionBarActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null)
             setSupportActionBar(toolbar);
+
+        ad = new AlertDialog.Builder(this);
+        ad.setTitle(DIALOG);
+
+        ad.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int arg1) {
+
+            }
+        });
+        ad.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int arg1) {
+
+            }
+        });
+        ad.setCancelable(true);
+        ad.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            public void onCancel(DialogInterface dialog) {
+
+            }
+        });
+
+        upgrade = (Button)findViewById(R.id.button_upgrade);
+        sell = (Button)findViewById(R.id.button_sell);
+        OnClickListener upgradeListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ad.setMessage("Вы можете улучшить здание за 500р");
+                ad.show();
+            }
+        };
+        OnClickListener sellListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ad.setMessage("Вы можете продать здание за 50% стоимости");
+                ad.show();
+            }
+        };
+
+        upgrade.setOnClickListener(upgradeListener);
+        sell.setOnClickListener(sellListener);
+
+
     }
 
 
@@ -49,5 +97,10 @@ public class ObjectActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

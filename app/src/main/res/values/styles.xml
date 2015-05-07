@@ -5,4 +5,12 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="ClusterItemBackgroundColor">
+        <item name="android:textColor">#e3fbe734</item>
+    </style>
+
+    <style name="ClusterRenderBackgroundColor">
+        <item name="android:textColor">#e3fb253a</item>
+    </style>
+
 </resources>
