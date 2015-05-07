@@ -6,18 +6,18 @@ import org.json.JSONObject;
  * Created by Ivan on 19.04.2015.
  */
 public class Place implements Resource {
-    private String mId;
-    private long mCheckinsCount;
-    private long mUsersCount;
-    private long mTipCount;
-    private String mName;
-    private String mCategory;
-    private String mType;
-    private String mLevel;
-    private long mOwner;
-    private long mPrice;
-    private float mLatitude;
-    private float mLongitude;
+    private final String mId;
+    private final long mCheckinsCount;
+    private final long mUsersCount;
+    private final long mTipCount;
+    private final String mName;
+    private final String mCategory;
+    private final String mType;
+    private final String mLevel;
+    private final long mOwner;
+    private final long mPrice;
+    private final float mLatitude;
+    private final float mLongitude;
 
     public Place(JSONObject placeData) {
         mId = placeData.optString("id");

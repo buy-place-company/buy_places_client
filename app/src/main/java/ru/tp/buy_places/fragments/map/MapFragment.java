@@ -18,13 +18,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.map.ObjectItem;
+import ru.tp.buy_places.map.ObjectRenderer;
 import ru.tp.buy_places.service.ServiceHelper;
 
 import static ru.tp.buy_places.content_provider.BuyPlacesContract.Places;
@@ -32,7 +31,7 @@ import static ru.tp.buy_places.content_provider.BuyPlacesContract.Places;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-    private ClusterManager<ClusterItem> mClusterManager;
+    private ClusterManager<ObjectItem> mClusterManager;
     private MapView mMapView;
     private GoogleMap mGoogleMap;
     private LocationManager mLocationManager;
@@ -101,25 +100,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         mClusterManager = new ClusterManager<>(getActivity(), mGoogleMap);
+        mClusterManager.setRenderer(new ObjectRenderer(getActivity(), mGoogleMap, mClusterManager));
         mGoogleMap.setOnCameraChangeListener(mClusterManager);
         if (mLocationManager != null) {
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 10, 10.f, this);
             Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            ServiceHelper.get(getActivity()).getObjectsAroundThePlayer(lastKnownLocation);
             if (lastKnownLocation != null) {
-                mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
+                ServiceHelper.get(getActivity()).getObjectsAroundThePlayer(lastKnownLocation);
+                //mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
             }
         }
     }
 
     @Override
     public void onLocationChanged(Location location) {
+        ServiceHelper.get(getActivity()).getObjectsAroundThePlayer(location);
         if (mGoogleMap != null) {
             if (mMyPositionMarker == null) {
-                //mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(location.getLatitude(), location.getLongitude())));
-                //mClusterManager.addItem(new MyClusterItem(location.getLatitude(), location.getLongitude()));
+                //mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())));
             } else {
-                mMyPositionMarker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
+                //mMyPositionMarker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
             }
         }
     }
@@ -146,33 +146,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mClusterManager.clearItems();
         while (data.moveToNext()) {
+            long rowId = data.getLong(data.getColumnIndex(Places._ID));
+            String id = data.getString(data.getColumnIndex(Places.COLUMN_ID));
+            String name = data.getString(data.getColumnIndex(Places.COLUMN_NAME));
             double latitude = data.getDouble(data.getColumnIndex(Places.COLUMN_LATITUDE));
             double longitude = data.getDouble(data.getColumnIndex(Places.COLUMN_LONGITUDE));
-            //mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)));
-            mClusterManager.addItem(new MyClusterItem(latitude, longitude));
+            ObjectItem objectItem = new ObjectItem(rowId, id, name, latitude, longitude);
+            mClusterManager.addItem(objectItem);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-    }
-
-
-    private class MyClusterItem implements ClusterItem {
-        private final double latitude;
-        private final double longitude;
-
-        private MyClusterItem(double latitude, double longitude) {
-            this.latitude = latitude;
-            this.longitude = longitude;
-        }
-
-        @Override
-        public LatLng getPosition() {
-            return new LatLng(latitude, longitude);
-        }
     }
 
 }

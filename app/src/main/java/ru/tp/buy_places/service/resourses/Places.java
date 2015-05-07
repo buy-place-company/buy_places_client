@@ -10,21 +10,21 @@ import java.util.List;
  * Created by Ivan on 19.04.2015.
  */
 public class Places implements Resource {
-    private List<Place> mNearestPlaces = new ArrayList<>();
+    private List<Place> mNearestObjects = new ArrayList<>();
 
 
     public Places(JSONArray placesJSONObject) {
         if (placesJSONObject == null)
-            mNearestPlaces = null;
+            mNearestObjects = null;
         else {
             for (int i = 0; i < placesJSONObject.length(); i++) {
-                Place place = new Place(placesJSONObject.optJSONObject(i));
-                mNearestPlaces.add(place);
+                Place object = new Place(placesJSONObject.optJSONObject(i));
+                mNearestObjects.add(object);
             }
         }
     }
 
     public List<Place> getPlaces() {
-        return mNearestPlaces;
+        return mNearestObjects;
     }
 }

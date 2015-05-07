@@ -61,7 +61,7 @@ public class PlacesProcessor extends Processor {
     @Override
     protected void updateContentProviderAfterExecutingRequest(Response result) {
         Places places = (Places) result.getData();
-        List<Place> placeList = places.getPlaces();
+        List<Place> objectList = places.getPlaces();
         switch (mObjectsRequestMode) {
             case AROUND_THE_POINT:
 
@@ -73,19 +73,19 @@ public class PlacesProcessor extends Processor {
                 //AROUND_THE_PLAYER -> AROUND_THE_PLAYER
 
                 mContext.getContentResolver().delete(Uri.withAppendedPath(BuyPlacesContract.Places.CONTENT_URI, BuyPlacesContract.Places.AROUND_THE_POINT_DATA_SET), BuyPlacesContract.Places.WITH_SPECIFIED_STATE_SELECTION, new String[]{String.valueOf(BuyPlacesContract.Places.State.AROUND_THE_PLAYER)});
-                for (Place place : placeList) {
-                    String id = place.getId();
-                    long checkinsCount = place.getCheckinsCount();
-                    long usersCount = place.getUsersCount();
-                    long tipCount = place.getTipCount();
-                    String name = place.getName();
-                    String category = place.getCategory();
-                    String type = place.getType();
-                    String level = place.getLevel();
-                    long owner = place.getOwner();
-                    long price = place.getPrice();
-                    float latitude = place.getLatitude();
-                    float longitude = place.getLongitude();
+                for (Place object : objectList) {
+                    String id = object.getId();
+                    long checkinsCount = object.getCheckinsCount();
+                    long usersCount = object.getUsersCount();
+                    long tipCount = object.getTipCount();
+                    String name = object.getName();
+                    String category = object.getCategory();
+                    String type = object.getType();
+                    String level = object.getLevel();
+                    long owner = object.getOwner();
+                    long price = object.getPrice();
+                    float latitude = object.getLatitude();
+                    float longitude = object.getLongitude();
 
                     ContentValues values = new ContentValues();
                     values.put(BuyPlacesContract.Places.COLUMN_ID, id);
@@ -117,19 +117,19 @@ public class PlacesProcessor extends Processor {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(BuyPlacesContract.Places.COLUMN_STATE, BuyPlacesContract.Places.State.VISITED_IN_THE_PAST.name());
                 mContext.getContentResolver().update(Uri.withAppendedPath(BuyPlacesContract.Places.CONTENT_URI, BuyPlacesContract.Places.AROUND_THE_POINT_DATA_SET), contentValues, BuyPlacesContract.Places.WITH_SPECIFIED_STATE_SELECTION, new String[]{String.valueOf(BuyPlacesContract.Places.State.AROUND_THE_PLAYER)});
-                for (Place place : placeList) {
-                    String id = place.getId();
-                    long checkinsCount = place.getCheckinsCount();
-                    long usersCount = place.getUsersCount();
-                    long tipCount = place.getTipCount();
-                    String name = place.getName();
-                    String category = place.getCategory();
-                    String type = place.getType();
-                    String level = place.getLevel();
-                    long owner = place.getOwner();
-                    long price = place.getPrice();
-                    float latitude = place.getLatitude();
-                    float longitude = place.getLongitude();
+                for (Place object : objectList) {
+                    String id = object.getId();
+                    long checkinsCount = object.getCheckinsCount();
+                    long usersCount = object.getUsersCount();
+                    long tipCount = object.getTipCount();
+                    String name = object.getName();
+                    String category = object.getCategory();
+                    String type = object.getType();
+                    String level = object.getLevel();
+                    long owner = object.getOwner();
+                    long price = object.getPrice();
+                    float latitude = object.getLatitude();
+                    float longitude = object.getLongitude();
 
                     ContentValues values = new ContentValues();
                     values.put(BuyPlacesContract.Places.COLUMN_ID, id);
