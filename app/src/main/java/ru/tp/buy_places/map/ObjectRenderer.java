@@ -41,6 +41,7 @@ public class ObjectRenderer extends DefaultClusterRenderer<ObjectItem> {
         mClusterItemGenerator.setColor(R.style.ClusterItemBackgroundColor);
         Bitmap icon = mClusterItemGenerator.makeIcon();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(item.getName());
+
     }
 
     @Override

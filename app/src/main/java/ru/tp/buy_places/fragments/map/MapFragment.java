@@ -1,6 +1,7 @@
 package ru.tp.buy_places.fragments.map;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
@@ -10,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +22,12 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
-
+import com.google.maps.android.clustering.ClusterManager.OnClusterItemInfoWindowClickListener;
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.activities.ObjectActivity;
 import ru.tp.buy_places.map.ObjectItem;
 import ru.tp.buy_places.map.ObjectRenderer;
 import ru.tp.buy_places.service.ServiceHelper;
@@ -101,6 +107,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mGoogleMap = googleMap;
         mClusterManager = new ClusterManager<>(getActivity(), mGoogleMap);
         mClusterManager.setRenderer(new ObjectRenderer(getActivity(), mGoogleMap, mClusterManager));
+//        OnClusterItemInfoWindowClickListener clusterClickListener = new OnClusterItemInfoWindowClickListener(){
+//
+//            @Override
+//            public void onClusterItemInfoWindowClick(ClusterItem clusterItem) {
+//                Log.d("Click", "Click");
+//                Intent intent = new Intent(getActivity(), ObjectActivity.class);
+//                startActivity(intent);
+//            }
+//        };
+
+        Log.d("Click", "Click1");
+        //mClusterManager.setOnClusterClickListener(clusterClickListener);
         mGoogleMap.setOnCameraChangeListener(mClusterManager);
         if (mLocationManager != null) {
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 10, 10.f, this);
