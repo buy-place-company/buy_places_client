@@ -6,7 +6,7 @@ import com.google.maps.android.clustering.ClusterItem;
 /**
  * Created by Ivan on 05.05.2015.
  */
-public class ObjectItem implements ClusterItem {
+public class PlaceClusterItem implements ClusterItem {
 
     private final long mRowId;
     private final String mId;
@@ -14,7 +14,7 @@ public class ObjectItem implements ClusterItem {
     private final double mLatitude;
     private final double mLongitude;
 
-    public ObjectItem(long rowId, String id, String name, double latitude, double longitude) {
+    public PlaceClusterItem(long rowId, String id, String name, double latitude, double longitude) {
         mRowId = rowId;
         mId = id;
         mName = name;

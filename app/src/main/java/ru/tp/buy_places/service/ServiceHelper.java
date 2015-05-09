@@ -2,9 +2,10 @@ package ru.tp.buy_places.service;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class ServiceHelper {
     }
 
 
-    public long getObjectsAroundThePoint(Location location) {
+    public long getObjectsAroundThePoint(LatLng position) {
         long requestId = mRequestIdGenerator.incrementAndGet();
         mPendingRequests.put(NEAREST_OBJECTS, requestId);
         ResultReceiver serviceCallback = new ResultReceiver(null) {
@@ -50,11 +51,11 @@ public class ServiceHelper {
                 handleGetObjectsAroundThePointResponse(resultCode, resultData);
             }
         };
-        BuyItService.startGetObjectsAroundThePointService(mContext, serviceCallback, requestId, location);
+        BuyItService.startGetPlacesAroundThePointService(mContext, serviceCallback, requestId, position);
         return requestId;
     }
 
-    public long getObjectsAroundThePlayer(Location location) {
+    public long getObjectsAroundThePlayer(LatLng position) {
         long requestId = mRequestIdGenerator.incrementAndGet();
         mPendingRequests.put(NEAREST_OBJECTS, requestId);
         ResultReceiver serviceCallback = new ResultReceiver(null) {
@@ -63,7 +64,7 @@ public class ServiceHelper {
                 handleGetObjectsAroundThePlayerResponse(resultCode, resultData);
             }
         };
-        BuyItService.startGetObjectsAroundThePlayerService(mContext, serviceCallback, requestId, location);
+        BuyItService.startGetPlacesAroundThePlayerService(mContext, serviceCallback, requestId, position);
         return requestId;
     }
 

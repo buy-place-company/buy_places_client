@@ -19,6 +19,11 @@ public class Place implements Resource {
     private final float mLatitude;
     private final float mLongitude;
 
+    private boolean mIsAroundThePoint;
+    private boolean mIsAroundThePlayer;
+    private boolean mIsInOwnership;
+    private boolean mIsVisitedInThePast;
+
     public Place(JSONObject placeData) {
         mId = placeData.optString("id");
         final JSONObject stats = placeData.optJSONObject("stats");

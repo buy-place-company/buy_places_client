@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.os.ResultReceiver;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import ru.tp.buy_places.service.places.PlacesProcessorCreator;
 
@@ -20,7 +20,7 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
 
     private static final String EXTRA_LATITUDE = "EXTRA_LATITUDE";
     private static final String EXTRA_LONGITUDE = "EXTRA_LONGITUDE";
-    private static final String EXTRA_LOCATION = "EXTRA_LOCATION";
+    private static final String EXTRA_POSITION = "EXTRA_POSITION";
     private static final String EXTRA_OBJECTS_REQUEST_MODE = "EXTRA_OBJECTS_REQUEST_MODE";
 
     private static final int REQUEST_INVALID = -1;
@@ -47,21 +47,21 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
 
 
 
-    public static void startGetObjectsAroundThePlayerService(Context context, ResultReceiver serviceCallback, long requestId, Location location) {
+    public static void startGetPlacesAroundThePlayerService(Context context, ResultReceiver serviceCallback, long requestId, LatLng position) {
         Intent intent = new Intent(ACTION_GET_OBJECTS, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
-        intent.putExtra(EXTRA_OBJECTS_REQUEST_MODE, (Parcelable) ObjectsRequestMode.AROUND_THE_PLAYER);
-        intent.putExtra(EXTRA_LOCATION, location);
+        intent.putExtra(EXTRA_OBJECTS_REQUEST_MODE, ObjectsRequestMode.AROUND_THE_PLAYER);
+        intent.putExtra(EXTRA_POSITION, position);
         context.startService(intent);
     }
 
-    public static void startGetObjectsAroundThePointService(Context context, ResultReceiver serviceCallback, long requestId, Location location) {
+    public static void startGetPlacesAroundThePointService(Context context, ResultReceiver serviceCallback, long requestId, LatLng position) {
         Intent intent = new Intent(ACTION_GET_OBJECTS, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
-        intent.putExtra(EXTRA_OBJECTS_REQUEST_MODE, (Parcelable) ObjectsRequestMode.AROUND_THE_POINT);
-        intent.putExtra(EXTRA_LOCATION, location);
+        intent.putExtra(EXTRA_OBJECTS_REQUEST_MODE, ObjectsRequestMode.AROUND_THE_POINT);
+        intent.putExtra(EXTRA_POSITION, position);
         context.startService(intent);
     }
 
@@ -72,10 +72,10 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         String action = intent.getAction();
         switch (action) {
             case ACTION_GET_OBJECTS:
-                final Location location = intent.getParcelableExtra(EXTRA_LOCATION);
-                final ObjectsRequestMode objectsRequestMode = intent.getParcelableExtra(EXTRA_OBJECTS_REQUEST_MODE);
-                Processor nearestPlacesProcessor = new PlacesProcessorCreator(this, this, location, objectsRequestMode).createProcessor();
-                nearestPlacesProcessor.process();
+                final LatLng position = intent.getParcelableExtra(EXTRA_POSITION);
+                final ObjectsRequestMode objectsRequestMode = (ObjectsRequestMode) intent.getSerializableExtra(EXTRA_OBJECTS_REQUEST_MODE);
+                Processor placesProcessor = new PlacesProcessorCreator(this, this, position, objectsRequestMode).createProcessor();
+                placesProcessor.process();
                 break;
             default:
                 mCallback.send(REQUEST_INVALID, getOriginalIntentBundle());
@@ -98,31 +98,8 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
     }
 
 
-    public enum ObjectsRequestMode implements Parcelable {
+    public enum ObjectsRequestMode {
         AROUND_THE_PLAYER,
-        AROUND_THE_POINT;
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(name());
-        }
-
-        public static final Parcelable.Creator<ObjectsRequestMode> CREATOR = new Parcelable.Creator<ObjectsRequestMode>() {
-
-            @Override
-            public ObjectsRequestMode createFromParcel(Parcel source) {
-                return ObjectsRequestMode.valueOf(source.readString());
-            }
-
-            @Override
-            public ObjectsRequestMode[] newArray(int size) {
-                return new ObjectsRequestMode[size];
-            }
-        };
+        AROUND_THE_POINT
     }
 }

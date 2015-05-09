@@ -1,22 +1,18 @@
 package ru.tp.buy_places.service.places;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.location.Location;
-import android.net.Uri;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.Processor;
 import ru.tp.buy_places.service.network.Request;
 import ru.tp.buy_places.service.network.Response;
-import ru.tp.buy_places.service.resourses.Place;
 import ru.tp.buy_places.service.resourses.Places;
 
 import static ru.tp.buy_places.service.BuyItService.ObjectsRequestMode;
@@ -27,11 +23,11 @@ import static ru.tp.buy_places.service.BuyItService.ObjectsRequestMode;
 public class PlacesProcessor extends Processor {
 
     private final ObjectsRequestMode mObjectsRequestMode;
-    private final Location mLocation;
+    private final LatLng mPosition;
 
-    PlacesProcessor(Context context, OnProcessorResultListener listener, Location location, ObjectsRequestMode objectsRequestMode) {
+    PlacesProcessor(Context context, OnProcessorResultListener listener, LatLng position, ObjectsRequestMode objectsRequestMode) {
         super(context, listener);
-        mLocation = location;
+        mPosition = position;
         mObjectsRequestMode = objectsRequestMode;
 
     }
@@ -39,8 +35,8 @@ public class PlacesProcessor extends Processor {
     @Override
     protected Request prepareRequest() {
         Map<String, String> params = new HashMap<>();
-        params.put("lat", Double.toString(mLocation.getLatitude()));
-        params.put("lng", Double.toString(mLocation.getLongitude()));
+        params.put("lat", Double.toString(mPosition.latitude));
+        params.put("lng", Double.toString(mPosition.longitude));
         return new Request(mContext, "/objects_near", Request.RequestMethod.GET, params);
     }
 
@@ -61,92 +57,12 @@ public class PlacesProcessor extends Processor {
     @Override
     protected void updateContentProviderAfterExecutingRequest(Response result) {
         Places places = (Places) result.getData();
-        List<Place> objectList = places.getPlaces();
         switch (mObjectsRequestMode) {
             case AROUND_THE_POINT:
-
-                //All rows:
-                //AROUND_THE_POINT -> delete
-
-                //Received rows:
-                //VISITED_IN_THE_PAST -> AROUND_THE_POINT
-                //AROUND_THE_PLAYER -> AROUND_THE_PLAYER
-
-                mContext.getContentResolver().delete(Uri.withAppendedPath(BuyPlacesContract.Places.CONTENT_URI, BuyPlacesContract.Places.AROUND_THE_POINT_DATA_SET), BuyPlacesContract.Places.WITH_SPECIFIED_STATE_SELECTION, new String[]{String.valueOf(BuyPlacesContract.Places.State.AROUND_THE_PLAYER)});
-                for (Place object : objectList) {
-                    String id = object.getId();
-                    long checkinsCount = object.getCheckinsCount();
-                    long usersCount = object.getUsersCount();
-                    long tipCount = object.getTipCount();
-                    String name = object.getName();
-                    String category = object.getCategory();
-                    String type = object.getType();
-                    String level = object.getLevel();
-                    long owner = object.getOwner();
-                    long price = object.getPrice();
-                    float latitude = object.getLatitude();
-                    float longitude = object.getLongitude();
-
-                    ContentValues values = new ContentValues();
-                    values.put(BuyPlacesContract.Places.COLUMN_ID, id);
-                    values.put(BuyPlacesContract.Places.COLUMN_CHECKINS_COUNT, checkinsCount);
-                    values.put(BuyPlacesContract.Places.COLUMN_USERS_COUNT, usersCount);
-                    values.put(BuyPlacesContract.Places.COLUMN_TIP_COUNT, tipCount);
-                    values.put(BuyPlacesContract.Places.COLUMN_NAME, name);
-                    values.put(BuyPlacesContract.Places.COLUMN_CATEGORY, category);
-                    values.put(BuyPlacesContract.Places.COLUMN_TYPE, type);
-                    values.put(BuyPlacesContract.Places.COLUMN_LEVEL, level);
-                    values.put(BuyPlacesContract.Places.COLUMN_OWNER, owner);
-                    values.put(BuyPlacesContract.Places.COLUMN_PRICE, price);
-                    values.put(BuyPlacesContract.Places.COLUMN_LATITUDE, latitude);
-                    values.put(BuyPlacesContract.Places.COLUMN_LONGITUDE, longitude);
-                    values.put(BuyPlacesContract.Places.COLUMN_STATE, BuyPlacesContract.Places.State.AROUND_THE_POINT.name());
-                    mContext.getContentResolver().insert(BuyPlacesContract.Places.CONTENT_URI, values);
-                }
+                places.writeToDatabaseAsPlacesAroundThePoint(mContext);
                 break;
-
-
             case AROUND_THE_PLAYER:
-                //All rows
-                //AROUND_THE_PLAYER -> VISITED_IN_THE_PAST
-
-                //Received rows
-                //VISITED_IN_THE_PAST -> AROUND_THE_PLAYER
-                //AROUND_THE_POINT -> AROUND_THE_PLAYER
-
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(BuyPlacesContract.Places.COLUMN_STATE, BuyPlacesContract.Places.State.VISITED_IN_THE_PAST.name());
-                mContext.getContentResolver().update(Uri.withAppendedPath(BuyPlacesContract.Places.CONTENT_URI, BuyPlacesContract.Places.AROUND_THE_POINT_DATA_SET), contentValues, BuyPlacesContract.Places.WITH_SPECIFIED_STATE_SELECTION, new String[]{String.valueOf(BuyPlacesContract.Places.State.AROUND_THE_PLAYER)});
-                for (Place object : objectList) {
-                    String id = object.getId();
-                    long checkinsCount = object.getCheckinsCount();
-                    long usersCount = object.getUsersCount();
-                    long tipCount = object.getTipCount();
-                    String name = object.getName();
-                    String category = object.getCategory();
-                    String type = object.getType();
-                    String level = object.getLevel();
-                    long owner = object.getOwner();
-                    long price = object.getPrice();
-                    float latitude = object.getLatitude();
-                    float longitude = object.getLongitude();
-
-                    ContentValues values = new ContentValues();
-                    values.put(BuyPlacesContract.Places.COLUMN_ID, id);
-                    values.put(BuyPlacesContract.Places.COLUMN_CHECKINS_COUNT, checkinsCount);
-                    values.put(BuyPlacesContract.Places.COLUMN_USERS_COUNT, usersCount);
-                    values.put(BuyPlacesContract.Places.COLUMN_TIP_COUNT, tipCount);
-                    values.put(BuyPlacesContract.Places.COLUMN_NAME, name);
-                    values.put(BuyPlacesContract.Places.COLUMN_CATEGORY, category);
-                    values.put(BuyPlacesContract.Places.COLUMN_TYPE, type);
-                    values.put(BuyPlacesContract.Places.COLUMN_LEVEL, level);
-                    values.put(BuyPlacesContract.Places.COLUMN_OWNER, owner);
-                    values.put(BuyPlacesContract.Places.COLUMN_PRICE, price);
-                    values.put(BuyPlacesContract.Places.COLUMN_LATITUDE, latitude);
-                    values.put(BuyPlacesContract.Places.COLUMN_LONGITUDE, longitude);
-                    values.put(BuyPlacesContract.Places.COLUMN_STATE, BuyPlacesContract.Places.State.AROUND_THE_PLAYER.name());
-                    mContext.getContentResolver().insert(BuyPlacesContract.Places.CONTENT_URI, values);
-                }
+                places.writeToDatabaseAsPlacesAroundThePlayer(mContext);
                 break;
         }
     }

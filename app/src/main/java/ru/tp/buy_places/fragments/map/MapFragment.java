@@ -1,7 +1,6 @@
 package ru.tp.buy_places.fragments.map;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,15 +19,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterItem;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.ClusterManager.OnClusterItemInfoWindowClickListener;
+
 import ru.tp.buy_places.R;
-import ru.tp.buy_places.activities.ObjectActivity;
-import ru.tp.buy_places.map.ObjectItem;
 import ru.tp.buy_places.map.ObjectRenderer;
+import ru.tp.buy_places.map.PlaceClusterItem;
 import ru.tp.buy_places.service.ServiceHelper;
 
 import static ru.tp.buy_places.content_provider.BuyPlacesContract.Places;
@@ -37,12 +35,15 @@ import static ru.tp.buy_places.content_provider.BuyPlacesContract.Places;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-    private ClusterManager<ObjectItem> mClusterManager;
+    private static final int ALL_PLACES_LOADER_ID = 0;
+    private static final int CHANGED_PLACE_LOADER_ID = 1;
+
+
+    private ClusterManager<PlaceClusterItem> mClusterManager;
     private MapView mMapView;
     private GoogleMap mGoogleMap;
     private LocationManager mLocationManager;
     private Marker mMyPositionMarker;
-
 
 
     public MapFragment() {
@@ -55,7 +56,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         super.onCreate(savedInstanceState);
         MapsInitializer.initialize(getActivity());
         mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(ALL_PLACES_LOADER_ID, null, this);
+
     }
 
     @Override
@@ -107,37 +109,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mGoogleMap = googleMap;
         mClusterManager = new ClusterManager<>(getActivity(), mGoogleMap);
         mClusterManager.setRenderer(new ObjectRenderer(getActivity(), mGoogleMap, mClusterManager));
-//        OnClusterItemInfoWindowClickListener clusterClickListener = new OnClusterItemInfoWindowClickListener(){
-//
-//            @Override
-//            public void onClusterItemInfoWindowClick(ClusterItem clusterItem) {
-//                Log.d("Click", "Click");
-//                Intent intent = new Intent(getActivity(), ObjectActivity.class);
-//                startActivity(intent);
-//            }
-//        };
-
-        Log.d("Click", "Click1");
-        //mClusterManager.setOnClusterClickListener(clusterClickListener);
-        mGoogleMap.setOnCameraChangeListener(mClusterManager);
+        mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+                Log.d("MapFragment", "OnCameraChanged");
+                mClusterManager.onCameraChange(cameraPosition);
+                ServiceHelper.get(getActivity()).getObjectsAroundThePoint(cameraPosition.target);
+            }
+        });
         if (mLocationManager != null) {
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 10, 10.f, this);
             Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             if (lastKnownLocation != null) {
-                ServiceHelper.get(getActivity()).getObjectsAroundThePlayer(lastKnownLocation);
-                //mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
+                Log.d("MapFragment", "OnMapReady");
+                ServiceHelper.get(getActivity()).getObjectsAroundThePlayer(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
+                mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
             }
         }
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        ServiceHelper.get(getActivity()).getObjectsAroundThePlayer(location);
+        ServiceHelper.get(getActivity()).getObjectsAroundThePlayer(new LatLng(location.getLatitude(), location.getLongitude()));
+        Log.d("MapFragment", "OnLocationChanged");
         if (mGoogleMap != null) {
             if (mMyPositionMarker == null) {
-                //mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())));
+                mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())));
             } else {
-                //mMyPositionMarker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
+                mMyPositionMarker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
             }
         }
     }
@@ -164,16 +163,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mClusterManager.clearItems();
+        if (mClusterManager != null)
+            mClusterManager.clearItems();
         while (data.moveToNext()) {
             long rowId = data.getLong(data.getColumnIndex(Places._ID));
             String id = data.getString(data.getColumnIndex(Places.COLUMN_ID));
             String name = data.getString(data.getColumnIndex(Places.COLUMN_NAME));
             double latitude = data.getDouble(data.getColumnIndex(Places.COLUMN_LATITUDE));
             double longitude = data.getDouble(data.getColumnIndex(Places.COLUMN_LONGITUDE));
-            ObjectItem objectItem = new ObjectItem(rowId, id, name, latitude, longitude);
-            mClusterManager.addItem(objectItem);
+            int isAroundThePoint = data.getInt(data.getColumnIndex(Places.COLUMN_IS_AROUND_THE_POINT));
+            int isAroundThePlayer = data.getInt(data.getColumnIndex(Places.COLUMN_IS_AROUND_THE_PLAYER));
+            int isVisitedInThePast = data.getInt(data.getColumnIndex(Places.COLUMN_IS_VISITED_IN_THE_PAST));
+            Log.d("Places row", rowId + "\t" + id + "\t" + isAroundThePoint + "\t" + isAroundThePlayer + "\t" + isVisitedInThePast + "\n");
+            PlaceClusterItem placeClusterItem = new PlaceClusterItem(rowId, id, name, latitude, longitude);
+            mClusterManager.addItem(placeClusterItem);
         }
+        Log.d("==========", "========================================================");
     }
 
     @Override

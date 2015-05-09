@@ -2,7 +2,6 @@ package ru.tp.buy_places.map;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -19,12 +18,12 @@ import ru.tp.buy_places.R;
 /**
  * Created by Ivan on 05.05.2015.
  */
-public class ObjectRenderer extends DefaultClusterRenderer<ObjectItem> {
+public class ObjectRenderer extends DefaultClusterRenderer<PlaceClusterItem> {
     private final IconGenerator mIconGenerator;
     private final IconGenerator mClusterItemGenerator;
 
 
-    public ObjectRenderer(Context context, GoogleMap map, ClusterManager<ObjectItem> clusterManager) {
+    public ObjectRenderer(Context context, GoogleMap map, ClusterManager<PlaceClusterItem> clusterManager) {
         super(context, map, clusterManager);
 
         mIconGenerator = new IconGenerator(context);
@@ -37,7 +36,7 @@ public class ObjectRenderer extends DefaultClusterRenderer<ObjectItem> {
     }
 
     @Override
-    protected void onBeforeClusterItemRendered(ObjectItem item, MarkerOptions markerOptions) {
+    protected void onBeforeClusterItemRendered(PlaceClusterItem item, MarkerOptions markerOptions) {
         mClusterItemGenerator.setColor(R.style.ClusterItemBackgroundColor);
         Bitmap icon = mClusterItemGenerator.makeIcon();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(item.getName());
@@ -45,14 +44,14 @@ public class ObjectRenderer extends DefaultClusterRenderer<ObjectItem> {
     }
 
     @Override
-    protected void onBeforeClusterRendered(Cluster<ObjectItem> cluster, MarkerOptions markerOptions) {
+    protected void onBeforeClusterRendered(Cluster<PlaceClusterItem> cluster, MarkerOptions markerOptions) {
         mIconGenerator.setColor(R.style.ClusterRenderBackgroundColor);
         Bitmap icon = mIconGenerator.makeIcon();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
     }
 
     @Override
-    protected boolean shouldRenderAsCluster(Cluster<ObjectItem> cluster) {
+    protected boolean shouldRenderAsCluster(Cluster<PlaceClusterItem> cluster) {
         return cluster.getSize() > 2;
     }
 }
