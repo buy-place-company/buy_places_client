@@ -35,6 +35,7 @@ public final class BuyPlacesContract {
         public static final String COLUMN_IS_AROUND_THE_PLAYER = "is_around_the_player";
         public static final String COLUMN_IS_VISITED_IN_THE_PAST = "is_visited_in_the_past";
         public static final String COLUMN_IS_IN_OWNERSHIP = "is_in_ownership";
+        public static final String COLUMN_STATE_UPDATING = "state_updating";
 
         public static final String[] ALL_COLUMNS_PROJECTION = {
                 _ID,
@@ -53,7 +54,8 @@ public final class BuyPlacesContract {
                 COLUMN_IS_AROUND_THE_POINT,
                 COLUMN_IS_AROUND_THE_PLAYER,
                 COLUMN_IS_VISITED_IN_THE_PAST,
-                COLUMN_IS_IN_OWNERSHIP };
+                COLUMN_IS_IN_OWNERSHIP,
+                COLUMN_STATE_UPDATING};
 
         static final String SQL_CREATE = "CREATE TABLE " + TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT" + "," +
@@ -72,7 +74,8 @@ public final class BuyPlacesContract {
                 COLUMN_IS_AROUND_THE_POINT + " INTEGER DEFAULT 0" + "," +
                 COLUMN_IS_AROUND_THE_PLAYER + " INTEGER DEFAULT 0" + "," +
                 COLUMN_IS_VISITED_IN_THE_PAST + " INTEGER DEFAULT 0" + "," +
-                COLUMN_IS_IN_OWNERSHIP + " INTEGER DEFAULT 0" + ");";
+                COLUMN_IS_IN_OWNERSHIP + " INTEGER DEFAULT 0" + "," +
+                COLUMN_STATE_UPDATING + " INTEGER DEFAULT 0" + ");";
 
         static final String SQL_DROP = "DROP TABLE IF EXISTS " + TABLE_NAME;
 

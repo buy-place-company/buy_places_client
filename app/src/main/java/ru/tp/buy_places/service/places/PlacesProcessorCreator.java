@@ -1,7 +1,6 @@
 package ru.tp.buy_places.service.places;
 
 import android.content.Context;
-import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -13,17 +12,14 @@ import static ru.tp.buy_places.service.BuyItService.ObjectsRequestMode;
 /**
  * Created by Ivan on 22.04.2015.
  */
-public class PlacesProcessorCreator implements ProcessorCreator {
+public class PlacesProcessorCreator extends ProcessorCreator {
 
     private final LatLng mPosition;
     private final ObjectsRequestMode mObjectsRequestMode;
-    private Context mContext;
-    private Processor.OnProcessorResultListener mListener;
 
 
     public PlacesProcessorCreator(Context context, Processor.OnProcessorResultListener listener, LatLng position, ObjectsRequestMode objectsRequestMode) {
-        mContext = context;
-        mListener = listener;
+        super(context, listener);
         mPosition = position;
         mObjectsRequestMode = objectsRequestMode;
     }

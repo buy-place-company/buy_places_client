@@ -30,11 +30,13 @@ public class Place implements Resource {
     private boolean mIsAroundThePlayer;
     private boolean mIsInOwnership;
     private boolean mIsVisitedInThePast;
+    private boolean mStateUpdating;
 
     private boolean mIsAroundThePointIsSet = false;
     private boolean mIsAroundThePlayerIsSet = false;
     private boolean mIsInOwnershipIsSet = false;
     private boolean mIsVisitedInThePastIsSet = false;
+    private boolean mStateUpdatingIsSet = false;
 
     public static Place fromJSONObject(JSONObject placeData) {
         String id = placeData.optString("id");
@@ -71,11 +73,13 @@ public class Place implements Resource {
         final boolean isAroundThePlayer = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_IS_AROUND_THE_PLAYER)) != 0;
         final boolean isVisitedInThePast = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_IS_VISITED_IN_THE_PAST)) != 0;
         final boolean isInOwnership = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_IS_IN_OWNERSHIP)) != 0;
+        final boolean stateUpdating = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_STATE_UPDATING)) != 0;
         Place place = new Place(rowId, id, checkinsCount, usersCount, tipCount, name, category, type, level, owner, price, latitude, longitude);
         place.setIsAroundThePoint(isAroundThePoint);
         place.setIsAroundThePlayer(isAroundThePlayer);
         place.setIsInOwnership(isInOwnership);
         place.setIsVisitedInThePast(isVisitedInThePast);
+        place.setStateUpdating(stateUpdating);
         return place;
     }
 
@@ -168,6 +172,10 @@ public class Place implements Resource {
         mIsVisitedInThePastIsSet = true;
     }
 
+    public void setStateUpdating(boolean stateUpdating) {
+        mStateUpdating = stateUpdating;
+    }
+
     public boolean getIsAroundThePointIsSet() {
         return mIsAroundThePointIsSet;
     }
@@ -198,6 +206,7 @@ public class Place implements Resource {
         values.put(BuyPlacesContract.Places.COLUMN_PRICE, mPrice);
         values.put(BuyPlacesContract.Places.COLUMN_LATITUDE, mLatitude);
         values.put(BuyPlacesContract.Places.COLUMN_LONGITUDE, mLongitude);
+
         if (mIsAroundThePointIsSet)
             values.put(BuyPlacesContract.Places.COLUMN_IS_AROUND_THE_POINT, mIsAroundThePoint);
         if (mIsAroundThePlayerIsSet)
@@ -208,7 +217,7 @@ public class Place implements Resource {
             values.put(BuyPlacesContract.Places.COLUMN_IS_VISITED_IN_THE_PAST, mIsVisitedInThePast);
         if (context.getContentResolver().update(BuyPlacesContract.Places.CONTENT_URI, values, BuyPlacesContract.Places.WITH_SPECIFIED_ID_SELECTION, new String[]{mId}) == 0)
             context.getContentResolver().insert(BuyPlacesContract.Places.CONTENT_URI, values);
+
+        values.put(BuyPlacesContract.Places.COLUMN_STATE_UPDATING, mStateUpdating);
     }
-
-
 }

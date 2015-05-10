@@ -10,11 +10,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
@@ -34,7 +35,7 @@ import ru.tp.buy_places.service.resourses.Place;
 import ru.tp.buy_places.service.resourses.Places;
 
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
     private static final int ALL_PLACES_LOADER_ID = 0;
     private static final int CHANGED_PLACE_LOADER_ID = 1;
@@ -45,6 +46,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     private GoogleMap mGoogleMap;
     private LocationManager mLocationManager;
     private Marker mMyPositionMarker;
+    private ImageButton mMyLocationImageButton;
+    private ImageButton mZoomInImageButton;
+    private ImageButton mZoomOutImageButton;
 
 
     public MapFragment() {
@@ -67,6 +71,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         mMapView = (MapView) rootView.findViewById(R.id.map_view);
         mMapView.onCreate(savedInstanceState);
+        mMyLocationImageButton = (ImageButton)rootView.findViewById(R.id.image_button_my_location);
+        mMyLocationImageButton.setOnClickListener(this);
+        mZoomInImageButton = (ImageButton)rootView.findViewById(R.id.image_button_zoom_in);
+        mZoomInImageButton.setOnClickListener(this);
+        mZoomOutImageButton = (ImageButton)rootView.findViewById(R.id.image_button_zoom_out);
+        mZoomOutImageButton.setOnClickListener(this);
         return rootView;
     }
 
@@ -113,7 +123,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-                Log.d("MapFragment", "OnCameraChanged");
                 mClusterManager.onCameraChange(cameraPosition);
                 ServiceHelper.get(getActivity()).getObjectsAroundThePoint(cameraPosition.target);
             }
@@ -122,9 +131,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 10, 10.f, this);
             Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             if (lastKnownLocation != null) {
-                Log.d("MapFragment", "OnMapReady");
                 ServiceHelper.get(getActivity()).getObjectsAroundThePlayer(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
                 mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mMyPositionMarker.getPosition(), 15f));
             }
         }
     }
@@ -132,7 +141,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     @Override
     public void onLocationChanged(Location location) {
         ServiceHelper.get(getActivity()).getObjectsAroundThePlayer(new LatLng(location.getLatitude(), location.getLongitude()));
-        Log.d("MapFragment", "OnLocationChanged");
         if (mGoogleMap != null) {
             if (mMyPositionMarker == null) {
                 mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())));
@@ -178,4 +186,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.image_button_my_location:
+                if (mGoogleMap != null && mMyPositionMarker != null)
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mMyPositionMarker.getPosition()));
+                break;
+            case R.id.image_button_zoom_in:
+                if (mGoogleMap != null)
+                    mGoogleMap.animateCamera(CameraUpdateFactory.zoomIn());
+                break;
+            case R.id.image_button_zoom_out:
+                if (mGoogleMap != null)
+                    mGoogleMap.animateCamera(CameraUpdateFactory.zoomOut());
+        }
+    }
 }

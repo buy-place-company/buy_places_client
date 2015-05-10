@@ -3,12 +3,12 @@ package ru.tp.buy_places.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import ru.tp.buy_places.service.action_with_place.ActionWithPlaceProcessorCreator;
 import ru.tp.buy_places.service.places.PlacesProcessorCreator;
 
 
@@ -18,10 +18,10 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
     private static final String EXTRA_SERVICE_CALLBACK = "EXTRA_SERVICE_CALLBACK";
     private static final String EXTRA_REQUEST_ID = "EXTRA_REQUEST_ID";
 
-    private static final String EXTRA_LATITUDE = "EXTRA_LATITUDE";
-    private static final String EXTRA_LONGITUDE = "EXTRA_LONGITUDE";
     private static final String EXTRA_POSITION = "EXTRA_POSITION";
     private static final String EXTRA_OBJECTS_REQUEST_MODE = "EXTRA_OBJECTS_REQUEST_MODE";
+    private static final String EXTRA_ACTION_WITH_OBJECT = "EXTRA_ACTION_WITH_OBJECT";
+    private static final String EXTRA_OBJECT_ID = "EXTRA_OBJECT_ID";
 
     private static final int REQUEST_INVALID = -1;
     private Intent mOriginalRequestIntent;
@@ -33,6 +33,8 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
 
 
     private static final String ACTION_GET_OBJECTS = "ru.mail.buy_it.service.ACTION_GET_NEAREST_PLACES";
+    private static final String ACTION_POST_OBJECT = "ru.mail.buy_it.service.ACTION_POST_OBJECT";
+
     private static final String ACTION_GET_PROFILE = "ru.mail.buy_it.service.ACTION_GET_PROFILE";
     private static final String ACTION_GET_USERS = "ru.mail.buy_it.service.ACTION_GET_USERS";
     private static final String ACTION_GET_DEALS = "ru.mail.buy_it.service.ACTION_GET_DEALS";
@@ -65,6 +67,38 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         context.startService(intent);
     }
 
+    public static void startBuyPlaceService(Context context, ResultReceiver serviceCallback, long requestId, String id) {
+        Intent intent = new Intent(ACTION_POST_OBJECT, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        intent.putExtra(EXTRA_ACTION_WITH_OBJECT, ActionWithPlace.BUY);
+        intent.putExtra(EXTRA_OBJECT_ID, id);
+    }
+
+    public static void startSellPlaceService(Context context, ResultReceiver serviceCallback, long requestId, String id) {
+        Intent intent = new Intent(ACTION_POST_OBJECT, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        intent.putExtra(EXTRA_ACTION_WITH_OBJECT, ActionWithPlace.SELL);
+        intent.putExtra(EXTRA_OBJECT_ID, id);
+    }
+
+    public static void startUpgradePlaceService(Context context, ResultReceiver serviceCallback, long requestId, String id) {
+        Intent intent = new Intent(ACTION_POST_OBJECT, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        intent.putExtra(EXTRA_ACTION_WITH_OBJECT, ActionWithPlace.UPGRADE);
+        intent.putExtra(EXTRA_OBJECT_ID, id);
+    }
+
+    public static void startCollectLootFromPlaceService(Context context, ResultReceiver serviceCallback, long requestId, String id) {
+        Intent intent = new Intent(ACTION_POST_OBJECT, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        intent.putExtra(EXTRA_ACTION_WITH_OBJECT, ActionWithPlace.COLLECT_LOOT);
+        intent.putExtra(EXTRA_OBJECT_ID, id);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         mOriginalRequestIntent = intent;
@@ -77,6 +111,11 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
                 Processor placesProcessor = new PlacesProcessorCreator(this, this, position, objectsRequestMode).createProcessor();
                 placesProcessor.process();
                 break;
+            case ACTION_POST_OBJECT:
+                final String id = intent.getStringExtra(EXTRA_OBJECT_ID);
+                final ActionWithPlace actionWithPlace = (ActionWithPlace) intent.getSerializableExtra(EXTRA_ACTION_WITH_OBJECT);
+                Processor actionWithPlaceProcessor = new ActionWithPlaceProcessorCreator(this, this, id, actionWithPlace).createProcessor();
+                actionWithPlaceProcessor.process();
             default:
                 mCallback.send(REQUEST_INVALID, getOriginalIntentBundle());
                 break;
@@ -97,9 +136,15 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         return originalRequest;
     }
 
-
     public enum ObjectsRequestMode {
         AROUND_THE_PLAYER,
         AROUND_THE_POINT
+    }
+
+    public enum ActionWithPlace {
+        BUY,
+        SELL,
+        UPGRADE,
+        COLLECT_LOOT
     }
 }
