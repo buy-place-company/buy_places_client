@@ -72,20 +72,9 @@ public class BuyPlacesContentProvider extends ContentProvider {
         final SQLiteDatabase db = helper.getWritableDatabase();
         switch (URI_MATCHER.match(uri)) {
             case PLACES:
-                String placeId = values.getAsString(Places.COLUMN_ID);
-                Cursor c = db.query(Places.TABLE_NAME, Places.ALL_COLUMNS_PROJECTION, Places.WITH_SPECIFIED_ID_SELECTION, new String[]{placeId}, null, null, null);
-                if (c.getCount() > 0) {
-                    c.moveToFirst();
-                    id = c.getLong(c.getColumnIndex(Places._ID));
-                    db.update(Places.TABLE_NAME, values, Places.WITH_SPECIFIED_ID_SELECTION, new String[]{placeId});
-                    result = ContentUris.withAppendedId(Places.CONTENT_URI, id);
-                    getContext().getContentResolver().notifyChange(result, null);
-                } else {
-                    id = db.insert(Places.TABLE_NAME, null, values);
-                    result = ContentUris.withAppendedId(Places.CONTENT_URI, id);
-                    getContext().getContentResolver().notifyChange(result, null);
-                }
-
+                id = db.insertOrThrow(Places.TABLE_NAME, null, values);
+                result = ContentUris.withAppendedId(uri, id);
+                getContext().getContentResolver().notifyChange(result, null);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -131,7 +120,7 @@ public class BuyPlacesContentProvider extends ContentProvider {
 
     private static final class DatabaseHelper extends SQLiteOpenHelper {
         private static final String DATABASE_NAME = "buy_places.db";
-        private static final int DATABASE_VERSION = 3;
+        private static final int DATABASE_VERSION = 4;
 
 
         public DatabaseHelper(Context context) {

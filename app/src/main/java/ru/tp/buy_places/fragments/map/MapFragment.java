@@ -26,11 +26,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.map.ObjectRenderer;
 import ru.tp.buy_places.map.PlaceClusterItem;
 import ru.tp.buy_places.service.ServiceHelper;
-
-import static ru.tp.buy_places.content_provider.BuyPlacesContract.Places;
+import ru.tp.buy_places.service.resourses.Place;
+import ru.tp.buy_places.service.resourses.Places;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener, LoaderManager.LoaderCallbacks<Cursor> {
@@ -158,27 +159,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), Places.CONTENT_URI, null, null, null, null);
+        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, null, null, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (mClusterManager != null)
             mClusterManager.clearItems();
-        while (data.moveToNext()) {
-            long rowId = data.getLong(data.getColumnIndex(Places._ID));
-            String id = data.getString(data.getColumnIndex(Places.COLUMN_ID));
-            String name = data.getString(data.getColumnIndex(Places.COLUMN_NAME));
-            double latitude = data.getDouble(data.getColumnIndex(Places.COLUMN_LATITUDE));
-            double longitude = data.getDouble(data.getColumnIndex(Places.COLUMN_LONGITUDE));
-            int isAroundThePoint = data.getInt(data.getColumnIndex(Places.COLUMN_IS_AROUND_THE_POINT));
-            int isAroundThePlayer = data.getInt(data.getColumnIndex(Places.COLUMN_IS_AROUND_THE_PLAYER));
-            int isVisitedInThePast = data.getInt(data.getColumnIndex(Places.COLUMN_IS_VISITED_IN_THE_PAST));
-            Log.d("Places row", rowId + "\t" + id + "\t" + isAroundThePoint + "\t" + isAroundThePlayer + "\t" + isVisitedInThePast + "\n");
-            PlaceClusterItem placeClusterItem = new PlaceClusterItem(rowId, id, name, latitude, longitude);
+        Places places = Places.fromCursor(data);
+        for (Place place: places.getPlaces()) {
+            PlaceClusterItem placeClusterItem = new PlaceClusterItem(place);
             mClusterManager.addItem(placeClusterItem);
         }
-        Log.d("==========", "========================================================");
     }
 
     @Override
