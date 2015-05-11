@@ -29,4 +29,9 @@ public class PlaceClusterItem implements ClusterItem {
     public int hashCode() {
         return mPlace.getId().hashCode();
     }
+
+
+    public long getPrice() {
+        return mPlace.getPrice();
+    }
 }

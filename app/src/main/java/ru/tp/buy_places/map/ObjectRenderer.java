@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -21,9 +22,10 @@ import ru.tp.buy_places.R;
 public class ObjectRenderer extends DefaultClusterRenderer<PlaceClusterItem> {
     private final IconGenerator mIconGenerator;
     private final IconGenerator mClusterItemGenerator;
+    private final OnClusterItemRenderedListener mOnClusterItemRenderedListerer;
 
 
-    public ObjectRenderer(Context context, GoogleMap map, ClusterManager<PlaceClusterItem> clusterManager) {
+    public ObjectRenderer(Context context, GoogleMap map, ClusterManager<PlaceClusterItem> clusterManager, OnClusterItemRenderedListener onClusterItemRenderedListener) {
         super(context, map, clusterManager);
 
         mIconGenerator = new IconGenerator(context);
@@ -33,7 +35,16 @@ public class ObjectRenderer extends DefaultClusterRenderer<PlaceClusterItem> {
         mClusterItemGenerator = new IconGenerator(context);
         View placesClusterItemMarkerLayout = LayoutInflater.from(context).inflate(R.layout.place_cluster_item_marker, null);
         mClusterItemGenerator.setContentView(placesClusterItemMarkerLayout);
+        mOnClusterItemRenderedListerer = onClusterItemRenderedListener;
     }
+
+    @Override
+    protected void onClusterItemRendered(PlaceClusterItem clusterItem, Marker marker) {
+        super.onClusterItemRendered(clusterItem, marker);
+        mOnClusterItemRenderedListerer.onClusterItemRendered(clusterItem, marker);
+    }
+
+
 
     @Override
     protected void onBeforeClusterItemRendered(PlaceClusterItem item, MarkerOptions markerOptions) {
@@ -53,5 +64,9 @@ public class ObjectRenderer extends DefaultClusterRenderer<PlaceClusterItem> {
     @Override
     protected boolean shouldRenderAsCluster(Cluster<PlaceClusterItem> cluster) {
         return cluster.getSize() > 2;
+    }
+
+    public interface OnClusterItemRenderedListener {
+        void onClusterItemRendered(PlaceClusterItem clusterItem, Marker marker);
     }
 }
