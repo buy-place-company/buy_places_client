@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,6 +43,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
 
     private ClusterManager<PlaceClusterItem> mClusterManager;
+    private CustomInfoWindowAdapter adapter;
     private MapView mMapView;
     private GoogleMap mGoogleMap;
     private LocationManager mLocationManager;
@@ -117,6 +119,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        adapter = new CustomInfoWindowAdapter(getActivity());
         mGoogleMap = googleMap;
         mClusterManager = new ClusterManager<>(getActivity(), mGoogleMap);
         mClusterManager.setRenderer(new ObjectRenderer(getActivity(), mGoogleMap, mClusterManager));
@@ -127,13 +130,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 ServiceHelper.get(getActivity()).getObjectsAroundThePoint(cameraPosition.target);
             }
         });
+        mGoogleMap.setInfoWindowAdapter(adapter);
         if (mLocationManager != null) {
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 10, 10.f, this);
             Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             if (lastKnownLocation != null) {
                 ServiceHelper.get(getActivity()).getObjectsAroundThePlayer(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
                 mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
+
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mMyPositionMarker.getPosition(), 15f));
+
             }
         }
     }
