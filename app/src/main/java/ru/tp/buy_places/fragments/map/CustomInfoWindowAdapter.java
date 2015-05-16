@@ -1,10 +1,12 @@
 package ru.tp.buy_places.fragments.map;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
@@ -40,11 +42,12 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter, Obj
             PlaceClusterItem item = mMarkerToPlaceClusterItem.get(marker);
             if (item != null) {
                 View v = LayoutInflater.from(mContext).inflate(R.layout.object_infowindow, null);
-                Button buyButton = (Button) v.findViewById(R.id.button_buy_object);
+
                 TextView tvName = (TextView) v.findViewById(R.id.text_view_object_custom_name);
                 TextView tvPrice = (TextView) v.findViewById(R.id.text_view_object_custom_price);
                 tvPrice.setText(Long.toString(item.getPrice()));
                 tvName.setText(item.getName());
+
                 return v;
             }
         }

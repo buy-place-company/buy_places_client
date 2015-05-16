@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import ru.tp.buy_places.R;
 
-public class ObjectActivity extends ActionBarActivity implements OnClickListener
+public class PlaceActivity extends ActionBarActivity implements OnClickListener
 {
 
     private Button upgrade;

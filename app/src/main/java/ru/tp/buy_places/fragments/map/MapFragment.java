@@ -1,6 +1,7 @@
 package ru.tp.buy_places.fragments.map;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
@@ -27,6 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.activities.PlaceActivity;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.map.ObjectRenderer;
 import ru.tp.buy_places.map.PlaceClusterItem;
@@ -132,6 +134,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         });
         mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
         mGoogleMap.setInfoWindowAdapter(mInfoWindowAdapter);
+
+        mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+
+                Intent intent = new Intent(getActivity(), PlaceActivity.class);
+                startActivity(intent);
+            }
+        });
+
         if (mLocationManager != null) {
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 10, 10.f, this);
             Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
