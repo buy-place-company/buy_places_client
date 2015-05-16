@@ -50,7 +50,7 @@ public class Places implements Resource {
     }
 
     private boolean checkIsInOwnership(Context context, String id) {
-        // TODO Запростить у AccountManager'а id пользователя и сравнить с переданным
+        // TODO Request Account Manager player's id and compare with parameter
         return false;
     }
 

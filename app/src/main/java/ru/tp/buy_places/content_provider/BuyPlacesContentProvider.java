@@ -55,6 +55,10 @@ public class BuyPlacesContentProvider extends ContentProvider {
         int deleted;
         SQLiteDatabase db = helper.getWritableDatabase();
         switch (URI_MATCHER.match(uri)) {
+            case PLACES_ID:
+                final long id = ContentUris.parseId(uri);
+                deleted = db.delete(Places.TABLE_NAME, Places.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(id)});
+                break;
             case PLACES:
                 deleted = db.delete(Places.TABLE_NAME, selection, selectionArgs);
                 break;
@@ -71,6 +75,7 @@ public class BuyPlacesContentProvider extends ContentProvider {
         long id;
         final SQLiteDatabase db = helper.getWritableDatabase();
         switch (URI_MATCHER.match(uri)) {
+            case PLACES_ID:
             case PLACES:
                 id = db.insertOrThrow(Places.TABLE_NAME, null, values);
                 result = ContentUris.withAppendedId(uri, id);
@@ -88,11 +93,12 @@ public class BuyPlacesContentProvider extends ContentProvider {
         Cursor cursor;
         final SQLiteDatabase db = helper.getReadableDatabase();
         switch (URI_MATCHER.match(uri)) {
+            case PLACES_ID:
+                final long id = ContentUris.parseId(uri);
+                cursor = db.query(Places.TABLE_NAME, Places.ALL_COLUMNS_PROJECTION, Places.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(id)}, null, null, null, null);
+                break;
             case PLACES:
                 cursor = db.query(Places.TABLE_NAME, Places.ALL_COLUMNS_PROJECTION, null, null, null, null, null);
-                break;
-            case PLACES_ID:
-                cursor = db.query(Places.TABLE_NAME, Places.ALL_COLUMNS_PROJECTION, Places._ID + "=?", new String[]{uri.getLastPathSegment()}, null, null, null, null);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -107,6 +113,10 @@ public class BuyPlacesContentProvider extends ContentProvider {
         int updated;
         SQLiteDatabase db = helper.getWritableDatabase();
         switch (URI_MATCHER.match(uri)) {
+            case PLACES_ID:
+                final long id = ContentUris.parseId(uri);
+                updated = db.update(Places.TABLE_NAME, values, Places.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(id)});
+                break;
             case PLACES:
                 updated = db.update(Places.TABLE_NAME, values, selection, selectionArgs);
                 getContext().getContentResolver().notifyChange(Places.CONTENT_URI, null);
@@ -120,7 +130,7 @@ public class BuyPlacesContentProvider extends ContentProvider {
 
     private static final class DatabaseHelper extends SQLiteOpenHelper {
         private static final String DATABASE_NAME = "buy_places.db";
-        private static final int DATABASE_VERSION = 5;
+        private static final int DATABASE_VERSION = 6;
 
 
         public DatabaseHelper(Context context) {

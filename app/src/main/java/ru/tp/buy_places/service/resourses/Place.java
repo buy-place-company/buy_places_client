@@ -66,7 +66,7 @@ public class Place implements Resource {
         String type = row.getString(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_TYPE));
         int level = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_LEVEL));
         long owner = row.getLong(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_OWNER));
-        long price = row.getLong(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_PRICE));
+        long price = row.getLong(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_BUY_PRICE));
         double latitude = row.getDouble(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_LATITUDE));
         double longitude = row.getDouble(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_LONGITUDE));
         final boolean isAroundThePoint = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_IS_AROUND_THE_POINT)) != 0;
@@ -203,7 +203,7 @@ public class Place implements Resource {
         values.put(BuyPlacesContract.Places.COLUMN_TYPE, mType);
         values.put(BuyPlacesContract.Places.COLUMN_LEVEL, mLevel);
         values.put(BuyPlacesContract.Places.COLUMN_OWNER, mOwner);
-        values.put(BuyPlacesContract.Places.COLUMN_PRICE, mPrice);
+        values.put(BuyPlacesContract.Places.COLUMN_BUY_PRICE, mPrice);
         values.put(BuyPlacesContract.Places.COLUMN_LATITUDE, mLatitude);
         values.put(BuyPlacesContract.Places.COLUMN_LONGITUDE, mLongitude);
 

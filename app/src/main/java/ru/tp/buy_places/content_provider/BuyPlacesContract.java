@@ -28,9 +28,14 @@ public final class BuyPlacesContract {
         public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_LEVEL = "level";
         public static final String COLUMN_OWNER = "owner";
-        public static final String COLUMN_PRICE = "price";
         public static final String COLUMN_LATITUDE = "latitude";
         public static final String COLUMN_LONGITUDE = "longitude";
+        public static final String COLUMN_MAX_LOOT = "max_loot";
+        public static final String COLUMN_LOOT = "loot";
+        public static final String COLUMN_BUY_PRICE = "buy_price";
+        public static final String COLUMN_SELL_PRICE = "sell_price";
+        public static final String COLUMN_DEAL_PRICE = "deal_price";
+        public static final String COLUMN_UPGRADE_PRICE = "upgrade_price";
         public static final String COLUMN_IS_AROUND_THE_POINT = "is_around_the_point";
         public static final String COLUMN_IS_AROUND_THE_PLAYER = "is_around_the_player";
         public static final String COLUMN_IS_VISITED_IN_THE_PAST = "is_visited_in_the_past";
@@ -48,9 +53,14 @@ public final class BuyPlacesContract {
                 COLUMN_TYPE,
                 COLUMN_LEVEL,
                 COLUMN_OWNER,
-                COLUMN_PRICE,
                 COLUMN_LATITUDE,
                 COLUMN_LONGITUDE,
+                COLUMN_MAX_LOOT,
+                COLUMN_LOOT,
+                COLUMN_BUY_PRICE,
+                COLUMN_SELL_PRICE,
+                COLUMN_DEAL_PRICE,
+                COLUMN_UPGRADE_PRICE,
                 COLUMN_IS_AROUND_THE_POINT,
                 COLUMN_IS_AROUND_THE_PLAYER,
                 COLUMN_IS_VISITED_IN_THE_PAST,
@@ -68,9 +78,14 @@ public final class BuyPlacesContract {
                 COLUMN_TYPE + " TEXT" + "," +
                 COLUMN_LEVEL + " INTEGER" + "," +
                 COLUMN_OWNER + " INTEGER" + "," +
-                COLUMN_PRICE + " INTEGER" + "," +
                 COLUMN_LATITUDE + " REAL" + "," +
                 COLUMN_LONGITUDE + " REAL" + "," +
+                COLUMN_MAX_LOOT + " INTEGER" + "," +
+                COLUMN_LOOT + " INTEGER" + "," +
+                COLUMN_BUY_PRICE + " INTEGER" + "," +
+                COLUMN_SELL_PRICE + " INTEGER" + "," +
+                COLUMN_DEAL_PRICE + " INTEGER" + "," +
+                COLUMN_UPGRADE_PRICE + " INTEGER" + "," +
                 COLUMN_IS_AROUND_THE_POINT + " INTEGER DEFAULT 0" + "," +
                 COLUMN_IS_AROUND_THE_PLAYER + " INTEGER DEFAULT 0" + "," +
                 COLUMN_IS_VISITED_IN_THE_PAST + " INTEGER DEFAULT 0" + "," +
@@ -84,12 +99,10 @@ public final class BuyPlacesContract {
                 COLUMN_IS_AROUND_THE_POINT + "=1 AND " +
                         COLUMN_IS_AROUND_THE_PLAYER + "=0 AND " +
                         COLUMN_IS_VISITED_IN_THE_PAST + "=0";
-
+        public static final String WITH_SPECIFIED_ROW_ID_SELECTION = _ID + "=?";
+        public static final String WITH_SPECIFIED_ID_SELECTION = COLUMN_ID + "=?";
         public static final String AROUND_THE_POINT_SELECTION = COLUMN_IS_AROUND_THE_POINT + "=1";
         public static final String AROUND_THE_PLAYER_SELECTION = COLUMN_IS_AROUND_THE_PLAYER + "=1";
-
-
-        public static final String WITH_SPECIFIED_ID_SELECTION = COLUMN_ID + "=?";
 
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, TABLE_NAME);
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.buy_places." + TABLE_NAME;
