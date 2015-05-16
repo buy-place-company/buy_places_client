@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import ru.tp.buy_places.R;
-import ru.tp.buy_places.activities.ObjectActivity;
 import ru.tp.buy_places.activities.UserActivity;
 
 /**

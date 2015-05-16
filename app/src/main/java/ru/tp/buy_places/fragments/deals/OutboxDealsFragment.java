@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import ru.tp.buy_places.R;
-import ru.tp.buy_places.activities.ObjectActivity;
+import ru.tp.buy_places.activities.PlaceActivity;
 
 public class OutboxDealsFragment extends Fragment {
 
@@ -77,7 +77,7 @@ public class OutboxDealsFragment extends Fragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), ObjectActivity.class);
+                Intent intent = new Intent(getActivity(), PlaceActivity.class);
                 startActivity(intent);
             }
         });
