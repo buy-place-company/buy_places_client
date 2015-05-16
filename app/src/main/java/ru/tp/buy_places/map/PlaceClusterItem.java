@@ -34,4 +34,9 @@ public class PlaceClusterItem implements ClusterItem {
     public long getPrice() {
         return mPlace.getPrice();
     }
+
+
+    public long getRowId() {
+        return mPlace.getRowId();
+    }
 }

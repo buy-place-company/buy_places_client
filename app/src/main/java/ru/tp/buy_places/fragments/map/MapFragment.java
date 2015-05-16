@@ -135,7 +135,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
         mGoogleMap.setInfoWindowAdapter(mInfoWindowAdapter);
 
-        mGoogleMap.setOnInfoWindowClickListener((GoogleMap.OnInfoWindowClickListener) mInfoWindowAdapter);
+        mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = new Intent(getActivity(), PlaceActivity.class);
+                PlaceClusterItem item = mInfoWindowAdapter.getItem(marker);
+                if (item !=  null) {
+                    Long id = (Long)item.getRowId();
+                    intent.putExtra("EXTRA_PLACE_ID", id.toString());
+                } else intent.putExtra("EXTRA_PLACE_ID", "ANONYMOUS");
+                startActivity(intent);
+            }
+        });
 
         if (mLocationManager != null) {
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 10, 10.f, this);

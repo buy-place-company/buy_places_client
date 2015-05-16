@@ -25,10 +25,11 @@ import ru.tp.buy_places.map.PlaceClusterItem;
 /**
  * Created by home on 11.05.2015.
  */
-public class CustomInfoWindowAdapter implements ClusterManager.OnClusterInfoWindowClickListener, GoogleMap.InfoWindowAdapter, ObjectRenderer.OnClusterItemRenderedListener {
+public class CustomInfoWindowAdapter implements  GoogleMap.InfoWindowAdapter, ObjectRenderer.OnClusterItemRenderedListener {
 
     private final Context mContext;
     private Map<Marker, PlaceClusterItem> mMarkerToPlaceClusterItem = new HashMap<>();
+    private PlaceClusterItem mItem;
 
     CustomInfoWindowAdapter(Context context){
         mContext = context;
@@ -43,13 +44,13 @@ public class CustomInfoWindowAdapter implements ClusterManager.OnClusterInfoWind
     @Override
     public View getInfoContents(Marker marker) {
         if (mMarkerToPlaceClusterItem.containsKey(marker)) {
-            PlaceClusterItem item = mMarkerToPlaceClusterItem.get(marker);
-            if (item != null) {
+            mItem = mMarkerToPlaceClusterItem.get(marker);
+            if (mItem != null) {
                 View v = LayoutInflater.from(mContext).inflate(R.layout.object_infowindow, null);
                 TextView tvName = (TextView) v.findViewById(R.id.text_view_object_custom_name);
                 TextView tvPrice = (TextView) v.findViewById(R.id.text_view_object_custom_price);
-                tvPrice.setText(Long.toString(item.getPrice()));
-                tvName.setText(item.getName());
+                tvPrice.setText(Long.toString(mItem.getPrice()));
+                tvName.setText(mItem.getName());
 
                 return v;
             }
@@ -62,11 +63,11 @@ public class CustomInfoWindowAdapter implements ClusterManager.OnClusterInfoWind
         mMarkerToPlaceClusterItem.put(marker, clusterItem);
     }
 
-    @Override
-    public void onClusterInfoWindowClick(Cluster cluster) {
-
-        Intent intent = new Intent(mContext, PlaceActivity.class);
-       // intent.putExtra("EXTRA_PLACE_ID", );
-        mContext.startActivity(intent);
+    public PlaceClusterItem getItem(Marker marker) {
+        if (mMarkerToPlaceClusterItem.containsKey(marker)) {
+            mItem = mMarkerToPlaceClusterItem.get(marker);
+            return mItem;
+        }
+        return null;
     }
 }
