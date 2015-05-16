@@ -135,14 +135,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
         mGoogleMap.setInfoWindowAdapter(mInfoWindowAdapter);
 
-        mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-
-                Intent intent = new Intent(getActivity(), PlaceActivity.class);
-                startActivity(intent);
-            }
-        });
+        mGoogleMap.setOnInfoWindowClickListener((GoogleMap.OnInfoWindowClickListener) mInfoWindowAdapter);
 
         if (mLocationManager != null) {
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 10, 10.f, this);
