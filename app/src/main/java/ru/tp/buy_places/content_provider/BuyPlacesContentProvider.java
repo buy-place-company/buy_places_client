@@ -12,7 +12,9 @@ import android.net.Uri;
 import android.util.Log;
 
 import static ru.tp.buy_places.content_provider.BuyPlacesContract.AUTHORITY;
+import static ru.tp.buy_places.content_provider.BuyPlacesContract.Deals;
 import static ru.tp.buy_places.content_provider.BuyPlacesContract.Places;
+import static ru.tp.buy_places.content_provider.BuyPlacesContract.Players;
 
 public class BuyPlacesContentProvider extends ContentProvider {
     private static final UriMatcher URI_MATCHER;
@@ -22,11 +24,15 @@ public class BuyPlacesContentProvider extends ContentProvider {
 
     private static final int PLACES = 0;
     private static final int PLACES_ID = 1;
+    private static final int PLAYERS = 2;
+    private static final int PLAYERS_ID = 3;
 
     static {
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
         URI_MATCHER.addURI(AUTHORITY, Places.TABLE_NAME, PLACES);
         URI_MATCHER.addURI(AUTHORITY, Places.TABLE_NAME + "/#", PLACES_ID);
+        URI_MATCHER.addURI(AUTHORITY, Players.TABLE_NAME, PLAYERS);
+        URI_MATCHER.addURI(AUTHORITY, Players.TABLE_NAME + "/#", PLAYERS_ID);
     }
 
     public BuyPlacesContentProvider() {
@@ -77,7 +83,13 @@ public class BuyPlacesContentProvider extends ContentProvider {
         switch (URI_MATCHER.match(uri)) {
             case PLACES_ID:
             case PLACES:
-                id = db.insertOrThrow(Places.TABLE_NAME, null, values);
+                id = db.insert(Places.TABLE_NAME, null, values);
+                result = ContentUris.withAppendedId(uri, id);
+                getContext().getContentResolver().notifyChange(result, null);
+                break;
+            case PLAYERS_ID:
+            case PLAYERS:
+                id = db.insert(Players.TABLE_NAME, null, values);
                 result = ContentUris.withAppendedId(uri, id);
                 getContext().getContentResolver().notifyChange(result, null);
                 break;
@@ -94,11 +106,18 @@ public class BuyPlacesContentProvider extends ContentProvider {
         final SQLiteDatabase db = helper.getReadableDatabase();
         switch (URI_MATCHER.match(uri)) {
             case PLACES_ID:
-                final long id = ContentUris.parseId(uri);
-                cursor = db.query(Places.TABLE_NAME, Places.ALL_COLUMNS_PROJECTION, Places.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(id)}, null, null, null, null);
+                final long placesRowId = ContentUris.parseId(uri);
+                cursor = db.query(Places.WITH_OWNERS_TABLE_NAME, Places.WITH_OWNERS_COLUMNS_PROJECTION, Places.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(placesRowId)}, null, null, null, null);
                 break;
             case PLACES:
-                cursor = db.query(Places.TABLE_NAME, Places.ALL_COLUMNS_PROJECTION, null, null, null, null, null);
+                cursor = db.query(Places.WITH_OWNERS_TABLE_NAME, Places.WITH_OWNERS_COLUMNS_PROJECTION, null, null, null, null, null);
+                break;
+            case PLAYERS_ID:
+                final long playersRowId = ContentUris.parseId(uri);
+                cursor = db.query(Players.TABLE_NAME, Players.ALL_COLUMNS_PROJECTION, Players.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(playersRowId)}, null, null, null);
+                break;
+            case PLAYERS:
+                cursor = db.query(Players.TABLE_NAME, Players.ALL_COLUMNS_PROJECTION, null, null, null, null, null);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -114,12 +133,21 @@ public class BuyPlacesContentProvider extends ContentProvider {
         SQLiteDatabase db = helper.getWritableDatabase();
         switch (URI_MATCHER.match(uri)) {
             case PLACES_ID:
-                final long id = ContentUris.parseId(uri);
-                updated = db.update(Places.TABLE_NAME, values, Places.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(id)});
+                final long placesId = ContentUris.parseId(uri);
+                updated = db.update(Places.TABLE_NAME, values, Places.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(placesId)});
                 break;
             case PLACES:
                 updated = db.update(Places.TABLE_NAME, values, selection, selectionArgs);
                 getContext().getContentResolver().notifyChange(Places.CONTENT_URI, null);
+                break;
+            case PLAYERS_ID:
+                final long playersId = ContentUris.parseId(uri);
+                updated = db.update(Players.TABLE_NAME, values, Players.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(playersId)});
+                getContext().getContentResolver().notifyChange(Places.CONTENT_URI, null);
+                break;
+            case PLAYERS:
+                updated = db.update(Players.TABLE_NAME, values, selection, selectionArgs);
+                getContext().getContentResolver().notifyChange(Players.CONTENT_URI, null);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -130,7 +158,7 @@ public class BuyPlacesContentProvider extends ContentProvider {
 
     private static final class DatabaseHelper extends SQLiteOpenHelper {
         private static final String DATABASE_NAME = "buy_places.db";
-        private static final int DATABASE_VERSION = 6;
+        private static final int DATABASE_VERSION = 8;
 
 
         public DatabaseHelper(Context context) {
@@ -140,13 +168,17 @@ public class BuyPlacesContentProvider extends ContentProvider {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
+            db.execSQL(Players.SQL_CREATE);
             db.execSQL(Places.SQL_CREATE);
+            db.execSQL(Deals.SQL_CREATE);
         }
 
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            db.execSQL(Deals.SQL_DROP);
             db.execSQL(Places.SQL_DROP);
+            db.execSQL(Players.SQL_DROP);
             onCreate(db);
         }
     }

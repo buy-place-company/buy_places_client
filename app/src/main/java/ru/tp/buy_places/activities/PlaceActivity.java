@@ -1,9 +1,16 @@
 package ru.tp.buy_places.activities;
 
 import android.app.AlertDialog;
+import android.content.ContentUris;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,13 +18,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.content_provider.BuyPlacesContract;
+import ru.tp.buy_places.service.resourses.Place;
 
-public class PlaceActivity extends ActionBarActivity implements OnClickListener
-{
+public class PlaceActivity extends ActionBarActivity implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+    private static final int PLACE_LOADER_ID = 0;
+    private static final String EXTRA_PLACES_ROW_ID = "EXTRA_PLACES_ROW_ID";
     private TextView placeName;
     private Button upgrade;
     private Button sell;
@@ -33,6 +41,7 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener
         if (toolbar != null)
             setSupportActionBar(toolbar);
         Intent intent = getIntent();
+        long placeRowId = Long.parseLong(intent.getStringExtra("EXTRA_PLACE_ID"));
         placeName = (TextView)findViewById(R.id.text_view_object_name);
         if (intent.getStringExtra("EXTRA_PLACE_ID") != null) {
             placeName.setText(intent.getStringExtra("EXTRA_PLACE_ID"));
@@ -77,8 +86,9 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener
 
         upgrade.setOnClickListener(upgradeListener);
         sell.setOnClickListener(sellListener);
-
-
+        Bundle args = new Bundle();
+        args.putLong(EXTRA_PLACES_ROW_ID, placeRowId);
+        getSupportLoaderManager().initLoader(PLACE_LOADER_ID, args, this);
     }
 
 
@@ -107,6 +117,27 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener
 
     @Override
     public void onClick(View v) {
+
+    }
+
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        final long placesRowId = args.getLong(EXTRA_PLACES_ROW_ID);
+        final Uri placesUri = ContentUris.withAppendedId(BuyPlacesContract.Places.CONTENT_URI, placesRowId);
+        return new CursorLoader(this, placesUri, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data.moveToFirst()) {
+            Place place = Place.fromCursor(data);
+            new Integer(3).toString();
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
 
     }
 }

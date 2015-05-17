@@ -23,7 +23,7 @@ public class Player implements Resource {
     private final int mMaxPlaces;
     private long mRowId;
 
-    private Player(long id, String username, int level, String avatar, long score, int places, int maxPlaces) {
+    public Player(long id, String username, int level, String avatar, long score, int places, int maxPlaces) {
         mId = id;
         mUsername = username;
         mLevel = level;
@@ -79,7 +79,9 @@ public class Player implements Resource {
             id = ContentUris.parseId(uri);
         } else {
             Cursor cursor = context.getContentResolver().query(BuyPlacesContract.Players.CONTENT_URI, BuyPlacesContract.Players.ALL_COLUMNS_PROJECTION, BuyPlacesContract.Players.WITH_SPECIFIED_ID_SELECTION, new String[]{Long.toString(mId)}, null);
+            cursor.moveToFirst();
             id = cursor.getLong(cursor.getColumnIndex(BuyPlacesContract.Players._ID));
+            cursor.close();
         }
         return id;
     }

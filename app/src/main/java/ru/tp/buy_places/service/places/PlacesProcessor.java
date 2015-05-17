@@ -46,7 +46,7 @@ public class PlacesProcessor extends Processor {
     protected Response parseResponseJSONObject(JSONObject responseJSONObject) {
         int status = responseJSONObject.optInt("code");
         String message = responseJSONObject.optString("message", null);
-        JSONArray dataJSONArray = responseJSONObject.optJSONArray("data");
+        JSONArray dataJSONArray = responseJSONObject.optJSONArray("places");
         Places places = Places.fromJSONArray(dataJSONArray);
         return new Response(status, message, places);
     }
