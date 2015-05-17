@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:text="LVL1"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/text_view_user_level"
+                android:id="@+id/text_view_place_level"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
@@ -37,9 +37,9 @@
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:id="@+id/image_view_user"
+                android:id="@+id/image_view_place"
                 android:src="@drawable/h0"
-                android:layout_below="@+id/text_view_user_level"
+                android:layout_below="@+id/text_view_place_level"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp" />
 
@@ -49,7 +49,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="МГТУ им Баумана"
                 android:id="@+id/text_view_object_name"
-                android:layout_below="@+id/image_view_user"
+                android:layout_below="@+id/image_view_place"
                 android:layout_centerHorizontal="true" />
 
             <Button
@@ -58,7 +58,7 @@
                 android:text="Улучшить за 500"
                 android:id="@+id/button_upgrade"
                 android:layout_alignParentBottom="true"
-                android:layout_toLeftOf="@+id/image_view_user"
+                android:layout_toLeftOf="@+id/image_view_place"
                 android:layout_marginBottom="15dp" />
 
             <Button
@@ -67,9 +67,8 @@
                 android:text="Продать"
                 android:id="@+id/button_sell"
                 android:layout_alignTop="@+id/button_upgrade"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="false"
-                android:layout_toRightOf="@+id/image_view_user"
+                android:layout_toRightOf="@+id/image_view_place"
                 android:layout_marginBottom="15dp" />
 
             <TextView
@@ -196,10 +195,10 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/imageView2"
                 android:src="@mipmap/ic_location"
-                android:layout_alignTop="@+id/text_view_user_level"
+                android:layout_alignTop="@+id/text_view_place_level"
                 android:layout_alignLeft="@+id/text_view_price_value"
                 android:layout_alignStart="@+id/text_view_price_value"
-                android:layout_above="@+id/image_view_user" />
+                android:layout_above="@+id/image_view_place" />
 
 
         </RelativeLayout>

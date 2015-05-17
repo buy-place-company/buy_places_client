@@ -145,6 +145,10 @@ public class Place implements Resource {
         return mId;
     }
 
+    public long getRowId() {
+        return mRowId;
+    }
+
     public long getCheckinsCount() {
         return mCheckinsCount;
     }
