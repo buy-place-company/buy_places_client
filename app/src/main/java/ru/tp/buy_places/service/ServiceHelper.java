@@ -42,7 +42,7 @@ public class ServiceHelper {
     }
 
 
-    public long getObjectsAroundThePoint(LatLng position) {
+    public long getPlacesAroundThePoint(LatLng position) {
         long requestId = mRequestIdGenerator.incrementAndGet();
         mPendingRequests.put(OBJECTS, requestId);
         ResultReceiver serviceCallback = new ResultReceiver(null) {
@@ -55,7 +55,7 @@ public class ServiceHelper {
         return requestId;
     }
 
-    public long getObjectsAroundThePlayer(LatLng position) {
+    public long getPlacesAroundThePlayer(LatLng position) {
         long requestId = mRequestIdGenerator.incrementAndGet();
         mPendingRequests.put(OBJECTS, requestId);
         ResultReceiver serviceCallback = new ResultReceiver(null) {
@@ -66,6 +66,14 @@ public class ServiceHelper {
         };
         BuyItService.startGetPlacesAroundThePlayerService(mContext, serviceCallback, requestId, position);
         return requestId;
+    }
+
+    public long getMyPlaces() {
+        return 0;
+    }
+
+    public long getPlayersPlaces(long id) {
+        return 0;
     }
 
     public long buyPlace(String id) {
@@ -107,18 +115,6 @@ public class ServiceHelper {
         return requestId;
     }
 
-    private void handleUpgradePlaceResponse(int resultCode, Bundle resultData) {
-        Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
-        if (originalRequestIntent != null) {
-            long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
-            mPendingRequests.remove(OBJECTS);
-            Intent result = new Intent(ACTION_REQUEST_RESULT);
-            result.putExtra(EXTRA_REQUEST_ID, requestId);
-            result.putExtra(EXTRA_RESULT_CODE, resultCode);
-            mContext.sendBroadcast(result);
-        }
-    }
-
     public long collectLootFromPlace(String id) {
         long requestId = mRequestIdGenerator.incrementAndGet();
         mPendingRequests.put(OBJECTS, requestId);
@@ -130,6 +126,38 @@ public class ServiceHelper {
         };
         BuyItService.startCollectLootFromPlaceService(mContext, serviceCallback, requestId, id);
         return requestId;
+    }
+
+    public long getProfile() {
+        return 0;
+    }
+
+    public long getRating() {
+        return 0;
+    }
+
+    public long getDeals() {
+        return 0;
+    }
+
+    public long acceptDeal(long id) {
+        return 0;
+    }
+
+    public long rejectDeal(long id) {
+        return 0;
+    }
+
+    private void handleUpgradePlaceResponse(int resultCode, Bundle resultData) {
+        Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
+        if (originalRequestIntent != null) {
+            long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
+            mPendingRequests.remove(OBJECTS);
+            Intent result = new Intent(ACTION_REQUEST_RESULT);
+            result.putExtra(EXTRA_REQUEST_ID, requestId);
+            result.putExtra(EXTRA_RESULT_CODE, resultCode);
+            mContext.sendBroadcast(result);
+        }
     }
 
     private void handleCollectLootFormPlaceResponse(int resultCode, Bundle resultData) {

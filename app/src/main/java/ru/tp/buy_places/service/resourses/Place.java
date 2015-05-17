@@ -21,8 +21,15 @@ public class Place implements Resource {
     private final String mCategory;
     private final String mType;
     private final int mLevel;
-    private final long mOwner;
-    private final long mPrice;
+    private final Player mOwner;
+    private final long mBuyPrice;
+    private final long mSellPrice;
+    private final long mDealPrice;
+    private final long mUpgradePrice;
+    private final long mLoot;
+    private final long mMaxLoot;
+    private final long mIncome;
+    private final long mExpense;
     private final double mLatitude;
     private final double mLongitude;
 
@@ -48,11 +55,18 @@ public class Place implements Resource {
         String category = placeData.optString("category");
         String type = placeData.optString("type");
         int level = placeData.optInt("level");
-        long owner = placeData.optLong("owner");
-        long price = placeData.optLong("price");
+        Player owner = Player.fromJSONObject(placeData.optJSONObject("owner"));
+        long buyPrice = placeData.optLong("buy_price");
+        long sellPrice = placeData.optLong("sell_price");
+        long dealPrice = placeData.optLong("deal_price");
+        long upgradePrice = placeData.optLong("upgrade_price");
+        long loot = placeData.optLong("loot");
+        long maxLoot = placeData.optLong("max_loot");
+        long income = placeData.optLong("income");
+        long expense = placeData.optLong("expense");
         double latitude = placeData.optDouble("latitude");
         double longitude = placeData.optDouble("longitude");
-        return new Place(id, checkinsCount, usersCount, tipCount, name, category, type, level, owner, price, latitude, longitude);
+        return new Place(id, checkinsCount, usersCount, tipCount, name, category, type, level, owner, buyPrice, sellPrice, dealPrice, upgradePrice, loot, maxLoot, income, expense, latitude, longitude);
     }
 
     public static Place fromCursor(Cursor row) {
@@ -65,8 +79,25 @@ public class Place implements Resource {
         String category = row.getString(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_CATEGORY));
         String type = row.getString(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_TYPE));
         int level = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_LEVEL));
-        long owner = row.getLong(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_OWNER));
-        long price = row.getLong(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_BUY_PRICE));
+
+        long ownersRowId = row.getLong(row.getColumnIndex(BuyPlacesContract.Players.TABLE_NAME + "." + BuyPlacesContract.Players._ID));
+        long ownersId = row.getLong(row.getColumnIndex(BuyPlacesContract.Players.TABLE_NAME + "." + BuyPlacesContract.Players.COLUMN_ID));
+        String ownersUsername = row.getString(row.getColumnIndex(BuyPlacesContract.Players.TABLE_NAME + "." + BuyPlacesContract.Players.COLUMN_USERNAME));
+        int ownersLevel = row.getInt(row.getColumnIndex(BuyPlacesContract.Players.TABLE_NAME + "." + BuyPlacesContract.Players.COLUMN_LEVEL));
+        String ownersAvatar = row.getString(row.getColumnIndex(BuyPlacesContract.Players.TABLE_NAME + "." + BuyPlacesContract.Players.COLUMN_AVATAR));
+        long ownersScore = row.getLong(row.getColumnIndex(BuyPlacesContract.Players.TABLE_NAME + "." + BuyPlacesContract.Players.COLUMN_SCORE));
+        int ownersPlaces = row.getInt(row.getColumnIndex(BuyPlacesContract.Players.TABLE_NAME + "." + BuyPlacesContract.Players.COLUMN_PLACES));
+        int ownersMaxPlaces = row.getInt(row.getColumnIndex(BuyPlacesContract.Players.TABLE_NAME + "." + BuyPlacesContract.Players.COLUMN_MAX_PLACES));
+        Player owner = new Player(ownersRowId, ownersId, ownersUsername, ownersLevel, ownersAvatar, ownersScore, ownersPlaces, ownersMaxPlaces);
+
+        long buyPrice = row.getLong(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_BUY_PRICE));
+        long sellPrice = row.getLong(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_SELL_PRICE));
+        long dealPrice = row.getLong(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_DEAL_PRICE));
+        long upgradePrice = row.getLong(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_UPGRADE_PRICE));
+        long loot = row.getLong(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_LOOT));
+        long maxLoot = row.getLong(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_MAX_LOOT));
+        long income = row.getLong(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_INCOME));
+        long expense = row.getLong(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_EXPENSE));
         double latitude = row.getDouble(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_LATITUDE));
         double longitude = row.getDouble(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_LONGITUDE));
         final boolean isAroundThePoint = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_IS_AROUND_THE_POINT)) != 0;
@@ -74,7 +105,7 @@ public class Place implements Resource {
         final boolean isVisitedInThePast = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_IS_VISITED_IN_THE_PAST)) != 0;
         final boolean isInOwnership = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_IS_IN_OWNERSHIP)) != 0;
         final boolean stateUpdating = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_STATE_UPDATING)) != 0;
-        Place place = new Place(rowId, id, checkinsCount, usersCount, tipCount, name, category, type, level, owner, price, latitude, longitude);
+        Place place = new Place(rowId, id, checkinsCount, usersCount, tipCount, name, category, type, level, owner, buyPrice, sellPrice, dealPrice, upgradePrice, loot, maxLoot, income, expense, latitude, longitude);
         place.setIsAroundThePoint(isAroundThePoint);
         place.setIsAroundThePlayer(isAroundThePlayer);
         place.setIsInOwnership(isInOwnership);
@@ -83,7 +114,7 @@ public class Place implements Resource {
         return place;
     }
 
-    public Place(String id, long checkinsCount, long usersCount, long tipCount, String name, String category, String type, int level, long owner, long price, double latitude, double longitude) {
+    private Place(String id, long checkinsCount, long usersCount, long tipCount, String name, String category, String type, int level, Player owner, long buyPrice, long sellPrice, long dealPrice, long upgradePrice, long loot, long maxLoot, long income, long expense, double latitude, double longitude) {
         mId = id;
         mCheckinsCount = checkinsCount;
         mUsersCount = usersCount;
@@ -93,13 +124,20 @@ public class Place implements Resource {
         mType = type;
         mLevel = level;
         mOwner = owner;
-        mPrice = price;
+        mBuyPrice = buyPrice;
+        mSellPrice = sellPrice;
+        mDealPrice = dealPrice;
+        mUpgradePrice = upgradePrice;
+        mLoot = loot;
+        mMaxLoot = maxLoot;
+        mIncome = income;
+        mExpense = expense;
         mLatitude = latitude;
         mLongitude = longitude;
     }
 
-    public Place(long rowId, String id, long checkinsCount, long usersCount, long tipCount, String name, String category, String type, int level, long owner, long price, double latitude, double longitude) {
-        this(id, checkinsCount, usersCount, tipCount, name, category, type, level, owner, price, latitude, longitude);
+    private Place(long rowId, String id, long checkinsCount, long usersCount, long tipCount, String name, String category, String type, int level, Player owner, long buyPrice, long sellPrice, long dealPrice, long upgradePrice, long loot, long maxLoot, long income, long expense, double latitude, double longitude) {
+        this(id, checkinsCount, usersCount, tipCount, name, category, type, level, owner, buyPrice, sellPrice, dealPrice, upgradePrice, loot, maxLoot, income, expense, latitude, longitude);
         mRowId = rowId;
     }
 
@@ -135,12 +173,12 @@ public class Place implements Resource {
         return mLevel;
     }
 
-    public long getOwner() {
+    public Player getOwner() {
         return mOwner;
     }
 
     public long getPrice() {
-        return mPrice;
+        return mBuyPrice;
     }
 
     public double getLatitude() {
@@ -193,6 +231,8 @@ public class Place implements Resource {
     }
 
     public void writeToDatabase(Context context) {
+        long ownersRowId = mOwner.writeToDatabase(context);
+
         ContentValues values = new ContentValues();
         values.put(BuyPlacesContract.Places.COLUMN_ID, mId);
         values.put(BuyPlacesContract.Places.COLUMN_CHECKINS_COUNT, mCheckinsCount);
@@ -202,11 +242,10 @@ public class Place implements Resource {
         values.put(BuyPlacesContract.Places.COLUMN_CATEGORY, mCategory);
         values.put(BuyPlacesContract.Places.COLUMN_TYPE, mType);
         values.put(BuyPlacesContract.Places.COLUMN_LEVEL, mLevel);
-        values.put(BuyPlacesContract.Places.COLUMN_OWNER, mOwner);
-        values.put(BuyPlacesContract.Places.COLUMN_BUY_PRICE, mPrice);
+        values.put(BuyPlacesContract.Places.COLUMN_BUY_PRICE, mBuyPrice);
         values.put(BuyPlacesContract.Places.COLUMN_LATITUDE, mLatitude);
         values.put(BuyPlacesContract.Places.COLUMN_LONGITUDE, mLongitude);
-
+        values.put(BuyPlacesContract.Places.COLUMN_OWNER, ownersRowId);
         if (mIsAroundThePointIsSet)
             values.put(BuyPlacesContract.Places.COLUMN_IS_AROUND_THE_POINT, mIsAroundThePoint);
         if (mIsAroundThePlayerIsSet)
@@ -215,9 +254,11 @@ public class Place implements Resource {
             values.put(BuyPlacesContract.Places.COLUMN_IS_IN_OWNERSHIP, mIsInOwnership);
         if (mIsVisitedInThePastIsSet)
             values.put(BuyPlacesContract.Places.COLUMN_IS_VISITED_IN_THE_PAST, mIsVisitedInThePast);
+
+        values.put(BuyPlacesContract.Places.COLUMN_STATE_UPDATING, mStateUpdating);
+
         if (context.getContentResolver().update(BuyPlacesContract.Places.CONTENT_URI, values, BuyPlacesContract.Places.WITH_SPECIFIED_ID_SELECTION, new String[]{mId}) == 0)
             context.getContentResolver().insert(BuyPlacesContract.Places.CONTENT_URI, values);
 
-        values.put(BuyPlacesContract.Places.COLUMN_STATE_UPDATING, mStateUpdating);
     }
 }

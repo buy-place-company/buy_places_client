@@ -1,12 +1,9 @@
 package ru.tp.buy_places.fragments.map;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
@@ -26,7 +23,7 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter, Obj
     private final Context mContext;
     private Map<Marker, PlaceClusterItem> mMarkerToPlaceClusterItem = new HashMap<>();
 
-    CustomInfoWindowAdapter(Context context){
+    public CustomInfoWindowAdapter(Context context){
         mContext = context;
     };
 

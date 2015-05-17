@@ -129,12 +129,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 mClusterManager.onCameraChange(cameraPosition);
-                ServiceHelper.get(getActivity()).getObjectsAroundThePoint(cameraPosition.target);
+                ServiceHelper.get(getActivity()).getPlacesAroundThePoint(cameraPosition.target);
             }
         });
         mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
         mGoogleMap.setInfoWindowAdapter(mInfoWindowAdapter);
-
         mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
@@ -148,7 +147,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 10, 10.f, this);
             Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             if (lastKnownLocation != null) {
-                ServiceHelper.get(getActivity()).getObjectsAroundThePlayer(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
+                ServiceHelper.get(getActivity()).getPlacesAroundThePlayer(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
                 mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().title("You are here").position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mMyPositionMarker.getPosition(), 15f));
 
@@ -158,7 +157,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     @Override
     public void onLocationChanged(Location location) {
-        ServiceHelper.get(getActivity()).getObjectsAroundThePlayer(new LatLng(location.getLatitude(), location.getLongitude()));
+        ServiceHelper.get(getActivity()).getPlacesAroundThePlayer(new LatLng(location.getLatitude(), location.getLongitude()));
         if (mGoogleMap != null) {
             if (mMyPositionMarker == null) {
                 mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())));
