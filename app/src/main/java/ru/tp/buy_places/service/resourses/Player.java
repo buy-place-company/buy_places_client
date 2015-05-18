@@ -23,6 +23,38 @@ public class Player implements Resource {
     private final int mMaxPlaces;
     private long mRowId;
 
+    public long getId() {
+        return mId;
+    }
+
+    public String getUsername() {
+        return mUsername;
+    }
+
+    public int getLevel() {
+        return mLevel;
+    }
+
+    public String getAvatar() {
+        return mAvatar;
+    }
+
+    public long getScore() {
+        return mScore;
+    }
+
+    public int getPlaces() {
+        return mPlaces;
+    }
+
+    public int getMaxPlaces() {
+        return mMaxPlaces;
+    }
+
+    public long getRowId() {
+        return mRowId;
+    }
+
     public Player(long id, String username, int level, String avatar, long score, int places, int maxPlaces) {
         mId = id;
         mUsername = username;

@@ -27,6 +27,12 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener,
     private static final int PLACE_LOADER_ID = 0;
     private static final String EXTRA_PLACES_ROW_ID = "EXTRA_PLACES_ROW_ID";
     private TextView placeName;
+    private TextView owner;
+    private TextView level;
+    private TextView price;
+    private TextView service;
+    private TextView profit;
+    private TextView income;
     private Button upgrade;
     private Button sell;
 
@@ -41,8 +47,14 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener,
         if (toolbar != null)
             setSupportActionBar(toolbar);
         Intent intent = getIntent();
-        long placeRowId = Long.parseLong(intent.getStringExtra("EXTRA_PLACE_ID"));
+        long placeRowId = intent.getLongExtra("EXTRA_PLACE_ID", -1);
         placeName = (TextView)findViewById(R.id.text_view_object_name);
+        owner = (TextView)findViewById(R.id.text_view_owner);
+        price = (TextView)findViewById(R.id.text_view_price_value);
+        profit = (TextView)findViewById(R.id.text_view_profit_value);
+        level = (TextView)findViewById(R.id.text_view_place_level);
+        income = (TextView)findViewById(R.id.text_view_income_value);
+        service = (TextView)findViewById(R.id.text_view_service_value);
         if (intent.getStringExtra("EXTRA_PLACE_ID") != null) {
             placeName.setText(intent.getStringExtra("EXTRA_PLACE_ID"));
         }
@@ -132,8 +144,16 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener,
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.moveToFirst()) {
             Place place = Place.fromCursor(data);
-            new Integer(3).toString();
+            placeName.setText(place.getName());
+            owner.setText(place.getOwner().getUsername());
+            level.setText(Integer.toString(place.getLevel()));
+            price.setText(Long.toString(place.getPrice()));
+            service.setText(Long.toString(place.getExpense()));
+            income.setText(Long.toString(place.getIncome()));
+            profit.setText(Long.toString(place.getIncome() - place.getExpense()));
+
         }
+
     }
 
     @Override

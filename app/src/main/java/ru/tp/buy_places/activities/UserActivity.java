@@ -5,14 +5,24 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+
 import ru.tp.buy_places.R;
 
-public class UserActivity extends ActionBarActivity {
+public class UserActivity extends ActionBarActivity implements OnMapReadyCallback {
+    private MapView mMapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+        MapsInitializer.initialize(this);
+        ;
+        if (mMapView != null)
+            mMapView.getMapAsync(this);
     }
 
 
@@ -36,5 +46,10 @@ public class UserActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
     }
 }
