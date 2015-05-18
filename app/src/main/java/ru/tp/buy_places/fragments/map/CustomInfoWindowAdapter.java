@@ -29,7 +29,7 @@ public class CustomInfoWindowAdapter implements  GoogleMap.InfoWindowAdapter, Ob
 
     private final Context mContext;
     private Map<Marker, PlaceClusterItem> mMarkerToPlaceClusterItem = new HashMap<>();
-    private PlaceClusterItem mItem;
+
 
     public CustomInfoWindowAdapter(Context context){
         mContext = context;
@@ -44,7 +44,7 @@ public class CustomInfoWindowAdapter implements  GoogleMap.InfoWindowAdapter, Ob
     @Override
     public View getInfoContents(Marker marker) {
         if (mMarkerToPlaceClusterItem.containsKey(marker)) {
-            mItem = mMarkerToPlaceClusterItem.get(marker);
+            PlaceClusterItem mItem = mMarkerToPlaceClusterItem.get(marker);
             if (mItem != null) {
                 View v = LayoutInflater.from(mContext).inflate(R.layout.object_infowindow, null);
 
@@ -66,8 +66,7 @@ public class CustomInfoWindowAdapter implements  GoogleMap.InfoWindowAdapter, Ob
 
     public PlaceClusterItem getItem(Marker marker) {
         if (mMarkerToPlaceClusterItem.containsKey(marker)) {
-            mItem = mMarkerToPlaceClusterItem.get(marker);
-            return mItem;
+            return mMarkerToPlaceClusterItem.get(marker);
         }
         return null;
     }

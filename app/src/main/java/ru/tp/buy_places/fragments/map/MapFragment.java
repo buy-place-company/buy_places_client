@@ -66,7 +66,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         mInfoWindowAdapter = new CustomInfoWindowAdapter(getActivity());
         getLoaderManager().initLoader(ALL_PLACES_LOADER_ID, null, this);
-
     }
 
     @Override
@@ -141,10 +140,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 Intent intent = new Intent(getActivity(), PlaceActivity.class);
                 PlaceClusterItem item = mInfoWindowAdapter.getItem(marker);
                 if (item !=  null) {
-                    Long id = (Long)item.getRowId();
-                    intent.putExtra("EXTRA_PLACE_ID", id.toString());
-                } else intent.putExtra("EXTRA_PLACE_ID", "ANONYMOUS");
-                startActivity(intent);
+                    Long id = item.getRowId();
+                    intent.putExtra("EXTRA_PLACE_ID", id);
+                    startActivity(intent);
+                }
+
             }
         });
 

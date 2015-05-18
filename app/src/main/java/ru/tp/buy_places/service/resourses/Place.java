@@ -173,8 +173,17 @@ public class Place implements Resource {
         return mType;
     }
 
+    public long getExpense() {
+        return mExpense;
+    }
+
+    public long getIncome() {
+        return mIncome;
+    }
+
     public int getLevel() {
         return mLevel;
+
     }
 
     public Player getOwner() {

@@ -13,19 +13,19 @@
         android:layout_alignParentStart="true"
         android:layout_width="35dp"
         android:layout_height="wrap_content"
-        android:id="@+id/image_view_deals"
+        android:id="@+id/image_view_rating"
         android:src="@drawable/ic_launcher"
         android:layout_marginRight="10dp"
         android:layout_marginEnd="10dp"/>
 
     <TextView
-        android:layout_toRightOf="@id/image_view_deals"
-        android:layout_toEndOf="@id/image_view_deals"
+        android:layout_toRightOf="@id/image_view_rating"
+        android:layout_toEndOf="@id/image_view_rating"
         android:layout_width="210dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:textColor="@android:color/background_dark"
-        android:id="@+id/text_view_deals"
+        android:id="@+id/text_view_rating"
         android:text="МГТУ им Баумана"
         android:layout_marginRight="10dp"
         android:layout_marginEnd="15dp"
