@@ -133,6 +133,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             }
         });
         mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
+        mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
         mGoogleMap.setInfoWindowAdapter(mInfoWindowAdapter);
         mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
