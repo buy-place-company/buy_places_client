@@ -61,8 +61,8 @@ public class RaitingFragment extends Fragment {
         };
 
         int[] to = new int[] {
-                R.id.textObj,
-                R.id.imageObj
+                R.id.text_view_rating,
+                R.id.image_view_rating
         };
 
         adapter = new SimpleAdapter(getActivity(), getData(), R.layout.item_raiting, from, to);

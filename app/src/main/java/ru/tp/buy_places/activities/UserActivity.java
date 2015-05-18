@@ -1,5 +1,12 @@
 package ru.tp.buy_places.activities;
 
+import android.content.ContentUris;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,16 +18,28 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.content_provider.BuyPlacesContract;
+import ru.tp.buy_places.service.resourses.Place;
+import ru.tp.buy_places.service.resourses.Player;
 
-public class UserActivity extends ActionBarActivity implements OnMapReadyCallback {
+public class UserActivity extends ActionBarActivity implements OnMapReadyCallback,  LoaderManager.LoaderCallbacks<Cursor> {
     private MapView mMapView;
+    private Player mPlayer;
+
+    private static final int USER_LOADER_ID = 0;
+    private static final String EXTRA_USER_ID = "EXTRA_USER_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+        Intent intent = getIntent();
+        final long userId = intent.getLongExtra("EXTRA_USER_ID", -1);
+        Bundle args = new Bundle();
+        args.putLong(EXTRA_USER_ID, userId);
+        getSupportLoaderManager().initLoader(USER_LOADER_ID, args, this);
         MapsInitializer.initialize(this);
-        ;
+
         if (mMapView != null)
             mMapView.getMapAsync(this);
     }
@@ -50,6 +69,25 @@ public class UserActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        final long userId = args.getLong(EXTRA_USER_ID);
+        final Uri userUri = ContentUris.withAppendedId(BuyPlacesContract.Players.CONTENT_URI, userId);
+        return new CursorLoader(this, userUri, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data.moveToFirst()) {
+            mPlayer = Player.fromCursor(data);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
 
     }
 }

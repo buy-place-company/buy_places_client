@@ -26,6 +26,7 @@ import ru.tp.buy_places.service.resourses.Place;
 public class PlaceActivity extends ActionBarActivity implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static final int PLACE_LOADER_ID = 0;
     private static final String EXTRA_PLACES_ROW_ID = "EXTRA_PLACES_ROW_ID";
+    private Place mPlace;
     private TextView placeName;
     private TextView owner;
     private TextView level;
@@ -37,7 +38,7 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener,
     private Button sell;
 
     public static final String DIALOG = "Сделка";
-   private AlertDialog.Builder ad;
+    private AlertDialog.Builder ad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener,
         if (toolbar != null)
             setSupportActionBar(toolbar);
         Intent intent = getIntent();
-        long placeRowId = intent.getLongExtra("EXTRA_PLACE_ID", -1);
+        final long placeRowId = intent.getLongExtra("EXTRA_PLACE_ID", -1);
         placeName = (TextView)findViewById(R.id.text_view_object_name);
         owner = (TextView)findViewById(R.id.text_view_owner);
         price = (TextView)findViewById(R.id.text_view_price_value);
@@ -96,6 +97,15 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener,
             }
         };
 
+        owner.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PlaceActivity.this, UserActivity.class);
+                intent.putExtra("EXTRA_USER_ID", mPlace.getOwner().getId());
+                startActivity(intent);
+            }
+        });
+
         upgrade.setOnClickListener(upgradeListener);
         sell.setOnClickListener(sellListener);
         Bundle args = new Bundle();
@@ -143,14 +153,14 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener,
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.moveToFirst()) {
-            Place place = Place.fromCursor(data);
-            placeName.setText(place.getName());
-            owner.setText(place.getOwner().getUsername());
-            level.setText(Integer.toString(place.getLevel()));
-            price.setText(Long.toString(place.getPrice()));
-            service.setText(Long.toString(place.getExpense()));
-            income.setText(Long.toString(place.getIncome()));
-            profit.setText(Long.toString(place.getIncome() - place.getExpense()));
+            mPlace = Place.fromCursor(data);
+            placeName.setText(mPlace.getName());
+            owner.setText(mPlace.getOwner().getUsername());
+            level.setText(Integer.toString(mPlace.getLevel()));
+            price.setText(Long.toString(mPlace.getPrice()));
+            service.setText(Long.toString(mPlace.getExpense()));
+            income.setText(Long.toString(mPlace.getIncome()));
+            profit.setText(Long.toString(mPlace.getIncome() - mPlace.getExpense()));
 
         }
 
