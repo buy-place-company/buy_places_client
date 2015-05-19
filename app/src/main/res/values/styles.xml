@@ -18,7 +18,9 @@
 
     <style name="ActionBarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:background">?attr/colorPrimary</item>
-        <item name="android:minHeight">?attr/actionBarSize</item>
     </style>
 
+    <style name="ActionBarPopupTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:background">?attr/background</item>
+    </style>
 </resources>

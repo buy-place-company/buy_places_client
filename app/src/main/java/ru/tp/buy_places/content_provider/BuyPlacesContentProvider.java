@@ -110,7 +110,7 @@ public class BuyPlacesContentProvider extends ContentProvider {
                 cursor = db.query(Places.WITH_OWNERS_TABLE_NAME, Places.WITH_OWNERS_COLUMNS_PROJECTION, Places.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(placesRowId)}, null, null, null, null);
                 break;
             case PLACES:
-                cursor = db.query(Places.WITH_OWNERS_TABLE_NAME, Places.WITH_OWNERS_COLUMNS_PROJECTION, null, null, null, null, null);
+                cursor = db.query(Places.WITH_OWNERS_TABLE_NAME, Places.WITH_OWNERS_COLUMNS_PROJECTION, selection, null, null, null, null);
                 break;
             case PLAYERS_ID:
                 final long playersRowId = ContentUris.parseId(uri);
@@ -158,7 +158,7 @@ public class BuyPlacesContentProvider extends ContentProvider {
 
     private static final class DatabaseHelper extends SQLiteOpenHelper {
         private static final String DATABASE_NAME = "buy_places.db";
-        private static final int DATABASE_VERSION = 8;
+        private static final int DATABASE_VERSION = 10;
 
 
         public DatabaseHelper(Context context) {

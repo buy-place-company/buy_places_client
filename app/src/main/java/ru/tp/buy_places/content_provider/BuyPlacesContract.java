@@ -70,7 +70,7 @@ public final class BuyPlacesContract {
         public static final String COLUMN_FULL_IS_IN_OWNERSHIP = TABLE_NAME + "." + COLUMN_IS_IN_OWNERSHIP;
         public static final String COLUMN_FULL_STATE_UPDATING = TABLE_NAME + "." + COLUMN_STATE_UPDATING;
 
-        public static final String COLUMN_ALIAS_ROW_ID = "places_row_id";
+        public static final String COLUMN_ALIAS_ROW_ID = Places._ID;
         public static final String COLUMN_ALIAS_ID = "places_id";
         public static final String COLUMN_ALIAS_CHECKINS_COUNT = "places_checkins_count";
         public static final String COLUMN_ALIAS_USERS_COUNT = "places_users_count";
@@ -192,15 +192,16 @@ public final class BuyPlacesContract {
 
         static final String SQL_DROP = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
-        public static final String WITH_OWNERS_TABLE_NAME = Places.TABLE_NAME + " INNER JOIN " + Players.TABLE_NAME + " ON " + "(" + Places.COLUMN_FULL_OWNER + "=" + Players.COLUMN_FULL_ROW_ID + ")";
+        public static final String WITH_OWNERS_TABLE_NAME = Places.TABLE_NAME + " LEFT JOIN " + Players.TABLE_NAME + " ON " + "(" + Places.COLUMN_FULL_OWNER + "=" + Players.COLUMN_FULL_ROW_ID + ")";
         public static final String ONLY_AROUND_THE_POINT_SELECTION =
-                COLUMN_IS_AROUND_THE_POINT + "=1 AND " +
-                        COLUMN_IS_AROUND_THE_PLAYER + "=0 AND " +
-                        COLUMN_IS_VISITED_IN_THE_PAST + "=0";
-        public static final String WITH_SPECIFIED_ROW_ID_SELECTION =TABLE_NAME + "." + _ID + "=?";
-        public static final String WITH_SPECIFIED_ID_SELECTION = COLUMN_ID + "=?";
-        public static final String AROUND_THE_POINT_SELECTION = COLUMN_IS_AROUND_THE_POINT + "=1";
-        public static final String AROUND_THE_PLAYER_SELECTION = COLUMN_IS_AROUND_THE_PLAYER + "=1";
+                COLUMN_FULL_IS_AROUND_THE_POINT + "=1 AND " +
+                        COLUMN_FULL_IS_AROUND_THE_PLAYER + "=0 AND " +
+                        COLUMN_FULL_IS_VISITED_IN_THE_PAST + "=0";
+        public static final String WITH_SPECIFIED_ROW_ID_SELECTION =COLUMN_FULL_ROW_ID + "=?";
+        public static final String WITH_SPECIFIED_ID_SELECTION = COLUMN_FULL_ID + "=?";
+        public static final String AROUND_THE_POINT_SELECTION = COLUMN_FULL_IS_AROUND_THE_POINT + "=1";
+        public static final String AROUND_THE_PLAYER_SELECTION = COLUMN_FULL_IS_AROUND_THE_PLAYER + "=1";
+        public static final String IS_IN_OWNERSHIP_SELECTION = COLUMN_FULL_IS_IN_OWNERSHIP + "=1";
 
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, TABLE_NAME);
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.buy_places." + TABLE_NAME;

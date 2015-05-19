@@ -15,6 +15,7 @@ import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.Processor;
 import ru.tp.buy_places.service.network.Request;
 import ru.tp.buy_places.service.network.Response;
+import ru.tp.buy_places.service.network.UnknownErrorResponse;
 import ru.tp.buy_places.service.resourses.Places;
 
 import static ru.tp.buy_places.service.BuyItService.ObjectsRequestMode;
@@ -37,13 +38,28 @@ public class PlacesProcessor extends Processor {
     @Override
     protected Request prepareRequest() {
         Map<String, String> params = new HashMap<>();
-        params.put("lat", Double.toString(mPosition.latitude));
-        params.put("lng", Double.toString(mPosition.longitude));
-        return new Request(mContext, "/objects_near", Request.RequestMethod.GET, params);
+        String path;
+        switch (mObjectsRequestMode) {
+            case AROUND_THE_POINT:
+            case AROUND_THE_PLAYER:
+                params.put("lat", Double.toString(mPosition.latitude));
+                params.put("lng", Double.toString(mPosition.longitude));
+                path = "/objects_near";
+                break;
+            case IN_OWNERSHIP:
+                path = "/user_objects";
+                break;
+            default:
+                path = null;
+        }
+        return new Request(mContext, path, Request.RequestMethod.GET, params);
     }
 
     @Override
     protected Response parseResponseJSONObject(JSONObject responseJSONObject) {
+        if (responseJSONObject == null) {
+            return new UnknownErrorResponse();
+        }
         int status = responseJSONObject.optInt("code");
         String message = responseJSONObject.optString("message", null);
         JSONArray dataJSONArray = responseJSONObject.optJSONArray("places");
@@ -71,7 +87,17 @@ public class PlacesProcessor extends Processor {
                 places.setIsVisitedInThePast(true);
                 places.writeToDatabase(mContext);
                 break;
+            case IN_OWNERSHIP:
+                markPlacesInOwnership(mContext);
+                places.setIsInOwnership(true);
+                places.writeToDatabase(mContext);
         }
+    }
+
+    private void markPlacesInOwnership(Context context) {
+        ContentValues isInOwnershipIsFalseContentValues = new ContentValues();
+        isInOwnershipIsFalseContentValues.put(BuyPlacesContract.Places.COLUMN_IS_IN_OWNERSHIP, false);
+        context.getContentResolver().update(BuyPlacesContract.Places.CONTENT_URI, isInOwnershipIsFalseContentValues, BuyPlacesContract.Places.IS_IN_OWNERSHIP_SELECTION, null);
     }
 
     private void deleteOrMarkPlacesAroundTheLastPoint(Context context) {

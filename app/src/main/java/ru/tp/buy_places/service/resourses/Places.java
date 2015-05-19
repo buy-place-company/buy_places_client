@@ -44,13 +44,17 @@ public class Places implements Resource {
 
     public void writeToDatabase(Context context) {
         for (Place place: mPlaces) {
-            place.setIsInOwnership(checkIsInOwnership(context, place.getId()));
+            place.setIsInOwnership(checkIsInOwnership(context, place.getOwner()));
             place.writeToDatabase(context);
         }
     }
 
-    private boolean checkIsInOwnership(Context context, String id) {
+    private boolean checkIsInOwnership(Context context, Player id) {
         // TODO Request Account Manager player's id and compare with parameter
+        if (id == null)
+            return false;
+        else if (id.getId() == 43)
+            return true;
         return false;
     }
 
@@ -75,5 +79,11 @@ public class Places implements Resource {
 
     public void add(Place place) {
         mPlaces.add(place);
+    }
+
+    public void setIsInOwnership(boolean isInOwnership) {
+        for (Place place: mPlaces) {
+            place.setIsInOwnership(true);
+        }
     }
 }

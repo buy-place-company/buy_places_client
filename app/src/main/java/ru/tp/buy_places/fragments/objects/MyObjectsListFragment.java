@@ -72,7 +72,7 @@ public class MyObjectsListFragment extends Fragment implements LoaderManager.Loa
                 R.id.textObj,
                 R.id.imageObj
         };
-        adapter = new SimpleCursorAdapter(getActivity(), R.layout.item_object, null, new String[]{Places.COLUMN_NAME}, new int[]{R.id.textObj}, 0);
+        adapter = new SimpleCursorAdapter(getActivity(), R.layout.item_object, null, new String[]{Places.COLUMN_ALIAS_ID}, new int[]{R.id.textObj}, 0);
         //adapter = new SimpleAdapter(getActivity(), getData(), R.layout.item_object, from, to);
 
     }
@@ -105,8 +105,10 @@ public class MyObjectsListFragment extends Fragment implements LoaderManager.Loa
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), PlaceActivity.class);
-                startActivity(intent);
+                if (id>0) {
+                    Intent intent = new Intent(getActivity(), PlaceActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         return mListView;
@@ -132,7 +134,7 @@ public class MyObjectsListFragment extends Fragment implements LoaderManager.Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), Places.CONTENT_URI, null, null, null, null);
+        return new CursorLoader(getActivity(), Places.CONTENT_URI, null, Places.IS_IN_OWNERSHIP_SELECTION, null, null);
     }
 
     @Override

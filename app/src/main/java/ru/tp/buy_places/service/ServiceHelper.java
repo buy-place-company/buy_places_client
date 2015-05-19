@@ -69,7 +69,16 @@ public class ServiceHelper {
     }
 
     public long getMyPlaces() {
-        return 0;
+        long requestId = mRequestIdGenerator.incrementAndGet();
+        mPendingRequests.put(OBJECTS, requestId);
+        ResultReceiver serviceCallback = new ResultReceiver(null) {
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                handleGetMyPlacesResponse(resultCode, resultData);
+            }
+        };
+        BuyItService.startGetMyPlacesService(mContext, serviceCallback, requestId);
+        return requestId;
     }
 
     public long getPlayersPlaces(long id) {
@@ -209,6 +218,18 @@ public class ServiceHelper {
     }
 
     private void handleGetObjectsAroundThePointResponse(int resultCode, Bundle resultData) {
+        Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
+        if (originalRequestIntent != null) {
+            long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
+            mPendingRequests.remove(OBJECTS);
+            Intent result = new Intent(ACTION_REQUEST_RESULT);
+            result.putExtra(EXTRA_REQUEST_ID, requestId);
+            result.putExtra(EXTRA_RESULT_CODE, resultCode);
+            mContext.sendBroadcast(result);
+        }
+    }
+
+    private void handleGetMyPlacesResponse(int resultCode, Bundle resultData) {
         Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
         if (originalRequestIntent != null) {
             long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);

@@ -67,6 +67,14 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         context.startService(intent);
     }
 
+    public static void startGetMyPlacesService(Context context, ResultReceiver serviceCallback, long requestId) {
+        Intent intent = new Intent(ACTION_GET_OBJECTS, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        intent.putExtra(EXTRA_OBJECTS_REQUEST_MODE, ObjectsRequestMode.IN_OWNERSHIP);
+        context.startService(intent);
+    }
+
     public static void startBuyPlaceService(Context context, ResultReceiver serviceCallback, long requestId, String id) {
         Intent intent = new Intent(ACTION_POST_OBJECT, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
@@ -138,7 +146,8 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
 
     public enum ObjectsRequestMode {
         AROUND_THE_PLAYER,
-        AROUND_THE_POINT
+        AROUND_THE_POINT,
+        IN_OWNERSHIP
     }
 
     public enum ActionWithPlace {

@@ -110,7 +110,9 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener,
         sell.setOnClickListener(sellListener);
         Bundle args = new Bundle();
         args.putLong(EXTRA_PLACES_ROW_ID, placeRowId);
-        getSupportLoaderManager().initLoader(PLACE_LOADER_ID, args, this);
+        if (placeRowId > 0) {
+            getSupportLoaderManager().initLoader(PLACE_LOADER_ID, args, this);
+        }
     }
 
 
