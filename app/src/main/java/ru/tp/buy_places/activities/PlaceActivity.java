@@ -106,12 +106,10 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener,
             }
         });
 
-        upgrade.setOnClickListener(upgradeListener);
-        sell.setOnClickListener(sellListener);
-        Bundle args = new Bundle();
+        Bundle loaderArgs = new Bundle();
         args.putLong(EXTRA_PLACES_ROW_ID, placeRowId);
         if (placeRowId > 0) {
-            getSupportLoaderManager().initLoader(PLACE_LOADER_ID, args, this);
+            getSupportLoaderManager().initLoader(PLACE_LOADER_ID, loaderArgs, this);
         }
     }
 

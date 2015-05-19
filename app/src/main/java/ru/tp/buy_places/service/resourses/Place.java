@@ -80,7 +80,7 @@ public class Place implements Resource {
         String name = placeData.optString("name");
         String category = placeData.optString("category");
         String type = placeData.optString("type");
-        int level = placeData.optInt("level");
+        int level = placeData.optInt("lvl");
         Player owner = placeData.isNull("owner") ? null : Player.fromJSONObject(placeData.optJSONObject("owner"));
         long buyPrice = placeData.optLong("buy_price");
         long sellPrice = placeData.optLong("sell_price");
@@ -258,6 +258,13 @@ public class Place implements Resource {
         values.put(BuyPlacesContract.Places.COLUMN_TYPE, mType);
         values.put(BuyPlacesContract.Places.COLUMN_LEVEL, mLevel);
         values.put(BuyPlacesContract.Places.COLUMN_BUY_PRICE, mBuyPrice);
+        values.put(BuyPlacesContract.Places.COLUMN_SELL_PRICE, mSellPrice);
+        values.put(BuyPlacesContract.Places.COLUMN_UPGRADE_PRICE, mUpgradePrice);
+        values.put(BuyPlacesContract.Places.COLUMN_DEAL_PRICE, mDealPrice);
+        values.put(BuyPlacesContract.Places.COLUMN_LOOT, mLoot);
+        values.put(BuyPlacesContract.Places.COLUMN_MAX_LOOT, mMaxLoot);
+        values.put(BuyPlacesContract.Places.COLUMN_EXPENSE, mExpense);
+        values.put(BuyPlacesContract.Places.COLUMN_INCOME, mIncome);
         values.put(BuyPlacesContract.Places.COLUMN_LATITUDE, mLatitude);
         values.put(BuyPlacesContract.Places.COLUMN_LONGITUDE, mLongitude);
         values.put(BuyPlacesContract.Places.COLUMN_OWNER, ownersRowId);
