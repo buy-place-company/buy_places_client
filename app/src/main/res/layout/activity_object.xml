@@ -51,34 +51,14 @@
                 android:layout_below="@+id/image_view_place"
                 android:layout_centerHorizontal="true" />
 
-            <Button
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:text="Улучшить за 500"
-                android:id="@+id/button_upgrade"
-                android:layout_alignParentBottom="true"
-                android:layout_toLeftOf="@+id/image_view_place"
-                android:layout_marginBottom="15dp" />
-
-            <Button
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:text="Продать"
-                android:id="@+id/button_sell"
-                android:layout_alignTop="@+id/button_upgrade"
-                android:layout_alignParentRight="false"
-                android:layout_toRightOf="@+id/image_view_place"
-                android:layout_marginBottom="15dp" />
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/price"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:id="@+id/price_text_view"
-                android:layout_centerVertical="true"
-                android:layout_alignLeft="@+id/button_upgrade"
-                android:layout_alignStart="@+id/button_upgrade" />
+                android:layout_below="@+id/service_text_view"
+                android:layout_alignLeft="@+id/text_view_place_level_label" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -86,10 +66,8 @@
                 android:text="@string/service"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:id="@+id/service_text_view"
-                android:layout_below="@+id/price_text_view"
-                android:layout_alignLeft="@+id/price_text_view"
-                android:layout_alignStart="@+id/price_text_view"
-                android:layout_marginTop="5dp" />
+                android:layout_below="@+id/profit_text_view"
+                android:layout_alignLeft="@+id/text_view_place_level_label" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -97,10 +75,9 @@
                 android:text="@string/income"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:id="@+id/income_text_view"
-                android:layout_below="@+id/service_text_view"
-                android:layout_alignLeft="@+id/service_text_view"
-                android:layout_alignStart="@+id/service_text_view"
-                android:layout_marginTop="5dp" />
+                android:layout_below="@+id/price_text_view"
+                android:layout_alignLeft="@+id/price_text_view"
+                android:layout_alignStart="@+id/price_text_view" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -108,10 +85,9 @@
                 android:text="@string/profit"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:id="@+id/profit_text_view"
-                android:layout_below="@+id/income_text_view"
+                android:layout_alignTop="@+id/text_view_price_value"
                 android:layout_alignLeft="@+id/service_text_view"
-                android:layout_alignStart="@+id/service_text_view"
-                android:layout_marginTop="5dp" />
+                android:layout_alignStart="@+id/service_text_view" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -155,9 +131,10 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="200"
                 android:id="@+id/text_view_price_value"
-                android:layout_alignRight="@+id/text_view_profit_value"
-                android:layout_alignEnd="@+id/text_view_profit_value"
-                android:layout_alignBottom="@+id/image_view_dollar" />
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="20dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -165,9 +142,9 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="20"
                 android:id="@+id/text_view_service_value"
-                android:layout_alignTop="@+id/image_view_dollar1"
-                android:layout_alignLeft="@+id/text_view_income_value"
-                android:layout_alignStart="@+id/text_view_income_value" />
+                android:layout_below="@+id/text_view_price_value"
+                android:layout_alignRight="@+id/text_view_price_value"
+                android:layout_alignEnd="@+id/text_view_price_value" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -175,9 +152,10 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="70"
                 android:id="@+id/text_view_income_value"
-                android:layout_alignTop="@+id/image_view_dollar2"
 
-                android:layout_alignRight="@+id/button_sell" />
+                android:layout_below="@+id/text_view_service_value"
+                android:layout_alignLeft="@+id/text_view_service_value"
+                android:layout_alignStart="@+id/text_view_service_value" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -185,9 +163,9 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="50"
                 android:id="@+id/text_view_profit_value"
-                android:layout_alignTop="@+id/image_view_dollar3"
-                android:layout_alignRight="@+id/button_sell"
-                android:layout_alignEnd="@+id/button_sell" />
+                android:layout_below="@+id/text_view_income_value"
+                android:layout_alignLeft="@+id/text_view_income_value"
+                android:layout_alignStart="@+id/text_view_income_value" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -206,10 +184,9 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Владелец: "
                 android:id="@+id/text_view_owner_label"
-                android:layout_below="@+id/text_view_object_name"
-                android:layout_alignLeft="@+id/price_text_view"
-                android:layout_alignStart="@+id/price_text_view"
-                android:layout_marginTop="15dp" />
+                android:layout_above="@+id/profit_text_view"
+                android:layout_alignLeft="@+id/profit_text_view"
+                android:layout_alignStart="@+id/profit_text_view" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -217,9 +194,9 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Medium Text"
                 android:id="@+id/text_view_owner"
-                android:layout_alignTop="@+id/text_view_owner_label"
-                android:layout_toRightOf="@+id/text_view_owner_label"
-                android:layout_toEndOf="@+id/text_view_owner_label" />
+                android:layout_above="@+id/image_view_dollar3"
+                android:layout_toRightOf="@+id/profit_text_view"
+                android:layout_toEndOf="@+id/profit_text_view" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -232,6 +209,20 @@
                 android:layout_toLeftOf="@+id/image_view_place"
                 android:layout_toStartOf="@+id/image_view_place"
                 android:layout_marginLeft="5dp" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_alignLeft="@+id/text_view_place_level_label"
+                android:layout_alignStart="@+id/text_view_place_level_label"
+                android:id="@+id/button_content"
+                android:layout_below="@+id/text_view_profit_value"
+                android:layout_alignRight="@+id/text_view_profit_value"
+                android:layout_alignEnd="@+id/text_view_profit_value"
+                android:layout_marginBottom="20dp">
+
+            </FrameLayout>
 
 
         </RelativeLayout>
