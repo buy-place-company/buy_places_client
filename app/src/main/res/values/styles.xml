@@ -9,11 +9,11 @@
     </style>
 
     <style name="ClusterItemBackgroundColor">
-        <item name="android:textColor">#e3fbe734</item>
+        <item name="android:background">#e3fbe734</item>
     </style>
 
     <style name="ClusterRenderBackgroundColor">
-        <item name="android:textColor">#e3fb253a</item>
+        <item name="android:background">#e3fb253a</item>
     </style>
 
     <style name="ActionBarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">

@@ -142,6 +142,9 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
             LayoutInflater inflater = LayoutInflater.from(this);
             if (mPlace.isInOwnership()) {
                 inflater.inflate(R.layout.buttons_my_place, buttonContainer);
+                price.setVisibility(View.INVISIBLE);
+                priceLabel.setVisibility(View.INVISIBLE);
+                priceIcon.setVisibility(View.INVISIBLE);
                 upgradePlace = (Button) findViewById(R.id.button_upgrade_place);
                 sellPlace = (Button) findViewById(R.id.button_sell_place);
                 if (!upgradePlace.hasOnClickListeners())
@@ -174,10 +177,16 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
                     public void onCancel(DialogInterface dialog) {
                     }
                 });
-            } else if (mPlace.getOwner() == null)
+            } else if (mPlace.getOwner() == null){
                 inflater.inflate(R.layout.buttons_nobody_place, buttonContainer, true);
-            else
+                owner.setVisibility(View.INVISIBLE);
+                ownerLabel.setVisibility(View.INVISIBLE);
+            } else {
                 inflater.inflate(R.layout.buttons_player_place, buttonContainer, true);
+                price.setVisibility(View.INVISIBLE);
+                priceLabel.setVisibility(View.INVISIBLE);
+                priceIcon.setVisibility(View.INVISIBLE);
+            }
         }
 
 

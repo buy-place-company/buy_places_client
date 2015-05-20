@@ -29,12 +29,12 @@ public class ObjectRenderer extends DefaultClusterRenderer<PlaceClusterItem> {
         super(context, map, clusterManager);
 
         mIconGenerator = new IconGenerator(context);
-        View placeClusterMarkerLayout = LayoutInflater.from(context).inflate(R.layout.places_cluster_marker, null);
-        mIconGenerator.setContentView(placeClusterMarkerLayout);
-
+//        View placeClusterMarkerLayout = LayoutInflater.from(context).inflate(R.layout.places_cluster_marker, null);
+//        mIconGenerator.setContentView(placeClusterMarkerLayout);
+//
         mClusterItemGenerator = new IconGenerator(context);
-        View placesClusterItemMarkerLayout = LayoutInflater.from(context).inflate(R.layout.place_cluster_item_marker, null);
-        mClusterItemGenerator.setContentView(placesClusterItemMarkerLayout);
+//        View placesClusterItemMarkerLayout = LayoutInflater.from(context).inflate(R.layout.place_cluster_item_marker, null);
+//        mClusterItemGenerator.setContentView(placesClusterItemMarkerLayout);
         mOnClusterItemRenderedListerer = onClusterItemRenderedListener;
     }
 
