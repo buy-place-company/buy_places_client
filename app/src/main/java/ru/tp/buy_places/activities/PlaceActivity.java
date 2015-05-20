@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import ru.tp.buy_places.R;
@@ -31,13 +33,20 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener,
     private Place mPlace;
     private TextView placeName;
     private TextView owner;
+    private TextView ownerLabel;
     private TextView level;
     private TextView price;
+    private TextView priceLabel;
+    private ImageView priceIcon;
     private TextView service;
     private TextView profit;
     private TextView income;
     private Button upgradePlace;
     private Button sellPlace;
+    private FrameLayout buttonContent;
+    private RelativeLayout ownPlace;
+    private RelativeLayout nobodyPlace;
+    private RelativeLayout anotherPlace;
 
     public static final String DIALOG = "Сделка";
     private AlertDialog.Builder ad;
@@ -48,40 +57,56 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener,
         setContentView(R.layout.activity_object);
         placeName = (TextView)findViewById(R.id.text_view_object_name);
         owner = (TextView)findViewById(R.id.text_view_owner);
+        ownerLabel = (TextView)findViewById(R.id.text_view_owner_label);
         price = (TextView)findViewById(R.id.text_view_price_value);
+        priceIcon = (ImageView)findViewById(R.id.image_view_dollar);
+        priceLabel = (TextView)findViewById(R.id.price_text_view);
         profit = (TextView)findViewById(R.id.text_view_profit_value);
         level = (TextView)findViewById(R.id.text_view_place_level);
         income = (TextView)findViewById(R.id.text_view_income_value);
         service = (TextView)findViewById(R.id.text_view_service_value);
-        FrameLayout buttonContent = (FrameLayout)findViewById(R.id.button_content);
+        buttonContent = (FrameLayout)findViewById(R.id.button_content);
+        upgradePlace = (Button)findViewById(R.id.button_upgrade_place);
+        sellPlace = (Button)findViewById(R.id.button_sell_place);
+        ownPlace = (RelativeLayout)findViewById(R.id.layout_my_place);
+        nobodyPlace = (RelativeLayout)findViewById(R.id.layout_nobody_place);
+        anotherPlace = (RelativeLayout)findViewById(R.id.layout_player_place);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null)
             setSupportActionBar(toolbar);
 
-        LayoutInflater inflater = getLayoutInflater();
-        inflater.inflate(R.layout.buttons_my_place, buttonContent, true);
 
-        Intent intent = getIntent();
-        final long placeRowId = intent.getLongExtra("EXTRA_PLACE_ID", -1);
-        Bundle args = new Bundle();
-        args.putLong(EXTRA_PLACES_ROW_ID, placeRowId);
-        getSupportLoaderManager().initLoader(PLACE_LOADER_ID, args, this);
+//        upgradePlace = (Button)findViewById(R.id.button_upgrade_place);
+//        sellPlace = (Button)findViewById(R.id.button_sell_place);
+//        upgradePlace.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ad.setMessage("Вы можете улучшить здание за 500р");
+//                ad.show();
+//            }
+//        });
+//        sellPlace.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ad.setMessage("Вы можете продать здание за 50% стоимости");
+//                ad.show();
+//            }
+//        });
+//        ad = new AlertDialog.Builder(this);
+//        ad.setTitle(DIALOG);
+//        ad.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int arg1) {}
+//        });
+//        ad.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int arg1) {}
+//        });
+//        ad.setCancelable(true);
+//        ad.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//            public void onCancel(DialogInterface dialog) {}
+//        });
+//
 
-        ad = new AlertDialog.Builder(this);
-        ad.setTitle(DIALOG);
-        ad.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int arg1) {}
-        });
-        ad.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int arg1) {}
-        });
-        ad.setCancelable(true);
-        ad.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            public void onCancel(DialogInterface dialog) {}
-        });
-
-        upgradePlace = (Button)findViewById(R.id.button_upgrade_place);
-        sellPlace = (Button)findViewById(R.id.button_sell_place);
         owner.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,25 +116,12 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener,
             }
         });
 
-        upgradePlace.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ad.setMessage("Вы можете улучшить здание за 500р");
-                ad.show();
-            }
-        });
-        sellPlace.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ad.setMessage("Вы можете продать здание за 50% стоимости");
-                ad.show();
-            }
-        });
-
-        Bundle loaderArgs = new Bundle();
+        Intent intent = getIntent();
+        final long placeRowId = intent.getLongExtra("EXTRA_PLACE_ID", -1);
+        Bundle args = new Bundle();
         args.putLong(EXTRA_PLACES_ROW_ID, placeRowId);
         if (placeRowId > 0) {
-            getSupportLoaderManager().initLoader(PLACE_LOADER_ID, loaderArgs, this);
+            getSupportLoaderManager().initLoader(PLACE_LOADER_ID, args, this);
         }
     }
 
@@ -142,6 +154,7 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener,
     }
 
 
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         final long placesRowId = args.getLong(EXTRA_PLACES_ROW_ID);
@@ -154,13 +167,34 @@ public class PlaceActivity extends ActionBarActivity implements OnClickListener,
         if (data.moveToFirst()) {
             mPlace = Place.fromCursor(data);
             placeName.setText(mPlace.getName());
-            owner.setText(mPlace.getOwner().getUsername());
+            if(mPlace.getOwner() != null)
+                owner.setText(mPlace.getOwner().getUsername());
             level.setText(Integer.toString(mPlace.getLevel()));
             price.setText(Long.toString(mPlace.getPrice()));
             service.setText(Long.toString(mPlace.getExpense()));
             income.setText(Long.toString(mPlace.getIncome()));
             profit.setText(Long.toString(mPlace.getIncome() - mPlace.getExpense()));
+            LayoutInflater inflater = getLayoutInflater();
+
+            if(mPlace.getOwner() != null) {
+                price.setVisibility(View.INVISIBLE);
+                priceLabel.setVisibility(View.INVISIBLE);
+                priceIcon.setVisibility(View.INVISIBLE);
+                if(mPlace.isInOwnership()){
+                    inflater.inflate(R.layout.buttons_my_place, buttonContent, true);
+                } else {
+                    inflater.inflate(R.layout.buttons_player_place, buttonContent, true);
+                }
+            } else {
+                inflater.inflate(R.layout.buttons_nobody_place, buttonContent, true);
+                owner.setVisibility(View.INVISIBLE);
+                ownerLabel.setVisibility(View.INVISIBLE);
+
+            }
+
         }
+
+
     }
 
     @Override
