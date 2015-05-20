@@ -66,8 +66,8 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/service_text_view"
             android:layout_below="@+id/income_text_view"
-            android:layout_alignLeft="@+id/button_content"
-            android:layout_alignStart="@+id/button_content" />
+            android:layout_alignLeft="@+id/button_container"
+            android:layout_alignStart="@+id/button_container" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -213,15 +213,13 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/button_content"
+            android:id="@+id/button_container"
             android:layout_below="@+id/profit_text_view"
             android:layout_alignLeft="@+id/text_view_place_level_label"
             android:layout_alignStart="@+id/text_view_place_level_label"
             android:layout_alignRight="@+id/text_view_income_value"
             android:layout_alignEnd="@+id/text_view_income_value"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp">
-
-        </FrameLayout>
+            android:layout_marginBottom="20dp"/>
     </RelativeLayout>
 </LinearLayout>
