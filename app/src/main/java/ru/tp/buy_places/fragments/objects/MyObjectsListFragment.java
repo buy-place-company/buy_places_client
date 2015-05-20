@@ -107,6 +107,7 @@ public class MyObjectsListFragment extends Fragment implements LoaderManager.Loa
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (id>0) {
                     Intent intent = new Intent(getActivity(), PlaceActivity.class);
+                    intent.putExtra("EXTRA_PLACE_ID", id);
                     startActivity(intent);
                 }
             }
