@@ -11,11 +11,16 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+
+import org.w3c.dom.Text;
+
+import java.awt.font.TextAttribute;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
@@ -24,6 +29,7 @@ import ru.tp.buy_places.service.resourses.Player;
 public class UserActivity extends AppCompatActivity implements OnMapReadyCallback,  LoaderManager.LoaderCallbacks<Cursor> {
     private MapView mMapView;
     private Player mPlayer;
+    private TextView userName;
 
     private static final int USER_LOADER_ID = 0;
     private static final String EXTRA_USER_ID = "EXTRA_USER_ID";
@@ -32,6 +38,7 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+        userName = (TextView)findViewById(R.id.text_view_user_name);
         Intent intent = getIntent();
         final long userId = intent.getLongExtra("EXTRA_USER_ID", -1);
         Bundle args = new Bundle();
@@ -82,6 +89,11 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.moveToFirst()) {
             mPlayer = Player.fromCursor(data);
+            if(mPlayer.getUsername() != null){
+                userName.setText(mPlayer.getUsername());
+            }
+
+
         }
     }
 

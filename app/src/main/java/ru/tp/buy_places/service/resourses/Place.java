@@ -241,6 +241,10 @@ public class Place implements Resource {
         return mIsInOwnershipIsSet;
     }
 
+    public boolean isInOwnership() {
+        return mIsInOwnership;
+    }
+
     public boolean getIsVisitedInThePastIsSet() {
         return mIsVisitedInThePastIsSet;
     }

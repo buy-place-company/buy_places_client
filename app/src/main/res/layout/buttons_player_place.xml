@@ -1,32 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    >
+    android:id="@+id/layout_player_place">
 
     <Button
         android:layout_width="120dp"
-        android:layout_weight="4"
-        android:layout_height="wrap_content"
-        android:text="Улучшить"
-        android:id="@+id/button_upgrade_place"
-        android:layout_gravity="bottom"
-        android:visibility="invisible"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button"
-        android:visibility="invisible" />
-
-    <Button
-        android:layout_weight="4"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:text="Выкупить"
         android:id="@+id/button_rebuy_place"
-        android:layout_gravity="bottom|center_horizontal"
-        />
-</LinearLayout>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@color/accent"
+        android:textColor="@color/accent_material_light"/>
+
+</RelativeLayout>
