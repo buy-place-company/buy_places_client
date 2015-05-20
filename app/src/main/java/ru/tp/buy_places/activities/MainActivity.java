@@ -6,13 +6,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import ru.tp.buy_places.NavigationDrawerFragment;
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.fragments.deals.DealsFragment;
@@ -22,7 +23,7 @@ import ru.tp.buy_places.fragments.raiting.RaitingFragment;
 import ru.tp.buy_places.fragments.settings.SettingFragment;
 import ru.tp.buy_places.fragments.user.UserFragment;
 
-public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.Manager,
+public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.Manager,
         MyObjectsListFragment.OnFragmentInteractionListener,
         DealsFragment.OnFragmentInteractionListener,
         RaitingFragment.OnFragmentInteractionListener,

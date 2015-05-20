@@ -11,6 +11,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,7 +26,7 @@ import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.resourses.Place;
 
-public class PlaceActivity extends ActionBarActivity implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class PlaceActivity extends AppCompatActivity implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static final int PLACE_LOADER_ID = 0;
     private static final String EXTRA_PLACES_ROW_ID = "EXTRA_PLACES_ROW_ID";
     private Place mPlace;

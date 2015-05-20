@@ -4,11 +4,11 @@ import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,10 +19,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
-import ru.tp.buy_places.service.resourses.Place;
 import ru.tp.buy_places.service.resourses.Player;
 
-public class UserActivity extends ActionBarActivity implements OnMapReadyCallback,  LoaderManager.LoaderCallbacks<Cursor> {
+public class UserActivity extends AppCompatActivity implements OnMapReadyCallback,  LoaderManager.LoaderCallbacks<Cursor> {
     private MapView mMapView;
     private Player mPlayer;
 

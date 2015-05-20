@@ -3,13 +3,13 @@ package ru.tp.buy_places.activities;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import ru.tp.buy_places.R;
 
 
-public class SplashScreenActivity extends ActionBarActivity {
+public class SplashScreenActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
