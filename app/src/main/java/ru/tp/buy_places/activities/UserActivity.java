@@ -18,10 +18,6 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
-import org.w3c.dom.Text;
-
-import java.awt.font.TextAttribute;
-
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.resourses.Player;
