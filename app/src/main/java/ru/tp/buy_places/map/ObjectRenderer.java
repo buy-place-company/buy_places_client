@@ -29,12 +29,12 @@ public class ObjectRenderer extends DefaultClusterRenderer<PlaceClusterItem> {
         super(context, map, clusterManager);
 
         mIconGenerator = new IconGenerator(context);
-        View placeClusterMarkerLayout = LayoutInflater.from(context).inflate(R.layout.places_cluster_marker, null);
-        mIconGenerator.setContentView(placeClusterMarkerLayout);
-
+//        View placeClusterMarkerLayout = LayoutInflater.from(context).inflate(R.layout.places_cluster_marker, null);
+//        mIconGenerator.setContentView(placeClusterMarkerLayout);
+//
         mClusterItemGenerator = new IconGenerator(context);
-        View placesClusterItemMarkerLayout = LayoutInflater.from(context).inflate(R.layout.place_cluster_item_marker, null);
-        mClusterItemGenerator.setContentView(placesClusterItemMarkerLayout);
+//        View placesClusterItemMarkerLayout = LayoutInflater.from(context).inflate(R.layout.place_cluster_item_marker, null);
+//        mClusterItemGenerator.setContentView(placesClusterItemMarkerLayout);
         mOnClusterItemRenderedListerer = onClusterItemRenderedListener;
     }
 
@@ -50,7 +50,7 @@ public class ObjectRenderer extends DefaultClusterRenderer<PlaceClusterItem> {
     protected void onBeforeClusterItemRendered(PlaceClusterItem item, MarkerOptions markerOptions) {
         mClusterItemGenerator.setColor(R.style.ClusterItemBackgroundColor);
         Bitmap icon = mClusterItemGenerator.makeIcon();
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(item.getName());
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.custommarker)).title(item.getName());
 
     }
 
@@ -58,7 +58,7 @@ public class ObjectRenderer extends DefaultClusterRenderer<PlaceClusterItem> {
     protected void onBeforeClusterRendered(Cluster<PlaceClusterItem> cluster, MarkerOptions markerOptions) {
         mIconGenerator.setColor(R.style.ClusterRenderBackgroundColor);
         Bitmap icon = mIconGenerator.makeIcon();
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.custommarker3));
     }
 
     @Override

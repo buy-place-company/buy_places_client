@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="16dp"
-    android:layout_height="16dp">
-    <ImageView
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:src="@drawable/marker"/>
+    android:layout_width="20dp"
+    android:layout_height="20dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:id="@+id/imageView"
+        android:layout_gravity="left|top"
+        android:src="@drawable/circleview" />
 </FrameLayout>
