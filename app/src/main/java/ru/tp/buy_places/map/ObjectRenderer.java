@@ -50,7 +50,7 @@ public class ObjectRenderer extends DefaultClusterRenderer<PlaceClusterItem> {
     protected void onBeforeClusterItemRendered(PlaceClusterItem item, MarkerOptions markerOptions) {
         mClusterItemGenerator.setColor(R.style.ClusterItemBackgroundColor);
         Bitmap icon = mClusterItemGenerator.makeIcon();
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(item.getName());
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.custommarker)).title(item.getName());
 
     }
 
@@ -58,7 +58,7 @@ public class ObjectRenderer extends DefaultClusterRenderer<PlaceClusterItem> {
     protected void onBeforeClusterRendered(Cluster<PlaceClusterItem> cluster, MarkerOptions markerOptions) {
         mIconGenerator.setColor(R.style.ClusterRenderBackgroundColor);
         Bitmap icon = mIconGenerator.makeIcon();
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.custommarker3));
     }
 
     @Override
