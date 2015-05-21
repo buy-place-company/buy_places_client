@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="filter">
+        <item>@string/all_places_filter_name</item>
+        <item>@string/my_places_filter_name</item>
+        <item>@string/visited_places_filter_name</item>
+    </string-array>
+</resources>

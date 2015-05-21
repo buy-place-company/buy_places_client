@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="positive_button_title">Да</string>
+    <string name="negative_button_title">Нет</string>
+    <string name="cancel_button_title">Отменить</string>
+    <string name="places_filter_dialog_title">Фильтры</string>
+</resources>

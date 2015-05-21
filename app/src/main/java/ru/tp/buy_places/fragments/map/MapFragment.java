@@ -1,7 +1,9 @@
 package ru.tp.buy_places.fragments.map;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,7 +13,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -27,6 +33,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.activities.PlaceActivity;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
@@ -40,8 +49,7 @@ import ru.tp.buy_places.service.resourses.Places;
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
     private static final int ALL_PLACES_LOADER_ID = 0;
-    private static final int CHANGED_PLACE_LOADER_ID = 1;
-
+    private static final String MAP_FILTER_SHARED_PREFERENCES = "MAP_FILTER";
 
     private ClusterManager<PlaceClusterItem> mClusterManager;
     private CustomInfoWindowAdapter mInfoWindowAdapter;
@@ -52,12 +60,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     private ImageButton mMyLocationImageButton;
     private ImageButton mZoomInImageButton;
     private ImageButton mZoomOutImageButton;
+    private SharedPreferences mSharedPreferences;
 
 
     public MapFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +73,39 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         MapsInitializer.initialize(getActivity());
         mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         mInfoWindowAdapter = new CustomInfoWindowAdapter(getActivity());
+        mSharedPreferences = getActivity().getSharedPreferences(MAP_FILTER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        setHasOptionsMenu(true);
         getLoaderManager().initLoader(ALL_PLACES_LOADER_ID, null, this);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_filter:
+                final Map<Integer, Boolean> currentState = new HashMap<>();
+                AlertDialog d = new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.places_filter_dialog_title)
+                        .setMultiChoiceItems(getResources().getStringArray(R.array.filter), null, new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+
+                            }
+                        })
+                        .setPositiveButton(R.string.positive_button_title, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setNeutralButton(R.string.cancel_button_title, null)
+                        .show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="all_places_filter_name">All</string>
+    <string name="my_places_filter_name">My</string>
+    <string name="visited_places_filter_name">Visited</string>
+</resources>

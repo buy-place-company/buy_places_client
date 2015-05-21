@@ -48,4 +48,10 @@
     <string name="android_geo_api_key">AIzaSyA6dxz7-vh3yv6TU0ec5lILH3-7QOh1Lbk</string>
     <string name="title_activity_object">ObjectActivity</string>
     <string name="url_root">http://private-f5e37f-testapi901.apiary-mock.com</string>
+
+
+    <string name="positive_button_title">Yes</string>
+    <string name="negative_button_title">No</string>
+    <string name="cancel_button_title">Cancel</string>
+    <string name="places_filter_dialog_title">Filter</string>
 </resources>

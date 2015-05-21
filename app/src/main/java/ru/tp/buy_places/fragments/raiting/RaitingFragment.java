@@ -1,23 +1,27 @@
 package ru.tp.buy_places.fragments.raiting;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import ru.tp.buy_places.R;
-import ru.tp.buy_places.activities.UserActivity;
+import ru.tp.buy_places.content_provider.BuyPlacesContract;
+import ru.tp.buy_places.service.resourses.Player;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +31,7 @@ import ru.tp.buy_places.activities.UserActivity;
  * Use the {@link RaitingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RaitingFragment extends Fragment {
+public class RaitingFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
 
     private ListView mListView;
@@ -66,7 +70,7 @@ public class RaitingFragment extends Fragment {
         };
 
         adapter = new SimpleAdapter(getActivity(), getData(), R.layout.item_raiting, from, to);
-
+        getLoaderManager().initLoader(0, null, this);
     }
 
     private ArrayList<HashMap<String, Object>> getData(){
@@ -91,14 +95,6 @@ public class RaitingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mListView = (ListView) inflater.inflate(R.layout.fragment_raiting, container, false);
-        mListView.setAdapter(adapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), UserActivity.class);
-                startActivity(intent);
-            }
-        });
         return mListView;
     }
 
@@ -126,6 +122,25 @@ public class RaitingFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(), BuyPlacesContract.Players.CONTENT_URI, BuyPlacesContract.Players.ALL_COLUMNS_PROJECTION, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        List<Player> players = new ArrayList<>();
+        while (data.moveToNext()) {
+            players.add(Player.fromCursor(data));
+        }
+        Log.d("PLAYERS SIZE", Integer.toString(players.size()));
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 
     /**
