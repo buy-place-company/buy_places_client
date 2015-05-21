@@ -43,6 +43,7 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
     private TextView income;
     private Button upgradePlace;
     private Button sellPlace;
+    private FrameLayout buttonContent;
     private AlertDialog.Builder ad;
     private FrameLayout buttonContainer;
 
@@ -60,6 +61,7 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
         level = (TextView) findViewById(R.id.text_view_place_level);
         income = (TextView) findViewById(R.id.text_view_income_value);
         service = (TextView) findViewById(R.id.text_view_service_value);
+        buttonContent = (FrameLayout) findViewById(R.id.button_container);
         upgradePlace = (Button) findViewById(R.id.button_upgrade_place);
         sellPlace = (Button) findViewById(R.id.button_sell_place);
         buttonContainer = (FrameLayout) findViewById(R.id.button_container);
