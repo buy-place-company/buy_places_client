@@ -2,16 +2,18 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
         <item name="colorPrimary">@color/primary</item>
         <item name="colorAccent">@color/accent</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="android:selectableItemBackground">@color/background</item>
-        <item name="android:buttonStyle">@style/ButtonStyle</item>
+        <item name="buttonStyle">@style/ButtonStyle</item>
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="ButtonStyle">
+    <style name="ButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:textColor">@color/text_or_icons</item>
     </style>
 
     <style name="ClusterItemBackgroundColor">
