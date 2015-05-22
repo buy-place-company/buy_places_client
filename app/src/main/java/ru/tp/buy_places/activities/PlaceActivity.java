@@ -43,7 +43,8 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
     private TextView income;
     private Button upgradePlace;
     private Button sellPlace;
-    private FrameLayout buttonContent;
+    private Button buyPlace;
+    private Button rebuyPlace;
     private AlertDialog.Builder ad;
     private FrameLayout buttonContainer;
 
@@ -61,9 +62,6 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
         level = (TextView) findViewById(R.id.text_view_place_level);
         income = (TextView) findViewById(R.id.text_view_income_value);
         service = (TextView) findViewById(R.id.text_view_service_value);
-        buttonContent = (FrameLayout) findViewById(R.id.button_container);
-        upgradePlace = (Button) findViewById(R.id.button_upgrade_place);
-        sellPlace = (Button) findViewById(R.id.button_sell_place);
         buttonContainer = (FrameLayout) findViewById(R.id.button_container);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -140,6 +138,21 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
             income.setText(Long.toString(mPlace.getIncome()));
             profit.setText(Long.toString(mPlace.getIncome() - mPlace.getExpense()));
             LayoutInflater inflater = LayoutInflater.from(this);
+            ad = new AlertDialog.Builder(this);
+            ad.setTitle(DIALOG);
+            ad.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int arg1) {
+                }
+            });
+            ad.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int arg1) {
+                }
+            });
+            ad.setCancelable(true);
+            ad.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                public void onCancel(DialogInterface dialog) {
+                }
+            });
             if (mPlace.isInOwnership()) {
                 inflater.inflate(R.layout.buttons_my_place, buttonContainer);
                 price.setVisibility(View.INVISIBLE);
@@ -158,31 +171,33 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
                 sellPlace.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ad.setMessage("Вы можете продать здание за 50% стоимости");
+                        ad.setMessage("Ваше здание будет продано за 50% от стоимости");
                         ad.show();
                     }
                 });
-                ad = new AlertDialog.Builder(this);
-                ad.setTitle(DIALOG);
-                ad.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int arg1) {
-                    }
-                });
-                ad.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int arg1) {
-                    }
-                });
-                ad.setCancelable(true);
-                ad.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    public void onCancel(DialogInterface dialog) {
-                    }
-                });
+
             } else if (mPlace.getOwner() == null){
                 inflater.inflate(R.layout.buttons_nobody_place, buttonContainer, true);
+                buyPlace = (Button) findViewById(R.id.button_buy_place);
+                buyPlace.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ad.setMessage("Вы действительно хотите купить здание за "+ mPlace.getPrice() + "?");
+                        ad.show();
+                    }
+                });
                 owner.setVisibility(View.INVISIBLE);
                 ownerLabel.setVisibility(View.INVISIBLE);
             } else {
                 inflater.inflate(R.layout.buttons_player_place, buttonContainer, true);
+                rebuyPlace = (Button) findViewById(R.id.button_rebuy_place);
+                rebuyPlace.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ad.setMessage("Вы действительно хотите выкупить это здание?");
+                        ad.show();
+                    }
+                });
                 price.setVisibility(View.INVISIBLE);
                 priceLabel.setVisibility(View.INVISIBLE);
                 priceIcon.setVisibility(View.INVISIBLE);
