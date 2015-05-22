@@ -14,11 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.activities.PlaceActivity;
@@ -72,24 +68,12 @@ public class MyObjectsListFragment extends Fragment implements LoaderManager.Loa
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_my_objects, container, false);
-        mRecycleView = (RecyclerView) rootView.findViewById(R.id.RecyclerView);
+        mRecycleView = (RecyclerView) rootView.findViewById(R.id.listPlacesRecyclerView);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecycleView.setLayoutManager(mLayoutManager);
-
         placeListAdapter = new PlaceListAdapter(getActivity());
         placeListAdapter.setOnItemClickListener(this);
         mRecycleView.setAdapter(placeListAdapter);
-
-//        mRecycleView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                if (id > 0) {
-//                    Intent intent = new Intent(getActivity(), PlaceActivity.class);
-//                    intent.putExtra("EXTRA_PLACE_ID", id);
-//                    startActivity(intent);
-//                }
-//            }
-//        });
         return mRecycleView;
     }
 

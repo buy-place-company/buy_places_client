@@ -88,8 +88,6 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
             if(mPlayer.getUsername() != null){
                 userName.setText(mPlayer.getUsername());
             }
-
-
         }
     }
 

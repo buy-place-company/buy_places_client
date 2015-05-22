@@ -1,6 +1,7 @@
 package ru.tp.buy_places.fragments.raiting;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,19 +9,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.activities.UserActivity;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
+import ru.tp.buy_places.fragments.objects.PlaceListAdapter;
 import ru.tp.buy_places.service.resourses.Player;
 
 /**
@@ -31,11 +33,12 @@ import ru.tp.buy_places.service.resourses.Player;
  * Use the {@link RaitingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RaitingFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class RaitingFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, RatingAdapter.OnItemClickListener {
 
-
-    private ListView mListView;
-    private SimpleAdapter adapter;
+    List<Player> mPlayers;
+    private RecyclerView mRecycleView;
+    private RatingAdapter ratingAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     private static final String TEXT_FIELD = "text";
     private static final String IMAGE_FIELD = "image";
 
@@ -56,46 +59,22 @@ public class RaitingFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLoaderManager().initLoader(0,null, this);
     }
 
-    private void initFragment(){
-        String from[] = new String[]{
-                TEXT_FIELD,
-                IMAGE_FIELD
-        };
 
-        int[] to = new int[] {
-                R.id.text_view_rating,
-                R.id.image_view_rating
-        };
-
-        adapter = new SimpleAdapter(getActivity(), getData(), R.layout.item_raiting, from, to);
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    private ArrayList<HashMap<String, Object>> getData(){
-        final String TITLES[] = new String[]{
-                getString(R.string.petya),
-                getString(R.string.vasya),
-                getString(R.string.gosha)};
-        final int IMAGE = R.mipmap.ic_pupkin;
-        ArrayList<HashMap<String, Object>> list =
-                new ArrayList<>();
-        for (int i = 0; i < TITLES.length; i++) {
-            HashMap<String, Object> element = new HashMap<>();
-            element.put(TEXT_FIELD, TITLES[i]);
-            element.put(IMAGE_FIELD, IMAGE);
-            list.add(element);
-        }
-        return list;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        mListView = (ListView) inflater.inflate(R.layout.fragment_raiting, container, false);
-        return mListView;
+        View rootView = inflater.inflate(R.layout.fragment_raiting, container, false);
+        mRecycleView = (RecyclerView) rootView.findViewById(R.id.ratingRecyclerView);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecycleView.setLayoutManager(mLayoutManager);
+        ratingAdapter = new RatingAdapter(getActivity());
+        ratingAdapter.setOnItemClickListener(this);
+        mRecycleView.setAdapter(ratingAdapter);
+        return mRecycleView;
     }
 
 
@@ -109,7 +88,6 @@ public class RaitingFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        initFragment();
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
@@ -131,11 +109,12 @@ public class RaitingFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        List<Player> players = new ArrayList<>();
+        mPlayers = new ArrayList<>();
         while (data.moveToNext()) {
-            players.add(Player.fromCursor(data));
+            mPlayers.add(Player.fromCursor(data));
         }
-        Log.d("PLAYERS SIZE", Integer.toString(players.size()));
+        ratingAdapter.setData(mPlayers);
+        Log.d("PLAYERS SIZE", Integer.toString(mPlayers.size()));
     }
 
     @Override
@@ -143,16 +122,14 @@ public class RaitingFragment extends Fragment implements LoaderManager.LoaderCal
 
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    @Override
+    public void onItemClick(View view, int position) {
+        Intent intent = new Intent(getActivity(), UserActivity.class);
+        intent.putExtra("EXTRA_USER_ID", mPlayers.get(position).getId());
+        startActivity(intent);
+    }
+
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
