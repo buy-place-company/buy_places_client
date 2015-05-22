@@ -10,8 +10,6 @@
         android:text="Выкупить"
         android:id="@+id/button_rebuy_place"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:background="@color/accent"
-        android:textColor="@color/accent_material_light"/>
+        android:layout_alignParentRight="true"/>
 
 </RelativeLayout>

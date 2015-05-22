@@ -11,9 +11,7 @@
         android:id="@+id/button_upgrade_place"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/button"
-        android:layout_toStartOf="@+id/button"
-        android:textColor="@color/accent_material_light"
-        android:background="@color/accent" />
+        android:layout_toStartOf="@+id/button"/>
 
     <Button
         android:layout_width="120dp"
@@ -22,9 +20,7 @@
         android:id="@+id/button_sell_place"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/button"
-        android:layout_toEndOf="@+id/button"
-        android:textColor="@color/accent_material_light"
-        android:background="@color/accent" />
+        android:layout_toEndOf="@+id/button"/>
 
     <Button
         android:layout_width="wrap_content"

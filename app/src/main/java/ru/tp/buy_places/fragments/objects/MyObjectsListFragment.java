@@ -9,21 +9,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.CursorAdapter;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.activities.PlaceActivity;
-
-import static ru.tp.buy_places.content_provider.BuyPlacesContract.Places;
+import ru.tp.buy_places.content_provider.BuyPlacesContract;
+import ru.tp.buy_places.service.resourses.Places;
 
 
 /**
@@ -34,15 +30,14 @@ import static ru.tp.buy_places.content_provider.BuyPlacesContract.Places;
  * Use the {@link MyObjectsListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyObjectsListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MyObjectsListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, PlaceListAdapter.OnItemClickListener {
 
 
     private OnFragmentInteractionListener mListener;
-    private ListView mListView;
-    private CursorAdapter adapter;
-    private static final String TEXT_FIELD = "text";
-    private static final String IMAGE_FIELD = "image";
-
+    private RecyclerView mRecycleView;
+    private PlaceListAdapter placeListAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    Places mPlaces;
 
     public static MyObjectsListFragment newInstance(String param1, String param2) {
         MyObjectsListFragment fragment = new MyObjectsListFragment();
@@ -62,63 +57,30 @@ public class MyObjectsListFragment extends Fragment implements LoaderManager.Loa
         getLoaderManager().initLoader(0, null, this);
     }
 
-    private void initFragment(){
-        String from[] = new String[]{
-                TEXT_FIELD,
-                IMAGE_FIELD
-        };
+//    private void initFragment(){
+//        //adapter = new SimpleCursorAdapter(getActivity(), R.layout.item_object, null, new String[]{Places.COLUMN_ALIAS_ID}, new int[]{R.id.title_place_list}, 0);
+//        //adapter = new SimpleAdapter(getActivity(), getData(), R.layout.item_object, from, to);
+//   }
 
-        int[] to = new int[] {
-                R.id.textObj,
-                R.id.imageObj
-        };
-        adapter = new SimpleCursorAdapter(getActivity(), R.layout.item_object, null, new String[]{Places.COLUMN_ALIAS_ID}, new int[]{R.id.textObj}, 0);
-        //adapter = new SimpleAdapter(getActivity(), getData(), R.layout.item_object, from, to);
-
-    }
-
-    private ArrayList<HashMap<String, Object>> getData(){
-        final String TITLES[] = new String[]{
-                getString(R.string.mgtu),
-                getString(R.string.yaposha),
-                getString(R.string.spar),
-                getString(R.string.mc),
-                getString(R.string.obsh)};
-        final int IMAGE = R.mipmap.ic_object;
-        ArrayList<HashMap<String, Object>> list =
-                new ArrayList<>();
-        for (int i = 0; i < TITLES.length; i++) {
-            HashMap<String, Object> element = new HashMap<>();
-            element.put(TEXT_FIELD, TITLES[i]);
-            element.put(IMAGE_FIELD, IMAGE);
-            list.add(element);
-        }
-        return list;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mListView = (ListView) inflater.inflate(R.layout.fragment_my_objects, container, false);
-        mListView.setAdapter(adapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (id>0) {
-                    Intent intent = new Intent(getActivity(), PlaceActivity.class);
-                    intent.putExtra("EXTRA_PLACE_ID", id);
-                    startActivity(intent);
-                }
-            }
-        });
-        return mListView;
+        View rootView = inflater.inflate(R.layout.fragment_my_objects, container, false);
+        mRecycleView = (RecyclerView) rootView.findViewById(R.id.listPlacesRecyclerView);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecycleView.setLayoutManager(mLayoutManager);
+        placeListAdapter = new PlaceListAdapter(getActivity());
+        placeListAdapter.setOnItemClickListener(this);
+        mRecycleView.setAdapter(placeListAdapter);
+        return mRecycleView;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        initFragment();
+//        initFragment();
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
@@ -135,17 +97,25 @@ public class MyObjectsListFragment extends Fragment implements LoaderManager.Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), Places.CONTENT_URI, null, Places.IS_IN_OWNERSHIP_SELECTION, null, null);
+        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, BuyPlacesContract.Places.IS_IN_OWNERSHIP_SELECTION, null, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data);
+        mPlaces = Places.fromCursor(data);
+        placeListAdapter.setData(mPlaces.getPlaces());
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
+
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Intent intent = new Intent(getActivity(), PlaceActivity.class);
+        intent.putExtra("EXTRA_PLACE_ID", mPlaces.getPlaces().get(position).getRowId());
+        startActivity(intent);
     }
 
     /**
