@@ -4,4 +4,7 @@
     <string name="negative_button_title">Нет</string>
     <string name="cancel_button_title">Отменить</string>
     <string name="places_filter_dialog_title">Фильтры</string>
+
+    <string name="wait">Подождите</string>
+    <string name="request_executes">Выполняется запрос</string>
 </resources>

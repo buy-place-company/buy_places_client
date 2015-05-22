@@ -54,4 +54,7 @@
     <string name="negative_button_title">No</string>
     <string name="cancel_button_title">Cancel</string>
     <string name="places_filter_dialog_title">Filter</string>
+    <string name="buy_it">Buy It</string>
+    <string name="wait">Wait</string>
+    <string name="request_executes">Loading</string>
 </resources>
