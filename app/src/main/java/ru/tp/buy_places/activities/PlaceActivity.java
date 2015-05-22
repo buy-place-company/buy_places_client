@@ -75,7 +75,7 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PlaceActivity.this, UserActivity.class);
-                intent.putExtra("EXTRA_USER_ID", mPlace.getOwner().getId());
+                intent.putExtra("EXTRA_USER_ID", mPlace.getOwner().getRowId());
                 startActivity(intent);
             }
         });

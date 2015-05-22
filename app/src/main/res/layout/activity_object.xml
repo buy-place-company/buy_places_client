@@ -142,7 +142,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="20"
             android:id="@+id/text_view_profit_value"
-            android:layout_below="@+id/text_view_service_value"
+            android:layout_alignTop="@+id/image_view_dollar3"
             android:layout_alignLeft="@+id/text_view_service_value"
             android:layout_alignStart="@+id/text_view_service_value" />
 

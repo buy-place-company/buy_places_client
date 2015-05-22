@@ -36,19 +36,9 @@
                 android:layout_height="150dp"
                 android:id="@+id/image_view_user"
                 android:src="@mipmap/ic_pupkin"
-                android:layout_marginTop="33dp"
                 android:layout_below="@+id/image_view_icon_dollar"
-                android:layout_alignRight="@+id/text_view_user_name"
-                android:layout_alignEnd="@+id/text_view_user_name" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Мася Пупкина"
-                android:id="@+id/text_view_user_name"
-                android:layout_below="@+id/image_view_user"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -56,8 +46,9 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="100"
                 android:id="@+id/text_view_dollar"
-                android:layout_alignLeft="@+id/map_view"
-                android:layout_marginTop="10dp" />
+                android:layout_alignTop="@+id/image_view_icon_dollar"
+                android:layout_toRightOf="@+id/image_view_icon_dollar"
+                android:layout_toEndOf="@+id/image_view_icon_dollar" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -65,13 +56,14 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="22"
                 android:id="@+id/text_view_user_object_amount"
-                android:layout_alignTop="@+id/image_view_user_object_amount"
-                android:layout_alignRight="@+id/map_view"
-                android:layout_alignEnd="@+id/map_view" />
+                android:layout_alignTop="@+id/text_view_user_level"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="20dp" />
 
             <ImageView
                 android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_height="25dp"
                 android:id="@+id/image_view_user_object_amount"
                 android:src="@mipmap/ic_object"
                 android:layout_alignTop="@+id/text_view_user_level"
@@ -83,17 +75,31 @@
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 android:layout_alignParentBottom="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="20dp"
                 android:layout_below="@+id/text_view_user_name"
-                android:layout_margin="20dp" />
+                android:layout_alignRight="@+id/text_view_user_object_amount"
+                android:layout_alignEnd="@+id/text_view_user_object_amount"
+                android:layout_marginTop="20dp" />
 
             <ImageView
                 android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_height="25dp"
                 android:id="@+id/image_view_icon_dollar"
-                android:layout_alignTop="@+id/text_view_user_level"
-                android:layout_toRightOf="@+id/text_view_dollar"
-                android:layout_toEndOf="@+id/text_view_dollar"
-                android:src="@mipmap/ic_currency_usd" />
+                android:src="@mipmap/ic_currency_usd"
+                android:layout_alignParentTop="true"
+                android:layout_alignLeft="@+id/map_view"
+                android:layout_alignStart="@+id/map_view"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/text_view_user_name"
+                android:text="Юзернейм"
+                android:layout_below="@+id/image_view_user"
+                android:layout_centerHorizontal="true" />
         </RelativeLayout>
 
     </LinearLayout>

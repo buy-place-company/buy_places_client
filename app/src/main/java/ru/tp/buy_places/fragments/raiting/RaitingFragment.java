@@ -125,7 +125,7 @@ public class RaitingFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(getActivity(), UserActivity.class);
-        intent.putExtra("EXTRA_USER_ID", mPlayers.get(position).getId());
+        intent.putExtra("EXTRA_USER_ID", mPlayers.get(position).getRowId());
         startActivity(intent);
     }
 

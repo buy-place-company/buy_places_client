@@ -50,7 +50,8 @@ public class CustomInfoWindowAdapter implements  GoogleMap.InfoWindowAdapter, Ob
 
                 TextView tvName = (TextView) v.findViewById(R.id.text_view_object_custom_name);
                 TextView tvPrice = (TextView) v.findViewById(R.id.text_view_object_custom_price);
-                tvPrice.setText(Long.toString(mItem.getPrice()));
+                tvPrice.setText("Цена: "+ Long.toString(mItem.getPrice()));
+
                 tvName.setText(mItem.getName());
 
                 return v;
