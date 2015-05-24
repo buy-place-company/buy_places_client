@@ -11,7 +11,7 @@
         app:popupTheme="@style/ActionBarPopupTheme"/>
     <Button
         android:id="@+id/button_login_via_vk"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login VK"
         android:background="#4B74A5"
@@ -19,7 +19,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="74dp" />
+        android:layout_marginBottom="74dp"
+        android:layout_margin="20dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -48,9 +49,8 @@
         android:text="Войдите"
         android:id="@+id/textView"
         android:layout_below="@+id/toolbar"
-        android:layout_alignLeft="@+id/button_login_via_vk"
-        android:layout_alignStart="@+id/button_login_via_vk"
-        android:layout_marginTop="130dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="140dp" />
 
     <TextView
         android:layout_width="wrap_content"

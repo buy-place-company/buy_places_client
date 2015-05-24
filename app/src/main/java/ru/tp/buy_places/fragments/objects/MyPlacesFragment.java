@@ -25,30 +25,35 @@ import ru.tp.buy_places.service.resourses.Places;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MyObjectsListFragment.OnFragmentInteractionListener} interface
+ * {@link MyPlacesFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MyObjectsListFragment#newInstance} factory method to
+ * Use the {@link MyPlacesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyObjectsListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, PlaceListAdapter.OnItemClickListener {
+public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, MyPlacesAdapter.OnItemClickListener {
 
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView mRecycleView;
-    private PlaceListAdapter placeListAdapter;
+    private MyPlacesAdapter myPlacesAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     Places mPlaces;
 
-    public static MyObjectsListFragment newInstance(String param1, String param2) {
-        MyObjectsListFragment fragment = new MyObjectsListFragment();
+    public static MyPlacesFragment newInstance(String param1, String param2) {
+        MyPlacesFragment fragment = new MyPlacesFragment();
         Bundle args = new Bundle();
 
         fragment.setArguments(args);
         return fragment;
     }
 
-    public MyObjectsListFragment() {
+    public MyPlacesFragment() {
         // Required empty public constructor
+    }
+
+    public static Fragment newInstance() {
+        Fragment fragment = new MyPlacesFragment();
+        return fragment;
     }
 
     @Override
@@ -71,9 +76,9 @@ public class MyObjectsListFragment extends Fragment implements LoaderManager.Loa
         mRecycleView = (RecyclerView) rootView.findViewById(R.id.listPlacesRecyclerView);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecycleView.setLayoutManager(mLayoutManager);
-        placeListAdapter = new PlaceListAdapter(getActivity());
-        placeListAdapter.setOnItemClickListener(this);
-        mRecycleView.setAdapter(placeListAdapter);
+        myPlacesAdapter = new MyPlacesAdapter(getActivity());
+        myPlacesAdapter.setOnItemClickListener(this);
+        mRecycleView.setAdapter(myPlacesAdapter);
         return mRecycleView;
     }
 
@@ -103,7 +108,7 @@ public class MyObjectsListFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mPlaces = Places.fromCursor(data);
-        placeListAdapter.setData(mPlaces.getPlaces());
+        myPlacesAdapter.setData(mPlaces.getPlaces());
     }
 
     @Override

@@ -22,7 +22,6 @@ import java.util.List;
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.activities.UserActivity;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
-import ru.tp.buy_places.fragments.objects.PlaceListAdapter;
 import ru.tp.buy_places.service.resourses.Player;
 
 /**
