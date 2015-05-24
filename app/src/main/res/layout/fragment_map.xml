@@ -17,13 +17,11 @@
             android:src="@drawable/my_location"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:layout_marginTop="16dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:id="@+id/image_button_my_location" />
+            android:id="@+id/image_button_my_location"
+            android:layout_below="@+id/relativeLayout"
+            android:layout_alignLeft="@+id/image_button_zoom_in"
+            android:layout_alignStart="@+id/image_button_zoom_in"
+            android:layout_marginTop="52dp" />
 
         <ImageButton
             android:layout_width="48dp"
@@ -51,6 +49,47 @@
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/relativeLayout"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:background="@color/accent"
+            android:alpha="0.5">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="25dp"
+                android:id="@+id/icon_current"
+                android:src="@mipmap/ic_currency_usd"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="100"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/tv_current_value"
+                android:layout_alignTop="@+id/icon_current"
+                android:layout_toRightOf="@+id/icon_current"
+                android:layout_toEndOf="@+id/icon_current"
+                android:layout_below="@+id/icon_current" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="lvl 1"
+                android:id="@+id/title_level"
+                android:layout_alignBottom="@+id/icon_current"
+                android:layout_centerHorizontal="true"
+                android:layout_alignTop="@+id/icon_current" />
+        </RelativeLayout>
 
     </RelativeLayout>
 </FrameLayout>
