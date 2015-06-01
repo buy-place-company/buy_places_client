@@ -40,6 +40,7 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
         Bundle args = new Bundle();
         args.putLong(EXTRA_USER_ID, userId);
         getSupportLoaderManager().initLoader(USER_LOADER_ID, args, this);
+
         MapsInitializer.initialize(this);
 
         if (mMapView != null)

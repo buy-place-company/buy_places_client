@@ -44,6 +44,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="38dp"
-            android:id="@+id/image"/>
+            android:id="@+id/image"
+            android:src="@mipmap/ava" />
 
     </RelativeLayout>

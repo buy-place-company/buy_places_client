@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
@@ -45,7 +46,10 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
     private Button sellPlace;
     private Button buyPlace;
     private Button rebuyPlace;
-    private AlertDialog.Builder ad;
+    private AlertDialog.Builder adSell;
+    private AlertDialog.Builder adUpgrade;
+    private AlertDialog.Builder adBuy;
+    private AlertDialog.Builder adRebuy;
     private FrameLayout buttonContainer;
 
     @Override
@@ -138,21 +142,7 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
             income.setText(Long.toString(mPlace.getIncome()));
             profit.setText(Long.toString(mPlace.getIncome() - mPlace.getExpense()));
             LayoutInflater inflater = LayoutInflater.from(this);
-            ad = new AlertDialog.Builder(this);
-            ad.setTitle(DIALOG);
-            ad.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int arg1) {
-                }
-            });
-            ad.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int arg1) {
-                }
-            });
-            ad.setCancelable(true);
-            ad.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                public void onCancel(DialogInterface dialog) {
-                }
-            });
+
             if (mPlace.isInOwnership()) {
                 inflater.inflate(R.layout.buttons_my_place, buttonContainer);
                 price.setVisibility(View.INVISIBLE);
@@ -160,42 +150,122 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
                 priceIcon.setVisibility(View.INVISIBLE);
                 upgradePlace = (Button) findViewById(R.id.button_upgrade_place);
                 sellPlace = (Button) findViewById(R.id.button_sell_place);
-                if (!upgradePlace.hasOnClickListeners())
-                upgradePlace.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ad.setMessage("Вы можете улучшить здание за 500р");
-                        ad.show();
-                    }
-                });
-                sellPlace.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ad.setMessage("Ваше здание будет продано за 50% от стоимости");
-                        ad.show();
-                    }
-                });
 
-            } else if (mPlace.getOwner() == null){
+                if (!upgradePlace.hasOnClickListeners()) {
+                    adSell = new AlertDialog.Builder(this);
+                    adUpgrade = new AlertDialog.Builder(this);
+                    upgradePlace.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            adUpgrade.setTitle(DIALOG);
+                            adUpgrade.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int arg1) {
+
+                                    Toast.makeText(PlaceActivity.this,
+                                            "Здание повысилось до " + Integer.toString(mPlace.getLevel() + 1) + " уровня",
+                                             Toast.LENGTH_LONG).show();
+                                    PlaceActivity.this.finish();
+
+                                }
+                            });
+                            adUpgrade.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int arg1) {
+                                }
+                            });
+                            adUpgrade.setCancelable(true);
+                            adUpgrade.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                public void onCancel(DialogInterface dialog) {
+                                }
+                            });
+                            adUpgrade.setMessage("Вы можете улучшить здание за 500р");
+                            adUpgrade.show();
+                        }
+                    });
+                    sellPlace.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            adSell.setTitle(DIALOG);
+                            adSell.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int arg1) {
+                                    Toast.makeText(PlaceActivity.this, "Здание продано",
+                                            Toast.LENGTH_LONG).show();
+                                    PlaceActivity.this.finish();
+                                }
+                            });
+                            adSell.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int arg1) {
+                                }
+                            });
+                            adSell.setCancelable(true);
+                            adSell.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                public void onCancel(DialogInterface dialog) {
+                                }
+                            });
+
+                            adSell.setMessage("Ваше здание будет продано за 50% от стоимости");
+                            adSell.show();
+                        }
+                    });
+
+                }
+            } else if (mPlace.getOwner() == null) {
+                adBuy = new AlertDialog.Builder(this);
                 inflater.inflate(R.layout.buttons_nobody_place, buttonContainer, true);
                 buyPlace = (Button) findViewById(R.id.button_buy_place);
                 buyPlace.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ad.setMessage("Вы действительно хотите купить здание за "+ mPlace.getPrice() + "?");
-                        ad.show();
+                        adBuy.setTitle(DIALOG);
+                        adBuy.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int arg1) {
+                                Toast.makeText(PlaceActivity.this, "Покупка осуществлена",
+                                        Toast.LENGTH_LONG).show();
+                                PlaceActivity.this.finish();
+                            }
+                        });
+                        adBuy.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int arg1) {
+                            }
+                        });
+                        adBuy.setCancelable(true);
+                        adBuy.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            public void onCancel(DialogInterface dialog) {
+                            }
+                        });
+
+                        adBuy.setMessage("Вы действительно хотите купить здание за " + mPlace.getPrice() + "?");
+                        adBuy.show();
                     }
                 });
                 owner.setVisibility(View.INVISIBLE);
                 ownerLabel.setVisibility(View.INVISIBLE);
             } else {
+                adRebuy = new AlertDialog.Builder(this);
                 inflater.inflate(R.layout.buttons_player_place, buttonContainer, true);
                 rebuyPlace = (Button) findViewById(R.id.button_rebuy_place);
                 rebuyPlace.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ad.setMessage("Вы действительно хотите выкупить это здание?");
-                        ad.show();
+                        adRebuy.setTitle(DIALOG);
+                        adRebuy.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int arg1) {
+                                Toast.makeText(PlaceActivity.this, "Ваше предложение выкупить отправлено",
+                                        Toast.LENGTH_LONG).show();
+                                PlaceActivity.this.finish();
+                            }
+                        });
+                        adRebuy.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int arg1) {
+                            }
+                        });
+                        adRebuy.setCancelable(true);
+                        adRebuy.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            public void onCancel(DialogInterface dialog) {
+                            }
+                        });
+
+                        adRebuy.setMessage("Вы действительно хотите выкупить это здание?");
+                        adRebuy.show();
                     }
                 });
                 price.setVisibility(View.INVISIBLE);
@@ -203,7 +273,11 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
                 priceIcon.setVisibility(View.INVISIBLE);
             }
         }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
     }
 
