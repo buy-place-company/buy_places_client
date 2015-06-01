@@ -1,6 +1,5 @@
 package ru.tp.buy_places.fragments.objects;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -14,7 +13,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.activities.PlaceActivity;
@@ -80,18 +78,6 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
         myPlacesAdapter.setOnItemClickListener(this);
         mRecycleView.setAdapter(myPlacesAdapter);
         return mRecycleView;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-//        initFragment();
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
