@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,10 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Spinner;
 
-import ru.tp.buy_places.NavigationDrawerFragment;
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.fragments.deals.DealsFragment;
 import ru.tp.buy_places.fragments.map.MapFragment;
@@ -23,18 +21,17 @@ import ru.tp.buy_places.fragments.raiting.RaitingFragment;
 import ru.tp.buy_places.fragments.settings.SettingFragment;
 import ru.tp.buy_places.fragments.user.UserFragment;
 
-public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.Manager,
+public class MainActivity extends AppCompatActivity implements
         MyObjectsListFragment.OnFragmentInteractionListener,
         DealsFragment.OnFragmentInteractionListener,
         RaitingFragment.OnFragmentInteractionListener,
         UserFragment.OnFragmentInteractionListener,
-        SettingFragment.OnFragmentInteractionListener {
+        SettingFragment.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
-    private View mDrawerView;
     private Toolbar mToolbar;
-    private Spinner mSpinner;
+    private NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,16 +39,16 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         Log.d("MainActivity", "onCreate");
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mNavigationView = (NavigationView)findViewById(R.id.navigation);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         if (mToolbar != null)
             setSupportActionBar(mToolbar);
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        mDrawerView = findViewById(R.id.navigation);
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.app_name, R.string.app_name);
         mActionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         mActionBarDrawerToggle.syncState();
         mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mNavigationView.setNavigationItemSelectedListener(this);
         showPage(Page.MAP);
     }
 
@@ -80,12 +77,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         context.startActivity(intent);
     }
 
-    @Override
-    public void onNavigationDrawerItemClick(final Page page) {
-        mDrawerLayout.closeDrawer(mDrawerView);
-        showPage(page);
-    }
-
     private void showPage(Page page) {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(page.name());
         if (fragment == null) {
@@ -112,6 +103,30 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment, page.name()).commit();
         }
 
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        menuItem.setChecked(true);
+
+        switch (menuItem.getItemId()) {
+            case R.id.navigation_map:
+                showPage(Page.MAP);
+                break;
+            case R.id.navigation_places:
+                showPage(Page.MY_OBJECTS);
+                break;
+            case R.id.navigation_deals:
+                showPage(Page.DEALS);
+                break;
+            case R.id.navigation_rating:
+                showPage(Page.RATING);
+                break;
+            default:
+                showPage(Page.MAP);
+        }
+        mDrawerLayout.closeDrawers();
+        return true;
     }
 
     public enum Page {

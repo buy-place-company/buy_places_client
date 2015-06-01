@@ -57,4 +57,8 @@
     <string name="buy_it">Buy It</string>
     <string name="wait">Wait</string>
     <string name="request_executes">Loading</string>
+    <string name="navigation_map">Map</string>
+    <string name="navigation_venues">Venues</string>
+    <string name="navigation_deals">Deals</string>
+    <string name="navigation_rating">Rating</string>
 </resources>

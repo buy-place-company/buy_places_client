@@ -7,4 +7,8 @@
 
     <string name="wait">Подождите</string>
     <string name="request_executes">Выполняется запрос</string>
+    <string name="navigation_map">Карта</string>
+    <string name="navigation_venues">Места</string>
+    <string name="navigation_deals">Сделки</string>
+    <string name="navigation_rating">Рейтинг</string>
 </resources>
