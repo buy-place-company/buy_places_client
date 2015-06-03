@@ -9,4 +9,5 @@
     <color name="text_or_icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
     <color name="background">#FFFFFF</color>
+    <color name="primary_text_inverse">#FFFFFF</color>
 </resources>

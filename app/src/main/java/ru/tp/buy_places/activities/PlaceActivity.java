@@ -72,7 +72,6 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
         if (toolbar != null)
             setSupportActionBar(toolbar);
 
-
 //
 
         owner.setOnClickListener(new OnClickListener() {

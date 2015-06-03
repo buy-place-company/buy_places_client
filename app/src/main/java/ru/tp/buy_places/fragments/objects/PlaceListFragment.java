@@ -3,6 +3,8 @@ package ru.tp.buy_places.fragments.objects;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -10,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ru.tp.buy_places.R;
-
-import ru.tp.buy_places.view.SlidingTabLayout;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -26,8 +26,9 @@ public class PlaceListFragment extends Fragment {
 
     private PlacePagerAdapter mPlacePagerAdapter;
     private ViewPager mViewPager;
+    private TabLayout mTabLayout;
     private OnFragmentInteractionListener mListener;
-    private SlidingTabLayout mSlidingTabLayout;
+    private AppBarLayout mAppBarLayout;
 
     public static PlaceListFragment newInstance() {
         PlaceListFragment fragment = new PlaceListFragment();
@@ -49,18 +50,24 @@ public class PlaceListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_placelist, container, false);
-
+        //mAppBarLayout = (AppBarLayout) getActivity().findViewById(R.id.app_bar_layout);
+        //mTabLayout = new TabLayout(getActivity());
+        //TabLayout.LayoutParams params = new TabLayout.LayoutParams(TabLayout.LayoutParams.MATCH_PARENT, TabLayout.LayoutParams.WRAP_CONTENT);
+        //mAppBarLayout.addView(mTabLayout, params);
+        mViewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
+        //mTabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
+        mPlacePagerAdapter = new PlacePagerAdapter(getChildFragmentManager());
+        mViewPager.setAdapter(mPlacePagerAdapter);
+        //mTabLayout.setTabsFromPagerAdapter(mPlacePagerAdapter);
+        //mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        //mTabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
         return rootView;
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
-        mPlacePagerAdapter = new PlacePagerAdapter(getChildFragmentManager());
-        mViewPager.setAdapter(mPlacePagerAdapter);
-        mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
-        mSlidingTabLayout.setDistributeEvenly(true);
-        mSlidingTabLayout.setViewPager(mViewPager);
+    public void onDestroyView() {
+        super.onDestroyView();
+        //mAppBarLayout.removeView(mTabLayout);
     }
 
     @Override

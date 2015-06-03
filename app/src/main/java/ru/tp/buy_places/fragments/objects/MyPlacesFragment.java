@@ -55,15 +55,10 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(0, null, this);
+    public void onDestroyView() {
+        super.onDestroy();
+        getLoaderManager().destroyLoader(0);
     }
-
-//    private void initFragment(){
-//        //adapter = new SimpleCursorAdapter(getActivity(), R.layout.item_object, null, new String[]{Places.COLUMN_ALIAS_ID}, new int[]{R.id.title_place_list}, 0);
-//        //adapter = new SimpleAdapter(getActivity(), getData(), R.layout.item_object, from, to);
-//   }
 
 
     @Override
@@ -77,6 +72,7 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
         myPlacesAdapter = new MyPlacesAdapter(getActivity());
         myPlacesAdapter.setOnItemClickListener(this);
         mRecycleView.setAdapter(myPlacesAdapter);
+        getLoaderManager().initLoader(0, null, this);
         return mRecycleView;
     }
 
