@@ -1,8 +1,9 @@
 package ru.tp.buy_places.fragments.deals;
 
-import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -10,23 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ru.tp.buy_places.R;
-import ru.tp.buy_places.view.SlidingTabLayout;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DealsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DealsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DealsFragment extends Fragment {
 
 
     private DealsPagerAdapter mDealsPagerAdapter;
     private ViewPager mViewPager;
-    private OnFragmentInteractionListener mListener;
-    private SlidingTabLayout mSlidingTabLayout;
+    private TabLayout mTabLayout;
+    private CoordinatorLayout mCoordinatorLayout;
+    private AppBarLayout mAppBarLayout;
 
     public static DealsFragment newInstance() {
         DealsFragment fragment = new DealsFragment();
@@ -42,45 +35,37 @@ public class DealsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDealsPagerAdapter = new DealsPagerAdapter(getChildFragmentManager());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_deals, container, false);
-
+        mTabLayout = (TabLayout) inflater.inflate(R.layout.tab_layout, null);
+        mViewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
         return rootView;
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
-        mDealsPagerAdapter = new DealsPagerAdapter(getChildFragmentManager());
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mAppBarLayout = (AppBarLayout) getActivity().findViewById(R.id.app_bar_layout);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         mViewPager.setAdapter(mDealsPagerAdapter);
-        mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
-        mSlidingTabLayout.setDistributeEvenly(true);
-        mSlidingTabLayout.setViewPager(mViewPager);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mAppBarLayout.addView(mTabLayout);
+
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(Uri uri);
+    public void onStop() {
+        super.onStop();
+        mAppBarLayout.removeView(mTabLayout);
     }
 
 }

@@ -9,6 +9,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -20,12 +22,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -61,6 +63,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     private ImageButton mZoomInImageButton;
     private ImageButton mZoomOutImageButton;
     private SharedPreferences mSharedPreferences;
+    private CoordinatorLayout mCoordinatorLayout;
+    private AppBarLayout mAppBarLayout;
+
+
+    private CoordinatorLayout.LayoutParams mOldLayoutParams;
+    private CoordinatorLayout.LayoutParams mNewLayoutParams;
+    private FrameLayout mFrameLayout;
 
 
     public MapFragment() {
@@ -70,7 +79,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MapsInitializer.initialize(getActivity());
         mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         mInfoWindowAdapter = new CustomInfoWindowAdapter(getActivity());
         mSharedPreferences = getActivity().getSharedPreferences(MAP_FILTER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
@@ -108,6 +116,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         return super.onOptionsItemSelected(item);
     }
 
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -120,6 +140,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mZoomInImageButton.setOnClickListener(this);
         mZoomOutImageButton = (ImageButton)rootView.findViewById(R.id.image_button_zoom_out);
         mZoomOutImageButton.setOnClickListener(this);
+
         return rootView;
     }
 

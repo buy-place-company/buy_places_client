@@ -1,6 +1,5 @@
-package ru.tp.buy_places.fragments.objects;
+package ru.tp.buy_places.fragments.deals;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,11 +15,11 @@ import ru.tp.buy_places.R;
 import ru.tp.buy_places.service.resourses.Place;
 
 /**
- * Created by home on 21.05.2015.
+ * Created by Ivan on 10.06.2015.
  */
-public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHolder> {
+public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> {
     OnItemClickListener mItemClickListener;
-    Activity activity;
+    Context mContext;
     private List<Place> mData = new ArrayList<>();
 
     public interface OnItemClickListener {
@@ -31,14 +30,14 @@ public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHo
         this.mItemClickListener = mItemClickListener;
     }
 
-    MyPlacesAdapter(Context context){
-        activity = (Activity)context;
+    public DealsAdapter(Context context){
+        mContext = context;
     }
 
     public void setData(List<Place> data){
         mData.clear();
         if(data != null)
-          mData.addAll(data);
+            mData.addAll(data);
         notifyDataSetChanged();
     }
 
@@ -63,13 +62,13 @@ public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHo
     }
 
     @Override
-    public MyPlacesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DealsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_object, parent, false);
         return new ViewHolder(v);
-     }
+    }
 
     @Override
-    public void onBindViewHolder(MyPlacesAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(DealsAdapter.ViewHolder holder, int position) {
         if(mData != null) {
             holder.mTitle.setText(mData.get(position).getName()); // Setting the Text with the array of our Titles
             holder.mIcon.setImageResource(R.mipmap.ic_object);

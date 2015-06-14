@@ -1,88 +1,54 @@
 package ru.tp.buy_places.fragments.deals;
 
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import ru.tp.buy_places.R;
-import ru.tp.buy_places.activities.PlaceActivity;
 
 public class OutboxDealsFragment extends Fragment {
-
-    private ListView mListView;
-    private SimpleAdapter adapter;
     private static final String TEXT_FIELD = "text";
     private static final String IMAGE_FIELD = "image";
-
-
-    private void initFragment(){
-        String from[] = new String[]{
-                TEXT_FIELD,
-                IMAGE_FIELD
-        };
-
-        int[] to = new int[] {
-                R.id.text,
-                R.id.image
-        };
-
-        adapter = new SimpleAdapter(getActivity(), getData(), R.layout.item_inbox, from, to);
-    }
-
-    private ArrayList<HashMap<String, Object>> getData(){
-        final String TITLE =  getString(R.string.mgtu);
-
-        final int IMAGE = R.mipmap.ic_object;
-        ArrayList<HashMap<String, Object>> list =
-                new ArrayList<>();
-        HashMap<String, Object> element = new HashMap<>();
-        element.put(TEXT_FIELD, TITLE);
-        element.put(IMAGE_FIELD, IMAGE);
-        list.add(element);
-        return list;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        initFragment();
-    }
-
-    public static OutboxDealsFragment newInstance() {
-        OutboxDealsFragment fragment = new OutboxDealsFragment();
-        return fragment;
-    }
-
+    private RecyclerView mRecycleView;
+    private DealsAdapter mDealsAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     public OutboxDealsFragment() {
         // Required empty public constructor
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mDealsAdapter = new DealsAdapter(getActivity());
+    }
+
+    public static Fragment newInstance() {
+        Fragment fragment = new OutboxDealsFragment();
+        return fragment;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroy();
+        getLoaderManager().destroyLoader(0);
+    }
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mListView = (ListView) inflater.inflate(R.layout.fragment_inbox_deals, container, false);
-        mListView.setAdapter(adapter);
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), PlaceActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        return mListView;
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_my_objects, container, false);
+        mRecycleView = (RecyclerView) rootView.findViewById(R.id.listPlacesRecyclerView);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecycleView.setLayoutManager(mLayoutManager);
+        mRecycleView.setAdapter(mDealsAdapter);
+        return mRecycleView;
     }
 
 }

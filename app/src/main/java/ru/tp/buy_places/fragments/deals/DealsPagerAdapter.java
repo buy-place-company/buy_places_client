@@ -17,11 +17,11 @@ public class DealsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int i) {
         switch (i) {
             case 0:
-                return InboxDealsFragment.newInstance();
+                return OutboxDealsFragment.newInstance();
             case 1:
                 return OutboxDealsFragment.newInstance();
             default:
-                return InboxDealsFragment.newInstance();
+                return OutboxDealsFragment.newInstance();
         }
     }
 

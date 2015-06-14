@@ -2,7 +2,6 @@ package ru.tp.buy_places.fragments.objects;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -20,30 +19,12 @@ import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.resourses.Places;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MyPlacesFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MyPlacesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, MyPlacesAdapter.OnItemClickListener {
 
-
-    private OnFragmentInteractionListener mListener;
     private RecyclerView mRecycleView;
     private MyPlacesAdapter myPlacesAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     Places mPlaces;
-
-    public static MyPlacesFragment newInstance(String param1, String param2) {
-        MyPlacesFragment fragment = new MyPlacesFragment();
-        Bundle args = new Bundle();
-
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     public MyPlacesFragment() {
         // Required empty public constructor
@@ -77,12 +58,6 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, BuyPlacesContract.Places.IS_IN_OWNERSHIP_SELECTION, null, null);
     }
@@ -103,21 +78,6 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
         Intent intent = new Intent(getActivity(), PlaceActivity.class);
         intent.putExtra("EXTRA_PLACE_ID", mPlaces.getPlaces().get(position).getRowId());
         startActivity(intent);
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
     }
 
 }

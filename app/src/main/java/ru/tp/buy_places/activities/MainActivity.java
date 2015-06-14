@@ -22,10 +22,8 @@ import ru.tp.buy_places.fragments.settings.SettingFragment;
 import ru.tp.buy_places.fragments.user.UserFragment;
 
 public class MainActivity extends AppCompatActivity implements
-        DealsFragment.OnFragmentInteractionListener,
         RaitingFragment.OnFragmentInteractionListener,
         UserFragment.OnFragmentInteractionListener,
-        PlaceListFragment.OnFragmentInteractionListener,
         SettingFragment.OnFragmentInteractionListener,
         NavigationView.OnNavigationItemSelectedListener {
 
