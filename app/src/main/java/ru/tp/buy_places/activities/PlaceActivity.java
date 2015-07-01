@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -23,11 +24,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.resourses.Place;
 
-public class PlaceActivity extends AppCompatActivity implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class PlaceActivity extends AppCompatActivity implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnMapReadyCallback {
     public static final String DIALOG = "Сделка";
     private static final int PLACE_LOADER_ID = 0;
     private static final String EXTRA_PLACES_ROW_ID = "EXTRA_PLACES_ROW_ID";
@@ -51,6 +59,9 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
     private AlertDialog.Builder adBuy;
     private AlertDialog.Builder adRebuy;
     private FrameLayout buttonContainer;
+    private MapView mMapView;
+    private GoogleMap mGoogleMap;
+    private AppBarLayout mAppBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +101,23 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
         if (placeRowId > 0) {
             getSupportLoaderManager().initLoader(PLACE_LOADER_ID, args, this);
         }
+
+        mMapView = (MapView) findViewById(R.id.map_view);
+        mMapView.onCreate(savedInstanceState);
+        mMapView.getMapAsync(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -271,17 +297,31 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
                 priceLabel.setVisibility(View.INVISIBLE);
                 priceIcon.setVisibility(View.INVISIBLE);
             }
+            if (mGoogleMap != null) {
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mPlace.getLatitude(), mPlace.getLongitude()), 15f));
+                mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(mPlace.getLatitude(), mPlace.getLongitude())));
+            }
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mMapView.onDestroy();
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mGoogleMap = googleMap;
+        if (mPlace != null) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mPlace.getLatitude(), mPlace.getLongitude()), 15f));
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(mPlace.getLatitude(), mPlace.getLongitude())));
+        }
     }
 }

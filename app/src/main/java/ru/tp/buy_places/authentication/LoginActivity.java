@@ -16,7 +16,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
@@ -30,7 +29,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
     public static final String EXTRA_TOKEN_TYPE = "EXTRA_TOKEN_TYPE";
     private Button mLoginViaVKButton;
 
-    private String SERVER_ROOT = "";
+    private String SERVER_ROOT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +41,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
 
         mLoginViaVKButton = (Button)findViewById(R.id.button_login_via_vk);
         mLoginViaVKButton.setOnClickListener(this);
+        SERVER_ROOT = getString(R.string.url_root);
     }
 
     @Override
@@ -90,16 +90,8 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
             JSONObject response;
             try {
                 paramsQuery.append("code="+mCode);
-                URL url = new URL(SERVER_ROOT + "auth/vk");
+                URL url = new URL(SERVER_ROOT + "auth/vk" + "?" + paramsQuery.toString());
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setDoOutput(true);
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setFixedLengthStreamingMode(paramsQuery.toString().getBytes().length);
-                httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-                PrintWriter printWriter = new PrintWriter(httpURLConnection.getOutputStream());
-                printWriter.write(paramsQuery.toString());
-                printWriter.close();
 
                 String responseString = "";
                 Scanner scanner = new Scanner(httpURLConnection.getInputStream());

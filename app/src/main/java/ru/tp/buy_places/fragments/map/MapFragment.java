@@ -195,16 +195,32 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
         mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
         mGoogleMap.setInfoWindowAdapter(mInfoWindowAdapter);
-        mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+        mGoogleMap.setOnMarkerClickListener(mClusterManager);
+//        mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+//            @Override
+//            public void onInfoWindowClick(Marker marker) {
+//                Intent intent = new Intent(getActivity(), PlaceActivity.class);
+//                PlaceClusterItem item = mInfoWindowAdapter.getItem(marker);
+//                if (item != null) {
+//                    Long id = item.getRowId();
+//                    intent.putExtra("EXTRA_PLACE_ID", id);
+//                    startActivity(intent);
+//                }
+//
+//            }
+//        });
+
+        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<PlaceClusterItem>() {
             @Override
-            public void onInfoWindowClick(Marker marker) {
+            public boolean onClusterItemClick(PlaceClusterItem placeClusterItem) {
                 Intent intent = new Intent(getActivity(), PlaceActivity.class);
-                PlaceClusterItem item = mInfoWindowAdapter.getItem(marker);
-                if (item !=  null) {
-                    Long id = item.getRowId();
+                if (placeClusterItem != null) {
+                    Long id = placeClusterItem.getRowId();
                     intent.putExtra("EXTRA_PLACE_ID", id);
                     startActivity(intent);
+                    return true;
                 }
+                return false;
 
             }
         });
