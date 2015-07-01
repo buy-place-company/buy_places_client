@@ -74,7 +74,7 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
         priceIcon = (ImageView) findViewById(R.id.image_view_dollar);
         priceLabel = (TextView) findViewById(R.id.price_text_view);
         profit = (TextView) findViewById(R.id.text_view_profit_value);
-        level = (TextView) findViewById(R.id.text_view_place_level);
+        //level = (TextView) findViewById(R.id.text_view_place_level);
         income = (TextView) findViewById(R.id.text_view_income_value);
         service = (TextView) findViewById(R.id.text_view_service_value);
         buttonContainer = (FrameLayout) findViewById(R.id.button_container);
@@ -161,7 +161,7 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
             placeName.setText(mPlace.getName());
             if (mPlace.getOwner() != null)
                 owner.setText(mPlace.getOwner().getUsername());
-            level.setText(Integer.toString(mPlace.getLevel()));
+            //level.setText(Integer.toString(mPlace.getLevel()));
             price.setText(Long.toString(mPlace.getPrice()));
             service.setText(Long.toString(mPlace.getExpense()));
             income.setText(Long.toString(mPlace.getIncome()));
