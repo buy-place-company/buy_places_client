@@ -2,14 +2,13 @@ package ru.tp.buy_places.activities;
 
 import android.content.ContentUris;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,91 +17,81 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
+import ru.tp.buy_places.service.ServiceHelper;
 import ru.tp.buy_places.service.resourses.Place;
 
 public class PlaceActivity extends AppCompatActivity implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnMapReadyCallback {
+    public static final String EXTRA_VENUES_ROW_ID = "EXTRA_VENUES_ROW_ID";
+    public static final String EXTRA_VENUES_LATITUDE = "EXTRA_VENUES_LATITUDE";
+    public static final String EXTRA_VENUES_LONGITUDE = "EXTRA_VENUES_LONGITUDE";
+    public static final String EXTRA_VENUES_TYPE = "EXTRA_VENUES_TYPE";
+
+
     public static final String DIALOG = "Сделка";
-    private static final int PLACE_LOADER_ID = 0;
-    private static final String EXTRA_PLACES_ROW_ID = "EXTRA_PLACES_ROW_ID";
+    private static final int VENUE_LOADER_ID = 0;
     private Place mPlace;
-    private TextView placeName;
-    private TextView owner;
-    private TextView ownerLabel;
-    private TextView level;
-    private TextView price;
-    private TextView priceLabel;
-    private ImageView priceIcon;
-    private TextView service;
-    private TextView profit;
-    private TextView income;
-    private Button upgradePlace;
-    private Button sellPlace;
-    private Button buyPlace;
-    private Button rebuyPlace;
-    private AlertDialog.Builder adSell;
-    private AlertDialog.Builder adUpgrade;
-    private AlertDialog.Builder adBuy;
-    private AlertDialog.Builder adRebuy;
-    private FrameLayout buttonContainer;
+
+    private VenueView mVenueView;
     private MapView mMapView;
     private GoogleMap mGoogleMap;
-    private AppBarLayout mAppBarLayout;
+    private FrameLayout mAppBarLayout;
+    private VenueType mVenueType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_object);
-        placeName = (TextView) findViewById(R.id.text_view_object_name);
-        owner = (TextView) findViewById(R.id.text_view_owner);
-        ownerLabel = (TextView) findViewById(R.id.text_view_owner_label);
-        price = (TextView) findViewById(R.id.text_view_price_value);
-        priceIcon = (ImageView) findViewById(R.id.image_view_dollar);
-        priceLabel = (TextView) findViewById(R.id.price_text_view);
-        profit = (TextView) findViewById(R.id.text_view_profit_value);
-        //level = (TextView) findViewById(R.id.text_view_place_level);
-        income = (TextView) findViewById(R.id.text_view_income_value);
-        service = (TextView) findViewById(R.id.text_view_service_value);
-        buttonContainer = (FrameLayout) findViewById(R.id.button_container);
+
+        final long venuesRowId = getIntent().getLongExtra(EXTRA_VENUES_ROW_ID, 0);
+        final double venuesLatitude = getIntent().getDoubleExtra(EXTRA_VENUES_LATITUDE, 0.0);
+        final double venuesLongitude = getIntent().getDoubleExtra(EXTRA_VENUES_LONGITUDE, 0.0);
+        final int zoomLevel = getResources().getInteger(R.integer.default_zoom_level);
+        mVenueType = (VenueType) getIntent().getSerializableExtra(EXTRA_VENUES_TYPE);
+        mAppBarLayout = (FrameLayout) findViewById(R.id.app_bar_layout);
+        GoogleMapOptions googleMapOptions = new GoogleMapOptions()
+                .liteMode(true)
+                .camera(new CameraPosition.Builder().target(new LatLng(venuesLatitude, venuesLongitude)).zoom(zoomLevel).build());
+        mMapView = new MapView(this, googleMapOptions);
+        mAppBarLayout.addView(mMapView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        mVenueView = new VenueView(this);
+        mVenueView.setNameTextView((TextView) findViewById(R.id.text_view_object_name));
+        mVenueView.setOwnerTextView((TextView) findViewById(R.id.text_view_owner));
+        mVenueView.setLevelTextView((TextView) findViewById(R.id.text_view_place_level));
+        mVenueView.setButtonsContainerLayout((FrameLayout) findViewById(R.id.button_container));
+        mVenueView.setStatisticsTableLayout((TableLayout) findViewById(R.id.table_layout_statistics));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null)
             setSupportActionBar(toolbar);
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
 
-//
-
-        owner.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PlaceActivity.this, UserActivity.class);
-                intent.putExtra("EXTRA_USER_ID", mPlace.getOwner().getRowId());
-                startActivity(intent);
-            }
-        });
-
-        Intent intent = getIntent();
-        final long placeRowId = intent.getLongExtra("EXTRA_PLACE_ID", -1);
+        }
         Bundle args = new Bundle();
-        args.putLong(EXTRA_PLACES_ROW_ID, placeRowId);
-        if (placeRowId > 0) {
-            getSupportLoaderManager().initLoader(PLACE_LOADER_ID, args, this);
+        args.putLong(EXTRA_VENUES_ROW_ID, venuesRowId);
+        if (venuesRowId != 0) {
+            getSupportLoaderManager().initLoader(VENUE_LOADER_ID, args, this);
         }
 
-        mMapView = (MapView) findViewById(R.id.map_view);
         mMapView.onCreate(savedInstanceState);
         mMapView.getMapAsync(this);
     }
@@ -149,7 +138,7 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        final long placesRowId = args.getLong(EXTRA_PLACES_ROW_ID);
+        final long placesRowId = args.getLong(EXTRA_VENUES_ROW_ID);
         final Uri placesUri = ContentUris.withAppendedId(BuyPlacesContract.Places.CONTENT_URI, placesRowId);
         return new CursorLoader(this, placesUri, null, null, null, null);
     }
@@ -158,150 +147,152 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.moveToFirst()) {
             mPlace = Place.fromCursor(data);
-            placeName.setText(mPlace.getName());
+            mVenueView.getNameTextView().setText(mPlace.getName());
             if (mPlace.getOwner() != null)
-                owner.setText(mPlace.getOwner().getUsername());
-            //level.setText(Integer.toString(mPlace.getLevel()));
-            price.setText(Long.toString(mPlace.getPrice()));
-            service.setText(Long.toString(mPlace.getExpense()));
-            income.setText(Long.toString(mPlace.getIncome()));
-            profit.setText(Long.toString(mPlace.getIncome() - mPlace.getExpense()));
+                mVenueView.getOwnerTextView().setText(mPlace.getOwner().getUsername());
+            mVenueView.getLevelTextView().setText(Integer.toString(mPlace.getLevel()));
+
+            mVenueView.getStatisticsTableLayout().removeAllViews();
+            mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_price), Long.toString(mPlace.getPrice())));
+            mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_outcome), Long.toString(mPlace.getExpense())));
+            mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_income), Long.toString(mPlace.getIncome())));
+            mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_profit), Long.toString(mPlace.getIncome() - mPlace.getExpense())));
+
             LayoutInflater inflater = LayoutInflater.from(this);
+            mVenueType = mPlace.isInOwnership() ? VenueType.MINE : mPlace.getOwner() == null ? VenueType.NOBODYS : VenueType.ANOTHERS;
 
-            if (mPlace.isInOwnership()) {
-                inflater.inflate(R.layout.buttons_my_place, buttonContainer);
-                price.setVisibility(View.INVISIBLE);
-                priceLabel.setVisibility(View.INVISIBLE);
-                priceIcon.setVisibility(View.INVISIBLE);
-                upgradePlace = (Button) findViewById(R.id.button_upgrade_place);
-                sellPlace = (Button) findViewById(R.id.button_sell_place);
+            switch (mVenueType) {
+                case MINE:
+                    View mineVenueButtons = inflater.inflate(R.layout.buttons_my_place, mVenueView.getButtonsContainerLayout());
+                    setMineVenueButtonsOnClickListeners(mineVenueButtons);
+                    break;
+                case ANOTHERS:
+                    View anothersVenueButtons = inflater.inflate(R.layout.buttons_player_place, mVenueView.getButtonsContainerLayout());
+                    setAnothersVenueButtonsOnClickListeners(anothersVenueButtons);
+                    break;
+                case NOBODYS:
+                    final View nobodysVenueButtons = inflater.inflate(R.layout.buttons_nobody_place, mVenueView.getButtonsContainerLayout());
+                    setNobodysVenueButtonsOnClickListeners(nobodysVenueButtons);
+                    break;
 
-                if (!upgradePlace.hasOnClickListeners()) {
-                    adSell = new AlertDialog.Builder(this);
-                    adUpgrade = new AlertDialog.Builder(this);
-                    upgradePlace.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            adUpgrade.setTitle(DIALOG);
-                            adUpgrade.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int arg1) {
-
-                                    Toast.makeText(PlaceActivity.this,
-                                            "Здание повысилось до " + Integer.toString(mPlace.getLevel() + 1) + " уровня",
-                                             Toast.LENGTH_LONG).show();
-                                    PlaceActivity.this.finish();
-
-                                }
-                            });
-                            adUpgrade.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int arg1) {
-                                }
-                            });
-                            adUpgrade.setCancelable(true);
-                            adUpgrade.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                public void onCancel(DialogInterface dialog) {
-                                }
-                            });
-                            adUpgrade.setMessage("Вы можете улучшить здание за 500р");
-                            adUpgrade.show();
-                        }
-                    });
-                    sellPlace.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            adSell.setTitle(DIALOG);
-                            adSell.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int arg1) {
-                                    Toast.makeText(PlaceActivity.this, "Здание продано",
-                                            Toast.LENGTH_LONG).show();
-                                    PlaceActivity.this.finish();
-                                }
-                            });
-                            adSell.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int arg1) {
-                                }
-                            });
-                            adSell.setCancelable(true);
-                            adSell.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                public void onCancel(DialogInterface dialog) {
-                                }
-                            });
-
-                            adSell.setMessage("Ваше здание будет продано за 50% от стоимости");
-                            adSell.show();
-                        }
-                    });
-
-                }
-            } else if (mPlace.getOwner() == null) {
-                adBuy = new AlertDialog.Builder(this);
-                inflater.inflate(R.layout.buttons_nobody_place, buttonContainer, true);
-                buyPlace = (Button) findViewById(R.id.button_buy_place);
-                buyPlace.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        adBuy.setTitle(DIALOG);
-                        adBuy.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int arg1) {
-                                Toast.makeText(PlaceActivity.this, "Покупка осуществлена",
-                                        Toast.LENGTH_LONG).show();
-                                PlaceActivity.this.finish();
-                            }
-                        });
-                        adBuy.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int arg1) {
-                            }
-                        });
-                        adBuy.setCancelable(true);
-                        adBuy.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            public void onCancel(DialogInterface dialog) {
-                            }
-                        });
-
-                        adBuy.setMessage("Вы действительно хотите купить здание за " + mPlace.getPrice() + "?");
-                        adBuy.show();
-                    }
-                });
-                owner.setVisibility(View.INVISIBLE);
-                ownerLabel.setVisibility(View.INVISIBLE);
-            } else {
-                adRebuy = new AlertDialog.Builder(this);
-                inflater.inflate(R.layout.buttons_player_place, buttonContainer, true);
-                rebuyPlace = (Button) findViewById(R.id.button_rebuy_place);
-                rebuyPlace.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        adRebuy.setTitle(DIALOG);
-                        adRebuy.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int arg1) {
-                                Toast.makeText(PlaceActivity.this, "Ваше предложение выкупить отправлено",
-                                        Toast.LENGTH_LONG).show();
-                                PlaceActivity.this.finish();
-                            }
-                        });
-                        adRebuy.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int arg1) {
-                            }
-                        });
-                        adRebuy.setCancelable(true);
-                        adRebuy.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            public void onCancel(DialogInterface dialog) {
-                            }
-                        });
-
-                        adRebuy.setMessage("Вы действительно хотите выкупить это здание?");
-                        adRebuy.show();
-                    }
-                });
-                price.setVisibility(View.INVISIBLE);
-                priceLabel.setVisibility(View.INVISIBLE);
-                priceIcon.setVisibility(View.INVISIBLE);
-            }
-            if (mGoogleMap != null) {
-                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mPlace.getLatitude(), mPlace.getLongitude()), 15f));
-                mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(mPlace.getLatitude(), mPlace.getLongitude())));
             }
         }
+    }
+
+    private void setNobodysVenueButtonsOnClickListeners(View nobodysVenueButtons) {
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        Button buyVenueButton = (Button) nobodysVenueButtons.findViewById(R.id.button_buy_place);
+        buyVenueButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogBuilder.setTitle(DIALOG);
+                dialogBuilder.setPositiveButton(R.string.positive_button_title, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        ServiceHelper.get(PlaceActivity.this).buyPlace(mPlace.getId());
+                        Toast.makeText(PlaceActivity.this, "Запрос на покупку отправлен", Toast.LENGTH_LONG);
+                    }
+                });
+                dialogBuilder.setNegativeButton(R.string.negative_button_title, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                    }
+                });
+                dialogBuilder.setCancelable(true);
+                dialogBuilder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    public void onCancel(DialogInterface dialog) {
+                    }
+                });
+
+                dialogBuilder.setMessage("Вы действительно хотите купить здание за " + mPlace.getPrice() + "?");
+                dialogBuilder.show();
+            }
+        });
+    }
+
+    private void setAnothersVenueButtonsOnClickListeners(View anothersVenueButtons) {
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        Button repurchaseVenueButton = (Button) anothersVenueButtons.findViewById(R.id.button_rebuy_place);
+        repurchaseVenueButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogBuilder.setTitle(DIALOG);
+                dialogBuilder.setPositiveButton(R.string.positive_button_title, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        ServiceHelper.get(PlaceActivity.this).suggestDeal(mPlace.getId());
+                        Toast.makeText(PlaceActivity.this, "Запрос на заключение сделки отправлен", Toast.LENGTH_LONG);
+                    }
+                });
+                dialogBuilder.setNegativeButton(R.string.negative_button_title, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                    }
+                });
+                dialogBuilder.setCancelable(true);
+                dialogBuilder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    public void onCancel(DialogInterface dialog) {
+                    }
+                });
+
+                dialogBuilder.setMessage("Вы действительно хотите выкупить это здание?");
+                dialogBuilder.show();
+            }
+        });
+    }
+
+    private void setMineVenueButtonsOnClickListeners(View mineVenueButtons) {
+        final AlertDialog.Builder sellDialogBuilder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder upgradeDialogBuilder = new AlertDialog.Builder(this);
+        Button upgradeVenueButton = (Button) mineVenueButtons.findViewById(R.id.button_upgrade_place);
+        Button sellVenueButton = (Button) mineVenueButtons.findViewById(R.id.button_sell_place);
+        upgradeVenueButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upgradeDialogBuilder.setTitle(DIALOG);
+                upgradeDialogBuilder.setPositiveButton(R.string.positive_button_title, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        ServiceHelper.get(PlaceActivity.this).upgradePlace(mPlace.getId());
+                        Toast.makeText(PlaceActivity.this,
+                                "Здание повысилось до " + Integer.toString(mPlace.getLevel() + 1) + " уровня",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+                upgradeDialogBuilder.setNegativeButton(R.string.negative_button_title, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                    }
+                });
+                upgradeDialogBuilder.setCancelable(true);
+                upgradeDialogBuilder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    public void onCancel(DialogInterface dialog) {
+                    }
+                });
+                upgradeDialogBuilder.setMessage("Вы можете улучшить здание за 500р");
+                upgradeDialogBuilder.show();
+            }
+        });
+        sellVenueButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sellDialogBuilder.setTitle(DIALOG);
+                sellDialogBuilder.setPositiveButton(R.string.positive_button_title, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        ServiceHelper.get(PlaceActivity.this).sellPlace(mPlace.getId());
+                        Toast.makeText(PlaceActivity.this, "Здание продано",
+                                Toast.LENGTH_LONG).show();
+                        //PlaceActivity.this.finish();
+                    }
+                });
+                sellDialogBuilder.setNegativeButton(R.string.negative_button_title, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                    }
+                });
+                sellDialogBuilder.setCancelable(true);
+                sellDialogBuilder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    public void onCancel(DialogInterface dialog) {
+                    }
+                });
+
+                sellDialogBuilder.setMessage("Ваше здание будет продано за 50% от стоимости");
+                sellDialogBuilder.show();
+            }
+        });
     }
 
     @Override
@@ -319,9 +310,15 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
-        if (mPlace != null) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mPlace.getLatitude(), mPlace.getLongitude()), 15f));
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(mPlace.getLatitude(), mPlace.getLongitude())));
-        }
+        final double venuesLatitude = getIntent().getDoubleExtra(EXTRA_VENUES_LATITUDE, 0.0);
+        final double venuesLongitude = getIntent().getDoubleExtra(EXTRA_VENUES_LONGITUDE, 0.0);
+        mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(venuesLatitude, venuesLongitude)));
+    }
+
+
+    public enum VenueType {
+        MINE,
+        ANOTHERS,
+        NOBODYS
     }
 }

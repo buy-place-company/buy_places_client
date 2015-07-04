@@ -157,6 +157,10 @@ public class ServiceHelper {
         return 0;
     }
 
+    public long suggestDeal(String id) {
+        return 0;
+    }
+
     private void handleUpgradePlaceResponse(int resultCode, Bundle resultData) {
         Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
         if (originalRequestIntent != null) {

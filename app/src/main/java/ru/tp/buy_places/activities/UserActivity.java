@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
 import ru.tp.buy_places.R;
@@ -40,8 +39,6 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
         Bundle args = new Bundle();
         args.putLong(EXTRA_USER_ID, userId);
         getSupportLoaderManager().initLoader(USER_LOADER_ID, args, this);
-
-        MapsInitializer.initialize(this);
 
         if (mMapView != null)
             mMapView.getMapAsync(this);

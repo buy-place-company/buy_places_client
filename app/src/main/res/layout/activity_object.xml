@@ -1,67 +1,86 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/app_bar_layout"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="240dp">
-
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/map_view"
+        android:layout_height="wrap_content"
+        android:background="@null">
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="240dp">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#10000000"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-    </FrameLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="?attr/colorPrimary">
-
-        <ImageView
-            android:id="@+id/image_view_place"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_margin="20dp"
-            android:src="@drawable/h0" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignWithParentIfMissing="true"
-            android:layout_toEndOf="@+id/image_view_place"
-            android:layout_toRightOf="@+id/image_view_place"
-            android:orientation="vertical"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp">
-
-            <TextView
-                android:id="@+id/text_view_object_name"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="МГТУ им Баумана"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        </android.support.design.widget.CollapsingToolbarLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="?attr/colorPrimary">
 
-        </LinearLayout>
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/image_view_place"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_margin="20dp"
+                android:src="@drawable/h0" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_toRightOf="@+id/image_view_place"
+                android:layout_toEndOf="@+id/image_view_place"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:layout_toLeftOf="@+id/text_view_place_level"
+                android:layout_toStartOf="@+id/text_view_place_level">
+
+                <TextView
+                    android:id="@+id/text_view_object_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="МГТУ им Баумана"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="checkins: 400000"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"/>
+
+            </LinearLayout>
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="20dp"
+                android:text="[level]"
+                android:id="@+id/text_view_place_level"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+                android:background="@drawable/circle_background"/>
+        </RelativeLayout>
+    </android.support.design.widget.AppBarLayout>
+
+
+
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <LinearLayout
@@ -77,120 +96,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:text="Алексей "
+                android:text="@string/owner"
                 android:id="@+id/text_view_owner" />
         </LinearLayout>
 
 
         <TableLayout
+            android:id="@+id/table_layout_statistics"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TableRow>
-
-                <TextView
-                    android:id="@+id/price_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/price"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                <ImageView
-                    android:id="@+id/image_view_dollar"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@mipmap/currency_black_dollar" />
-
-                <TextView
-                    android:id="@+id/text_view_price_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="200"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:id="@+id/service_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/service"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                <ImageView
-                    android:id="@+id/image_view_dollar1"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@mipmap/currency_black_dollar" />
-
-                <TextView
-                    android:id="@+id/text_view_service_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="50"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:id="@+id/income_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/income"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                <ImageView
-                    android:id="@+id/image_view_dollar2"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@mipmap/currency_black_dollar" />
-
-                <TextView
-                    android:id="@+id/text_view_income_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="70"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:id="@+id/profit_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/service_text_view"
-                    android:layout_alignStart="@+id/service_text_view"
-                    android:layout_below="@+id/service_text_view"
-                    android:text="@string/profit"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                <ImageView
-                    android:id="@+id/image_view_dollar3"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@mipmap/currency_black_dollar" />
-
-                <TextView
-                    android:id="@+id/text_view_profit_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/text_view_service_value"
-                    android:layout_alignStart="@+id/text_view_service_value"
-                    android:layout_alignTop="@+id/image_view_dollar3"
-                    android:text="20"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-            </TableRow>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_gravity="center">
+            <include layout="@layout/statistics_table_row"/>
         </TableLayout>
 
         <FrameLayout
             android:id="@+id/button_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </LinearLayout>

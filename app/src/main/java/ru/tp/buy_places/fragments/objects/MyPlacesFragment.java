@@ -59,7 +59,7 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, BuyPlacesContract.Places.IS_IN_OWNERSHIP_SELECTION, null, null);
+        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, null, null, null);
     }
 
     @Override
@@ -76,7 +76,10 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(getActivity(), PlaceActivity.class);
-        intent.putExtra("EXTRA_PLACE_ID", mPlaces.getPlaces().get(position).getRowId());
+        intent.putExtra(PlaceActivity.EXTRA_VENUES_ROW_ID, mPlaces.getPlaces().get(position).getRowId());
+        intent.putExtra(PlaceActivity.EXTRA_VENUES_LATITUDE, mPlaces.getPlaces().get(position).getLatitude());
+        intent.putExtra(PlaceActivity.EXTRA_VENUES_LONGITUDE, mPlaces.getPlaces().get(position).getLongitude());
+        intent.putExtra(PlaceActivity.EXTRA_VENUES_TYPE, mPlaces.getPlaces().get(position).isInOwnership() ? PlaceActivity.VenueType.MINE : mPlaces.getPlaces().get(position).getOwner() == null ? PlaceActivity.VenueType.NOBODYS : PlaceActivity.VenueType.ANOTHERS);
         startActivity(intent);
     }
 

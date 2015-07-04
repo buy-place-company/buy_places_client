@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="statistics_price">Price</string>
+    <string name="statistics_outcome">Outcome</string>
+    <string name="statistics_income">Income</string>
+    <string name="statistics_profit">Profit</string>
+</resources>

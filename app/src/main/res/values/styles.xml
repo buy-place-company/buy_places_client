@@ -11,7 +11,7 @@
     </style>
 
     <style name="ButtonStyle" parent="@style/Base.Widget.AppCompat.Button">
-        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:background">?attr/colorAccent</item>
         <item name="android:textColor">@color/text_or_icons</item>
     </style>
 
