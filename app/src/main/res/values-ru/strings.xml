@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="positive_button_title">Да</string>
-    <string name="negative_button_title">Нет</string>
-    <string name="cancel_button_title">Отменить</string>
+    <string name="dialog_positive_button_title">Да</string>
+    <string name="dialog_negative_button_title">Нет</string>
+    <string name="dialog_cancel_button_title">Отменить</string>
     <string name="places_filter_dialog_title">Фильтры</string>
 
-    <string name="wait">Подождите</string>
-    <string name="request_executes">Выполняется запрос</string>
+    <string name="common_wait_message">Подождите</string>
+    <string name="common_request_executes_message">Выполняется запрос</string>
     <string name="navigation_map">Карта</string>
     <string name="navigation_venues">Места</string>
     <string name="navigation_deals">Сделки</string>

@@ -80,4 +80,13 @@ public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHo
     public int getItemCount() {
         return mData.size();
     }
+
+    @Override
+    public long getItemId(int position) {
+        return mData.get(position).getRowId();
+    }
+
+    public Place getItem(int position) {
+        return mData.get(position);
+    }
 }

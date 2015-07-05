@@ -1,10 +1,13 @@
 package ru.tp.buy_places.activities;
 
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -39,10 +42,26 @@ import ru.tp.buy_places.service.resourses.Place;
 
 public class PlaceActivity extends AppCompatActivity implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnMapReadyCallback {
     public static final String EXTRA_VENUES_ROW_ID = "EXTRA_VENUES_ROW_ID";
-    public static final String EXTRA_VENUES_LATITUDE = "EXTRA_VENUES_LATITUDE";
-    public static final String EXTRA_VENUES_LONGITUDE = "EXTRA_VENUES_LONGITUDE";
+    public static final String EXTRA_VENUES_LOCATION = "EXTRA_VENUES_LOCATION";
     public static final String EXTRA_VENUES_TYPE = "EXTRA_VENUES_TYPE";
 
+
+
+    public static void start(Fragment fragment, long venuesRowId, LatLng venuesLocation, VenueType type) {
+        Intent intent = new Intent(fragment.getActivity(), PlaceActivity.class);
+        intent.putExtra(PlaceActivity.EXTRA_VENUES_ROW_ID, venuesRowId);
+        intent.putExtra(PlaceActivity.EXTRA_VENUES_LOCATION, venuesLocation);
+        intent.putExtra(PlaceActivity.EXTRA_VENUES_TYPE, type);
+        fragment.startActivity(intent);
+    }
+
+    public static void start(Activity activity, long venuesRowId, LatLng venuesLocation, VenueType type) {
+        Intent intent = new Intent(activity, PlaceActivity.class);
+        intent.putExtra(PlaceActivity.EXTRA_VENUES_ROW_ID, venuesRowId);
+        intent.putExtra(PlaceActivity.EXTRA_VENUES_LOCATION, venuesLocation);
+        intent.putExtra(PlaceActivity.EXTRA_VENUES_TYPE, type);
+        activity.startActivity(intent);
+    }
 
     public static final String DIALOG = "Сделка";
     private static final int VENUE_LOADER_ID = 0;
@@ -60,14 +79,13 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
         setContentView(R.layout.activity_object);
 
         final long venuesRowId = getIntent().getLongExtra(EXTRA_VENUES_ROW_ID, 0);
-        final double venuesLatitude = getIntent().getDoubleExtra(EXTRA_VENUES_LATITUDE, 0.0);
-        final double venuesLongitude = getIntent().getDoubleExtra(EXTRA_VENUES_LONGITUDE, 0.0);
-        final int zoomLevel = getResources().getInteger(R.integer.default_zoom_level);
+        final LatLng venuesPosition = getIntent().getParcelableExtra(EXTRA_VENUES_LOCATION);
+        final int zoomLevel = getResources().getInteger(R.integer.google_map_default_zoom_level);
         mVenueType = (VenueType) getIntent().getSerializableExtra(EXTRA_VENUES_TYPE);
         mAppBarLayout = (FrameLayout) findViewById(R.id.app_bar_layout);
         GoogleMapOptions googleMapOptions = new GoogleMapOptions()
                 .liteMode(true)
-                .camera(new CameraPosition.Builder().target(new LatLng(venuesLatitude, venuesLongitude)).zoom(zoomLevel).build());
+                .camera(new CameraPosition.Builder().target(venuesPosition).zoom(zoomLevel).build());
         mMapView = new MapView(this, googleMapOptions);
         mAppBarLayout.addView(mMapView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
@@ -157,7 +175,6 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
             mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_outcome), Long.toString(mPlace.getExpense())));
             mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_income), Long.toString(mPlace.getIncome())));
             mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_profit), Long.toString(mPlace.getIncome() - mPlace.getExpense())));
-
             LayoutInflater inflater = LayoutInflater.from(this);
             mVenueType = mPlace.isInOwnership() ? VenueType.MINE : mPlace.getOwner() == null ? VenueType.NOBODYS : VenueType.ANOTHERS;
 
@@ -186,13 +203,13 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
             @Override
             public void onClick(View view) {
                 dialogBuilder.setTitle(DIALOG);
-                dialogBuilder.setPositiveButton(R.string.positive_button_title, new DialogInterface.OnClickListener() {
+                dialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         ServiceHelper.get(PlaceActivity.this).buyPlace(mPlace.getId());
                         Toast.makeText(PlaceActivity.this, "Запрос на покупку отправлен", Toast.LENGTH_LONG);
                     }
                 });
-                dialogBuilder.setNegativeButton(R.string.negative_button_title, new DialogInterface.OnClickListener() {
+                dialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                     }
                 });
@@ -215,13 +232,13 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
             @Override
             public void onClick(View view) {
                 dialogBuilder.setTitle(DIALOG);
-                dialogBuilder.setPositiveButton(R.string.positive_button_title, new DialogInterface.OnClickListener() {
+                dialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         ServiceHelper.get(PlaceActivity.this).suggestDeal(mPlace.getId());
                         Toast.makeText(PlaceActivity.this, "Запрос на заключение сделки отправлен", Toast.LENGTH_LONG);
                     }
                 });
-                dialogBuilder.setNegativeButton(R.string.negative_button_title, new DialogInterface.OnClickListener() {
+                dialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                     }
                 });
@@ -246,7 +263,7 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
             @Override
             public void onClick(View v) {
                 upgradeDialogBuilder.setTitle(DIALOG);
-                upgradeDialogBuilder.setPositiveButton(R.string.positive_button_title, new DialogInterface.OnClickListener() {
+                upgradeDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         ServiceHelper.get(PlaceActivity.this).upgradePlace(mPlace.getId());
                         Toast.makeText(PlaceActivity.this,
@@ -254,7 +271,7 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
                                 Toast.LENGTH_LONG).show();
                     }
                 });
-                upgradeDialogBuilder.setNegativeButton(R.string.negative_button_title, new DialogInterface.OnClickListener() {
+                upgradeDialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                     }
                 });
@@ -271,7 +288,7 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
             @Override
             public void onClick(View v) {
                 sellDialogBuilder.setTitle(DIALOG);
-                sellDialogBuilder.setPositiveButton(R.string.positive_button_title, new DialogInterface.OnClickListener() {
+                sellDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         ServiceHelper.get(PlaceActivity.this).sellPlace(mPlace.getId());
                         Toast.makeText(PlaceActivity.this, "Здание продано",
@@ -279,7 +296,7 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
                         //PlaceActivity.this.finish();
                     }
                 });
-                sellDialogBuilder.setNegativeButton(R.string.negative_button_title, new DialogInterface.OnClickListener() {
+                sellDialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                     }
                 });
@@ -310,9 +327,8 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
-        final double venuesLatitude = getIntent().getDoubleExtra(EXTRA_VENUES_LATITUDE, 0.0);
-        final double venuesLongitude = getIntent().getDoubleExtra(EXTRA_VENUES_LONGITUDE, 0.0);
-        mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(venuesLatitude, venuesLongitude)));
+        final LatLng venuesLocation = getIntent().getParcelableExtra(EXTRA_VENUES_LOCATION);
+        mGoogleMap.addMarker(new MarkerOptions().position(venuesLocation));
     }
 
 

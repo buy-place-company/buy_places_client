@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigation_map">Карта</string>
+    <string name="navigation_venues">Места</string>
+    <string name="navigation_deals">Сделки</string>
+    <string name="navigation_rating">Рейтинг</string>
+
+    <string name="statistics_price">Цена</string>
+    <string name="statistics_outcome">Расходы</string>
+    <string name="statistics_income">Доходы</string>
+    <string name="statistics_profit">Прибыль</string>
+
+    <string name="dialog_positive_button_title">Да</string>
+    <string name="dialog_negative_button_title">Нет</string>
+    <string name="dialog_cancel_button_title">Отменить</string>
+
+    <string name="common_wait_message">Подождите</string>
+    <string name="common_request_executes_message">Выполняется запрос</string>
+
+    <string name="filter_all_venues">Все</string>
+    <string name="filter_mine_venues">Мои</string>
+    <string name="filter_visited_venues">Посещенные</string>
+</resources>

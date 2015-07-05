@@ -1,6 +1,5 @@
 package ru.tp.buy_places.fragments.objects;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.activities.PlaceActivity;
@@ -75,12 +76,10 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onItemClick(View view, int position) {
-        Intent intent = new Intent(getActivity(), PlaceActivity.class);
-        intent.putExtra(PlaceActivity.EXTRA_VENUES_ROW_ID, mPlaces.getPlaces().get(position).getRowId());
-        intent.putExtra(PlaceActivity.EXTRA_VENUES_LATITUDE, mPlaces.getPlaces().get(position).getLatitude());
-        intent.putExtra(PlaceActivity.EXTRA_VENUES_LONGITUDE, mPlaces.getPlaces().get(position).getLongitude());
-        intent.putExtra(PlaceActivity.EXTRA_VENUES_TYPE, mPlaces.getPlaces().get(position).isInOwnership() ? PlaceActivity.VenueType.MINE : mPlaces.getPlaces().get(position).getOwner() == null ? PlaceActivity.VenueType.NOBODYS : PlaceActivity.VenueType.ANOTHERS);
-        startActivity(intent);
+        final long venuesRowId = myPlacesAdapter.getItemId(position);
+        final LatLng venuesLocation = new LatLng(myPlacesAdapter.getItem(position).getLatitude(), myPlacesAdapter.getItem(position).getLongitude());
+        final PlaceActivity.VenueType venuesType = mPlaces.getPlaces().get(position).isInOwnership() ? PlaceActivity.VenueType.MINE : mPlaces.getPlaces().get(position).getOwner() == null ? PlaceActivity.VenueType.NOBODYS : PlaceActivity.VenueType.ANOTHERS;
+        PlaceActivity.start(this, venuesRowId, venuesLocation, venuesType);
     }
 
 }

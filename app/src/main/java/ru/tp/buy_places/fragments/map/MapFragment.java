@@ -104,13 +104,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
                             }
                         })
-                        .setPositiveButton(R.string.positive_button_title, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
                             }
                         })
-                        .setNeutralButton(R.string.cancel_button_title, null)
+                        .setNeutralButton(R.string.dialog_cancel_button_title, null)
                         .show();
         }
         return super.onOptionsItemSelected(item);
