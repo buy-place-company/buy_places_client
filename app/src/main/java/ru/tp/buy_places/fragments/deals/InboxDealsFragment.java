@@ -10,52 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import ru.tp.buy_places.R;
 
 public class InboxDealsFragment extends Fragment {
 
     private ListView mListView;
-    private SimpleAdapter adapter;
-    private static final String TEXT_FIELD = "text";
-    private static final String IMAGE_FIELD = "image";
     public static final String DIALOG = "Сделка";
     AlertDialog.Builder ad;
 
     private void initFragment(){
-        String from[] = new String[]{
-                TEXT_FIELD,
-                IMAGE_FIELD
-        };
-
-        int[] to = new int[] {
-                R.id.text,
-                R.id.image
-        };
-
-        adapter = new SimpleAdapter(getActivity(), getData(), R.layout.item_inbox, from, to);
-    }
-
-    private ArrayList<HashMap<String, Object>> getData(){
-        final String TITLES[] = new String[]{
-                getString(R.string.deals1),
-                getString(R.string.deals2)
-        };
-        final int IMAGE = R.mipmap.ic_object;
-        ArrayList<HashMap<String, Object>> list =
-                new ArrayList<>();
-        for (int i = 0; i < TITLES.length; i++) {
-            HashMap<String, Object> element = new HashMap<>();
-            element.put(TEXT_FIELD, TITLES[i]);
-            element.put(IMAGE_FIELD, IMAGE);
-            list.add(element);
-        }
-        return list;
     }
 
     @Override
@@ -77,7 +42,6 @@ public class InboxDealsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mListView = (ListView) inflater.inflate(R.layout.fragment_inbox_deals, container, false);
-        mListView.setAdapter(adapter);
         ad = new AlertDialog.Builder(getActivity());
         ad.setTitle(DIALOG);
         ad.setMessage("Осуществить сделку?");

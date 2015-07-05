@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +24,6 @@ import ru.tp.buy_places.fragments.user.UserFragment;
 public class MainActivity extends AppCompatActivity implements
         RaitingFragment.OnFragmentInteractionListener,
         UserFragment.OnFragmentInteractionListener,
-        SettingFragment.OnFragmentInteractionListener,
         NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout mDrawerLayout;
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void showPage(Page page) {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(page.name());
+        Fragment fragment = getFragmentManager().findFragmentByTag(page.name());
         if (fragment == null) {
             switch (page) {
                 case MAP:
@@ -99,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements
                     fragment = new MapFragment();
                     break;
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment, page.name()).commit();
+            getFragmentManager().beginTransaction().replace(R.id.content, fragment, page.name()).commit();
         }
 
     }
@@ -120,6 +119,9 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.navigation_rating:
                 showPage(Page.RATING);
+                break;
+            case R.id.navigation_settings:
+                showPage(Page.SETTINGS);
                 break;
             default:
                 showPage(Page.MAP);

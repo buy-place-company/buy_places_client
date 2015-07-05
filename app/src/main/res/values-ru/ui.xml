@@ -4,6 +4,7 @@
     <string name="navigation_venues">Места</string>
     <string name="navigation_deals">Сделки</string>
     <string name="navigation_rating">Рейтинг</string>
+    <string name="navigation_settings">Настройки</string>
 
     <string name="statistics_price">Цена</string>
     <string name="statistics_outcome">Расходы</string>
@@ -20,4 +21,6 @@
     <string name="filter_all_venues">Все</string>
     <string name="filter_mine_venues">Мои</string>
     <string name="filter_visited_venues">Посещенные</string>
+
+    <string name="menu_settings">Настройки</string>
 </resources>

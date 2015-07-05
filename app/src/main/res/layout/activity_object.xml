@@ -66,7 +66,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="20dp"
-                android:text="[level]"
+                android:text="@string/venues_level_hint"
                 android:id="@+id/text_view_place_level"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
@@ -96,7 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:text="@string/owner"
+                android:text="@string/venues_owner_hint"
                 android:id="@+id/text_view_owner" />
         </LinearLayout>
 
@@ -106,10 +106,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:layout_gravity="center">
+            android:gravity="center_horizontal">
             <include layout="@layout/statistics_table_row"/>
         </TableLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1e000000"/>
 
         <FrameLayout
             android:id="@+id/button_container"

@@ -1,10 +1,8 @@
 package ru.tp.buy_places.fragments.objects;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-
-import ru.tp.buy_places.fragments.deals.OutboxDealsFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentPagerAdapter;
 
 /**
  * Created by Ivan on 07.04.2015.

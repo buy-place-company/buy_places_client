@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="Theme">
+        <!-- Default style for Preference. -->
+        <attr name="preferenceStyle" format="reference"/>
+        <!-- Default style for CheckBoxPreference. -->
+        <attr name="checkBoxPreferenceStyle" format="reference"/>
+        <!-- Default style for DialogPreference. -->
+        <attr name="dialogPreferenceStyle" format="reference"/>
+        <!-- Default style for EditTextPreference. -->
+        <attr name="editTextPreferenceStyle" format="reference"/>
+        <!-- Default style for RingtonePreference. -->
+        <attr name="ringtonePreferenceStyle" format="reference"/>
+        <!-- Default style for switch preferences. -->
+        <attr name="switchPreferenceStyle" format="reference"/>
+
+        <attr name="seekBarPreferenceStyle" format="reference"/>
+        <attr name="seekBarDialogPreferenceStyle" format="reference"/>
+
+        <attr name="asp_textAppearanceListItemSecondary" format="reference"/>
+    </declare-styleable>
+
+    <!-- Base attributes available to Preference. -->
+    <declare-styleable name="Preference">
+        <!-- The optional icon for the preference -->
+        <attr name="android:icon"/>
+
+        <attr name="asp_tint" format="color|reference"/>
+        <attr name="asp_tintMode" format="enum">
+            <enum name="clear" value="0"/>
+            <enum name="src" value="1"/>
+            <enum name="dst" value="2"/>
+            <enum name="src_over" value="3"/>
+            <enum name="dst_over" value="4"/>
+            <enum name="src_in" value="5"/>
+            <enum name="dst_in" value="6"/>
+            <enum name="src_out" value="7"/>
+            <enum name="dst_out" value="8"/>
+            <enum name="src_atop" value="9"/>
+            <enum name="dst_atop" value="10"/>
+            <enum name="xor" value="11"/>
+            <enum name="darken" value="12"/>
+            <enum name="lighten" value="13"/>
+            <enum name="multiply" value="14"/>
+            <enum name="screen" value="15"/>
+            <enum name="add" value="16"/>
+            <enum name="overlay" value="17"/>
+        </attr>
+        <attr name="asp_tintIcon" format="boolean"/>
+
+        <attr name="asp_iconPaddingEnabled" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="CheckBoxPreference">
+        <attr name="android:summaryOn"/>
+        <attr name="android:summaryOff"/>
+        <attr name="android:disableDependentsState"/>
+    </declare-styleable>
+
+    <declare-styleable name="SwitchPreference">
+        <attr name="android:summaryOn"/>
+        <attr name="android:summaryOff"/>
+        <attr name="android:textOn"/>
+        <attr name="android:textOff"/>
+        <attr name="android:disableDependentsState"/>
+    </declare-styleable>
+
+    <declare-styleable name="ListPreference">
+        <attr name="android:entries"/>
+        <attr name="android:entryValues"/>
+    </declare-styleable>
+
+    <!-- Base attributes available to DialogPreference. -->
+    <declare-styleable name="DialogPreference">
+        <attr name="android:dialogTitle"/>
+        <attr name="android:dialogMessage"/>
+        <attr name="android:dialogIcon"/>
+        <attr name="android:positiveButtonText"/>
+        <attr name="android:negativeButtonText"/>
+        <attr name="android:dialogLayout"/>
+
+        <attr name="asp_tintDialogIcon" format="boolean"/>
+        <attr name="asp_dialogIconPaddingEnabled" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="RingtonePreference">
+        <attr name="android:ringtoneType"/>
+        <attr name="android:showDefault"/>
+        <attr name="android:showSilent"/>
+    </declare-styleable>
+
+    <declare-styleable name="SeekBarPreference">
+        <attr name="android:layout"/>
+    </declare-styleable>
+
+    <declare-styleable name="SeekBarPreference2">
+        <attr name="android:max"/>
+        <attr name="asp_tintSeekBar" format="boolean"/>
+    </declare-styleable>
+
+</resources>

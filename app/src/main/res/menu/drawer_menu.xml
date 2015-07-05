@@ -18,5 +18,9 @@
             android:id="@+id/navigation_rating"
             android:icon="@mipmap/ic_raiting"
             android:title="@string/navigation_rating"/>
+        <item
+            android:id="@+id/navigation_settings"
+            android:icon="@mipmap/ic_settings"
+            android:title="@string/navigation_settings"/>
     </group>
 </menu>
