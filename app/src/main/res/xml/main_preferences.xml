@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="MAIN PREFERENCES">
+        <CheckBoxPreference
+            android:key="chb2"
+            android:summary="SUMMARY"
+            android:title="TITLE"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="ACCOUNT PREFERENCES">
+        <EditTextPreference
+            android:key="address2"
+            android:summary="My name is %s"
+            android:title="ВЫХОД"/>
+    </PreferenceCategory>
+    <RingtonePreference
+        android:summary="SUMMARY2"
+        android:title="ВЫХОД">
+    </RingtonePreference>
+    <PreferenceScreen>
+        <PreferenceCategory android:title="MAIN PREFERENCES">
+            <CheckBoxPreference
+                android:key="chb2"
+                android:summary="SUMMARY"
+                android:title="TITLE"/>
+        </PreferenceCategory>
+        <PreferenceCategory android:title="ACCOUNT PREFERENCES">
+            <EditTextPreference
+                android:key="address2"
+                android:summary="SUMMARY2"
+                android:title="ВЫХОД"/>
+        </PreferenceCategory>
+    </PreferenceScreen>
+    <SwitchPreference
+        android:key="addressgg2"
+        android:summaryOff="SUMMARY_OFF"
+        android:summaryOn="SUMMARY_ON"
+        android:switchTextOff="Off"
+        android:switchTextOn="On"
+        android:defaultValue="true">
+
+    </SwitchPreference>
+</PreferenceScreen>

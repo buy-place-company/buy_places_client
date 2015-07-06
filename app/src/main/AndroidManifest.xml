@@ -46,25 +46,25 @@
             android:name=".content_provider.BuyPlacesContentProvider"
             android:authorities="ru.tp.buy_places.provider"
             android:enabled="true"
-            android:exported="false"></provider>
+            android:exported="false"/>
 
         <service
             android:name=".service.BuyItService"
-            android:exported="false"></service>
+            android:exported="false"/>
 
         <activity
             android:name=".activities.PlaceActivity"
-            android:label="@string/title_activity_object"></activity>
+            android:label="@string/title_activity_object"/>
         <activity
             android:name=".activities.UserActivity"
-            android:label="label"></activity>
+            android:label="label"/>
 
         <activity
             android:name=".authentication.LoginActivity"
-            android:label="label"></activity>
+            android:label="label"/>
 
         <activity android:name=".authentication.VKOAuthActivity"
-            android:label="label"></activity>
+            android:label="label"/>
 
         <service
             android:name=".authentication.BuyItAuthenticatorService"

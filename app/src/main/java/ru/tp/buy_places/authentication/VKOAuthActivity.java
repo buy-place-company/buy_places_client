@@ -15,9 +15,11 @@ import ru.tp.buy_places.R;
 public class VKOAuthActivity extends Activity {
     public static final int RESULT_FAILED = 2;
     private WebView mWebView;
-    final String REDIRECT_URI = "http://127.0.0.1/auth/vk";
-    final String APP_ID = "4927495";
-    final String PERMISSIONS = "email,friends";
+    private String REDIRECT_URI;
+    private String APP_ID;
+    private String PERMISSIONS;
+    private String PROTOCOL_VERSION;
+
     private WebViewClient mWebViewClient = new WebViewClient() {
         @Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
@@ -29,7 +31,7 @@ public class VKOAuthActivity extends Activity {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Uri uri = Uri.parse(url);
-            if (uri.getScheme().equals("http") && uri.getHost().equals("127.0.0.1") && uri.getPath().equals("/auth/vk")) {
+            if (uri.toString().equals(REDIRECT_URI)) {
                 String code = uri.getQueryParameter("code");
                 onVKCodeReceived(code);
                 return true;
@@ -37,6 +39,7 @@ public class VKOAuthActivity extends Activity {
             return super.shouldOverrideUrlLoading(view, url);
         }
     };
+
 
     private void onVKCodeReceived(String code) {
         Intent intent = new Intent();
@@ -51,19 +54,32 @@ public class VKOAuthActivity extends Activity {
         setContentView(R.layout.vk_oauth_activity);
         mWebView = (WebView) findViewById(R.id.web_view);
         mWebView.setWebViewClient(mWebViewClient);
+
+
+        APP_ID = getString(R.string.vk_app_id);
+        REDIRECT_URI = getString(R.string.vk_redirect_uri);
+        PERMISSIONS = getString(R.string.vk_permissions);
+        PROTOCOL_VERSION = getString(R.string.vk_protocol_version);
+
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         String url = "https://oauth.vk.com/authorize?" +
                 "client_id=" + APP_ID + "&" +
                 "scope=" + PERMISSIONS + "&" +
                 "redirect_uri=" + REDIRECT_URI + "&" +
                 "response_type=code&" +
-                "v=5.33";
+                "v=" + PROTOCOL_VERSION;
 
         mWebView.loadUrl(url);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 
     @Override

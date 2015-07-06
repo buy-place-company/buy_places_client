@@ -1,223 +1,124 @@
-<LinearLayout
-    android:layout_height="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@null">
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="240dp">
 
-    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        </android.support.design.widget.CollapsingToolbarLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="?attr/colorPrimary">
+
+            <ImageView
+                android:id="@+id/image_view_place"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_margin="20dp"
+                android:src="@drawable/h0" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_toRightOf="@+id/image_view_place"
+                android:layout_toEndOf="@+id/image_view_place"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:layout_toLeftOf="@+id/text_view_place_level"
+                android:layout_toStartOf="@+id/text_view_place_level">
+
+                <TextView
+                    android:id="@+id/text_view_object_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="МГТУ им Баумана"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="checkins: 400000"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"/>
+
+            </LinearLayout>
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="20dp"
+                android:text="@string/venues_level_hint"
+                android:id="@+id/text_view_place_level"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+                android:background="@drawable/circle_background"/>
+        </RelativeLayout>
+    </android.support.design.widget.AppBarLayout>
+
+
+
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="ru.tp.buy_places.fragments.objects.ObjectFragment">
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:text="Владелец: "
+                android:id="@+id/text_view_owner_label" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:text="@string/venues_owner_hint"
+                android:id="@+id/text_view_owner" />
+        </LinearLayout>
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="LVL"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/text_view_place_level_label"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp" />
+        <TableLayout
+            android:id="@+id/table_layout_statistics"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+            <include layout="@layout/statistics_table_row"/>
+        </TableLayout>
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:id="@+id/image_view_place"
-            android:src="@drawable/h0"
-            android:layout_below="@+id/text_view_place_level_label"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="МГТУ им Баумана"
-            android:id="@+id/text_view_object_name"
-            android:layout_below="@+id/image_view_place"
-            android:layout_centerHorizontal="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/price"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/price_text_view"
-            android:layout_alignTop="@+id/text_view_price_value"
-            android:layout_alignLeft="@+id/service_text_view"
-            android:layout_alignStart="@+id/service_text_view" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/service"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/service_text_view"
-            android:layout_below="@+id/income_text_view"
-            android:layout_alignLeft="@+id/button_container"
-            android:layout_alignStart="@+id/button_container" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/income"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/income_text_view"
-            android:layout_below="@+id/price_text_view"
-            android:layout_alignLeft="@+id/price_text_view"
-            android:layout_alignStart="@+id/price_text_view" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/profit"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/profit_text_view"
-            android:layout_below="@+id/service_text_view"
-            android:layout_alignLeft="@+id/service_text_view"
-            android:layout_alignStart="@+id/service_text_view" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/image_view_dollar"
-            android:src="@mipmap/currency_black_dollar"
-            android:layout_alignTop="@+id/price_text_view"
-            android:layout_alignBottom="@+id/price_text_view"
-            android:layout_toRightOf="@+id/service_text_view" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/image_view_dollar1"
-            android:src="@mipmap/currency_black_dollar"
-            android:layout_alignTop="@+id/service_text_view"
-            android:layout_alignBottom="@+id/service_text_view"
-            android:layout_toRightOf="@+id/service_text_view" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/image_view_dollar2"
-            android:src="@mipmap/currency_black_dollar"
-            android:layout_alignTop="@+id/income_text_view"
-            android:layout_alignBottom="@+id/income_text_view"
-            android:layout_toRightOf="@+id/service_text_view" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/image_view_dollar3"
-            android:src="@mipmap/currency_black_dollar"
-            android:layout_alignTop="@+id/profit_text_view"
-            android:layout_alignBottom="@+id/profit_text_view"
-            android:layout_toRightOf="@+id/service_text_view" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="200"
-            android:id="@+id/text_view_price_value"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="20dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="20"
-            android:id="@+id/text_view_profit_value"
-            android:layout_alignTop="@+id/image_view_dollar3"
-            android:layout_alignLeft="@+id/text_view_service_value"
-            android:layout_alignStart="@+id/text_view_service_value" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="70"
-            android:id="@+id/text_view_income_value"
-
-            android:layout_above="@+id/text_view_service_value"
-            android:layout_alignLeft="@+id/text_view_service_value"
-            android:layout_alignStart="@+id/text_view_service_value" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="50"
-            android:id="@+id/text_view_service_value"
-            android:layout_alignTop="@+id/image_view_dollar1"
-            android:layout_alignRight="@+id/text_view_price_value"
-            android:layout_alignEnd="@+id/text_view_price_value" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView2"
-            android:src="@mipmap/ic_location"
-            android:layout_alignTop="@+id/text_view_place_level_label"
-            android:layout_alignLeft="@+id/text_view_price_value"
-            android:layout_alignStart="@+id/text_view_price_value"
-            android:layout_above="@+id/image_view_place"
-            android:visibility="invisible" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Владелец: "
-            android:id="@+id/text_view_owner_label"
-            android:layout_above="@+id/price_text_view"
-            android:layout_alignLeft="@+id/price_text_view"
-            android:layout_alignStart="@+id/price_text_view" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text=" "
-            android:id="@+id/text_view_owner"
-            android:layout_above="@+id/image_view_dollar"
-            android:layout_toRightOf="@+id/profit_text_view"
-            android:layout_toEndOf="@+id/profit_text_view" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="0"
-            android:id="@+id/text_view_place_level"
-            android:layout_alignTop="@+id/text_view_place_level_label"
-            android:layout_toRightOf="@+id/text_view_place_level_label"
-            android:layout_toLeftOf="@+id/image_view_place"
-            android:layout_toStartOf="@+id/image_view_place"
-            android:layout_marginLeft="5dp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1e000000"/>
 
         <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:id="@+id/button_container"
-            android:layout_below="@+id/profit_text_view"
-            android:layout_alignLeft="@+id/text_view_place_level_label"
-            android:layout_alignStart="@+id/text_view_place_level_label"
-            android:layout_alignRight="@+id/text_view_income_value"
-            android:layout_alignEnd="@+id/text_view_income_value"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"/>
-    </RelativeLayout>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
 </LinearLayout>

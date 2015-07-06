@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="statistics_key_hint">[name]</string>
+    <string name="statistics_value_hint">[value]</string>
+    <string name="venues_level_hint">[level]</string>
+    <string name="venues_owner_hint">[owner]</string>
+</resources>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigation_map">Map</string>
+    <string name="navigation_venues">Venues</string>
+    <string name="navigation_deals">Deals</string>
+    <string name="navigation_rating">Rating</string>
+    <string name="navigation_settings">Settings</string>
+
+    <string name="statistics_price">Price</string>
+    <string name="statistics_outcome">Outcome</string>
+    <string name="statistics_income">Income</string>
+    <string name="statistics_profit">Profit</string>
+
+    <string name="dialog_positive_button_title">Yes</string>
+    <string name="dialog_negative_button_title">No</string>
+    <string name="dialog_cancel_button_title">Cancel</string>
+
+    <string name="common_wait_message">Wait</string>
+    <string name="common_request_executes_message">Request executes</string>
+
+    <string name="filter_all_venues">All</string>
+    <string name="filter_mine_venues">My</string>
+    <string name="filter_visited_venues">Visited</string>
+
+    <string name="menu_settings">Settings</string>
+</resources>
