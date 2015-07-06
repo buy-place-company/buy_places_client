@@ -20,20 +20,6 @@ public class InboxDealsFragment extends Fragment {
     public static final String DIALOG = "Сделка";
     AlertDialog.Builder ad;
 
-    private void initFragment(){
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        initFragment();
-    }
-
-    public static Fragment newInstance() {
-        Fragment fragment = new InboxDealsFragment();
-        return fragment;
-    }
-
     public InboxDealsFragment() {
         // Required empty public constructor
     }

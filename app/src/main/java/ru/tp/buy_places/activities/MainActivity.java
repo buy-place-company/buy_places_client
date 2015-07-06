@@ -2,7 +2,7 @@ package ru.tp.buy_places.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.app.Fragment;
@@ -10,11 +10,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.fragments.deals.DealsFragment;
+import ru.tp.buy_places.fragments.map.LocationApiConnectionListener;
+import ru.tp.buy_places.fragments.map.LocationProvider;
 import ru.tp.buy_places.fragments.map.MapFragment;
 import ru.tp.buy_places.fragments.objects.PlaceListFragment;
 import ru.tp.buy_places.fragments.raiting.RaitingFragment;
@@ -22,19 +29,23 @@ import ru.tp.buy_places.fragments.settings.SettingFragment;
 import ru.tp.buy_places.fragments.user.UserFragment;
 
 public class MainActivity extends AppCompatActivity implements
-        RaitingFragment.OnFragmentInteractionListener,
-        UserFragment.OnFragmentInteractionListener,
+        LocationApiConnectionListener.GoogleApiClientHolder,
+        LocationApiConnectionListener.OnLocationChangedListener,
+        LocationProvider,
         NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private Toolbar mToolbar;
     private NavigationView mNavigationView;
+    private GoogleApiClient mGoogleApiClient;
+
+
+    private Set<LocationApiConnectionListener.OnLocationChangedListener> mOnLocationChangedListeners = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("MainActivity", "onCreate");
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mNavigationView = (NavigationView)findViewById(R.id.navigation);
@@ -48,6 +59,13 @@ public class MainActivity extends AppCompatActivity implements
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         mNavigationView.setNavigationItemSelectedListener(this);
         showPage(Page.MAP);
+
+        final LocationApiConnectionListener mLocationApiConnectionListener = new LocationApiConnectionListener(this, this, this);
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(mLocationApiConnectionListener)
+                .addOnConnectionFailedListener(mLocationApiConnectionListener)
+                .build();
     }
 
     @Override
@@ -63,11 +81,6 @@ public class MainActivity extends AppCompatActivity implements
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
     public static void start(Context context) {
@@ -128,6 +141,32 @@ public class MainActivity extends AppCompatActivity implements
         }
         mDrawerLayout.closeDrawers();
         return true;
+    }
+
+    @Override
+    public GoogleApiClient getGoogleApiClient() {
+        return mGoogleApiClient;
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        notifyLocationChanged(location);
+    }
+
+    @Override
+    public void addLocationListener(LocationApiConnectionListener.OnLocationChangedListener listener) {
+        mOnLocationChangedListeners.add(listener);
+    }
+
+    @Override
+    public void removeLocationListener(LocationApiConnectionListener.OnLocationChangedListener listener) {
+        mOnLocationChangedListeners.remove(listener);
+    }
+
+    @Override
+    public void notifyLocationChanged(Location location) {
+        for (LocationApiConnectionListener.OnLocationChangedListener listener: mOnLocationChangedListeners)
+            listener.onLocationChanged(location);
     }
 
     public enum Page {

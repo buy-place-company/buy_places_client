@@ -55,11 +55,11 @@ public class LocationApiConnectionListener implements GoogleApiClient.Connection
         mOnLocationChangedListener.onLocationChanged(location);
     }
 
-    interface OnLocationChangedListener {
+    public interface OnLocationChangedListener {
         void onLocationChanged(Location location);
     }
 
-    interface GoogleApiClientHolder {
+    public interface GoogleApiClientHolder {
         GoogleApiClient getGoogleApiClient();
     }
 }

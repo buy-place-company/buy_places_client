@@ -1,5 +1,6 @@
 package ru.tp.buy_places.fragments.map;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -43,7 +44,7 @@ import ru.tp.buy_places.service.resourses.Place;
 import ru.tp.buy_places.service.resourses.Places;
 
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, LocationApiConnectionListener.GoogleApiClientHolder, LocationApiConnectionListener.OnLocationChangedListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, LocationApiConnectionListener.OnLocationChangedListener {
 
     private static final int ALL_PLACES_LOADER_ID = 0;
 
@@ -55,8 +56,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
     private ImageButton mMyLocationImageButton;
     private ImageButton mZoomInImageButton;
     private ImageButton mZoomOutImageButton;
-    private GoogleApiClient mGoogleApiClient;
-    private LocationApiConnectionListener mLocationApiConnectionListener;
+
+    private LocationProvider mLocationProvider;
 
 
     public MapFragment() {
@@ -64,20 +65,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+            try {
+                mLocationProvider = (LocationProvider)activity;
+                mLocationProvider.addLocationListener(this);
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString()
+                        + " must implement LocationProvider");
+            }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mLocationProvider.removeLocationListener(this);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mLocationApiConnectionListener = new LocationApiConnectionListener(getActivity(), this, this);
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(mLocationApiConnectionListener)
-                .addOnConnectionFailedListener(mLocationApiConnectionListener)
-                .build();
         mInfoWindowAdapter = new CustomInfoWindowAdapter(getActivity());
         setHasOptionsMenu(true);
         getLoaderManager().initLoader(ALL_PLACES_LOADER_ID, null, this);
@@ -142,12 +149,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
         super.onPause();
         if (mMapView != null)
             mMapView.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -264,10 +265,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
                 if (mGoogleMap != null)
                     mGoogleMap.animateCamera(CameraUpdateFactory.zoomOut());
         }
-    }
-
-    @Override
-    public GoogleApiClient getGoogleApiClient() {
-        return mGoogleApiClient;
     }
 }
