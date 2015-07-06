@@ -234,12 +234,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (mClusterManager != null)
+        if (mClusterManager != null) {
             mClusterManager.clearItems();
-        Places places = Places.fromCursor(data);
-        for (Place place : places.getPlaces()) {
-            PlaceClusterItem placeClusterItem = new PlaceClusterItem(place);
-            mClusterManager.addItem(placeClusterItem);
+            Places places = Places.fromCursor(data);
+            for (Place place : places.getPlaces()) {
+                PlaceClusterItem placeClusterItem = new PlaceClusterItem(place);
+                mClusterManager.addItem(placeClusterItem);
+            }
         }
     }
 

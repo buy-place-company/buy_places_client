@@ -39,7 +39,9 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
                 Account[] accounts = accountManager.getAccountsByType(BuyItAccount.TYPE);
                 if (accounts.length == 0) {
-                    addNewAccount(accountManager);
+                    //addNewAccount(accountManager);
+                    MainActivity.start(SplashScreenActivity.this);
+                    finish();
                 } else {
                     MainActivity.start(SplashScreenActivity.this);
                     finish();
