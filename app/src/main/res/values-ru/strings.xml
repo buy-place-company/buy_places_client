@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="last_visited_message">Вы были там</string>
+    <string name="distance_label_message"> км</string>
+    <string name="divider_message"> км</string>
+    <string name="distance_message">1.2</string>
+    <string name="level_message">Уровень 12</string>
+    <string name="price_label_message">Цена:</string>
+    <string name="price_message">1000:</string>
+</resources>
