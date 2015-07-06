@@ -37,6 +37,5 @@
         android:switchTextOff="Off"
         android:switchTextOn="On"
         android:defaultValue="true">
-
     </SwitchPreference>
 </PreferenceScreen>

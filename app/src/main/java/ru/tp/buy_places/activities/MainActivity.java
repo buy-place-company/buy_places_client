@@ -1,11 +1,11 @@
 package ru.tp.buy_places.activities;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,19 +14,20 @@ import android.view.MenuItem;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.fragments.deals.DealsFragment;
-import ru.tp.buy_places.fragments.map.LocationApiConnectionListener;
-import ru.tp.buy_places.fragments.map.LocationProvider;
 import ru.tp.buy_places.fragments.map.MapFragment;
 import ru.tp.buy_places.fragments.objects.PlaceListFragment;
 import ru.tp.buy_places.fragments.raiting.RaitingFragment;
 import ru.tp.buy_places.fragments.settings.SettingFragment;
-import ru.tp.buy_places.fragments.user.UserFragment;
+import ru.tp.buy_places.map.LocationApiConnectionListener;
+import ru.tp.buy_places.map.LocationProvider;
+import ru.tp.buy_places.service.ServiceHelper;
 
 public class MainActivity extends AppCompatActivity implements
         LocationApiConnectionListener.GoogleApiClientHolder,
@@ -72,6 +73,21 @@ public class MainActivity extends AppCompatActivity implements
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mActionBarDrawerToggle.syncState();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
     }
 
     @Override
@@ -150,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLocationChanged(Location location) {
+        ServiceHelper.get(this).getPlacesAroundThePlayer(new LatLng(location.getLatitude(), location.getLongitude()));
         notifyLocationChanged(location);
     }
 
@@ -167,6 +184,12 @@ public class MainActivity extends AppCompatActivity implements
     public void notifyLocationChanged(Location location) {
         for (LocationApiConnectionListener.OnLocationChangedListener listener: mOnLocationChangedListeners)
             listener.onLocationChanged(location);
+    }
+
+    @Override
+    public void requestLastKnownLocation() {
+        if (mGoogleApiClient != null)
+            notifyLocationChanged(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));
     }
 
     public enum Page {

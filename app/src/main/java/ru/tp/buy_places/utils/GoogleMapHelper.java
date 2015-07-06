@@ -6,6 +6,8 @@ import com.google.android.gms.maps.model.LatLng;
  * Created by Ivan on 04.07.2015.
  */
 public final class GoogleMapHelper {
+    private GoogleMapHelper(){}
+
     public static double getDistance(LatLng point1, LatLng point2) {
         double R = 6372795;
         double latitude1 = point1.latitude;

@@ -1,4 +1,4 @@
-package ru.tp.buy_places.fragments.map;
+package ru.tp.buy_places.map;
 
 import android.content.Context;
 import android.location.Location;

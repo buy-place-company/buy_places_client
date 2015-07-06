@@ -19,8 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -37,8 +35,11 @@ import java.util.Map;
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.activities.PlaceActivity;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
-import ru.tp.buy_places.map.ObjectRenderer;
-import ru.tp.buy_places.map.PlaceClusterItem;
+import ru.tp.buy_places.map.CustomInfoWindowAdapter;
+import ru.tp.buy_places.map.LocationApiConnectionListener;
+import ru.tp.buy_places.map.LocationProvider;
+import ru.tp.buy_places.map.VenuesRenderer;
+import ru.tp.buy_places.map.VenueClusterItem;
 import ru.tp.buy_places.service.ServiceHelper;
 import ru.tp.buy_places.service.resourses.Place;
 import ru.tp.buy_places.service.resourses.Places;
@@ -48,7 +49,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
 
     private static final int ALL_PLACES_LOADER_ID = 0;
 
-    private ClusterManager<PlaceClusterItem> mClusterManager;
+    private ClusterManager<VenueClusterItem> mClusterManager;
     private CustomInfoWindowAdapter mInfoWindowAdapter;
     private MapView mMapView;
     private GoogleMap mGoogleMap;
@@ -170,7 +171,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
         mInfoWindowAdapter = new CustomInfoWindowAdapter(getActivity());
         mGoogleMap = googleMap;
         mClusterManager = new ClusterManager<>(getActivity(), mGoogleMap);
-        mClusterManager.setRenderer(new ObjectRenderer(getActivity(), mGoogleMap, mClusterManager, mInfoWindowAdapter));
+        mClusterManager.setRenderer(new VenuesRenderer(getActivity(), mGoogleMap, mClusterManager, mInfoWindowAdapter));
         mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
@@ -182,26 +183,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
         mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
         mGoogleMap.setInfoWindowAdapter(mInfoWindowAdapter);
         mGoogleMap.setOnMarkerClickListener(mClusterManager);
-//        mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-//            @Override
-//            public void onInfoWindowClick(Marker marker) {
-//                Intent intent = new Intent(getActivity(), PlaceActivity.class);
-//                PlaceClusterItem item = mInfoWindowAdapter.getItem(marker);
-//                if (item != null) {
-//                    Long id = item.getRowId();
-//                    intent.putExtra("EXTRA_PLACE_ID", id);
-//                    startActivity(intent);
-//                }
-//
-//            }
-//        });
 
-        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<PlaceClusterItem>() {
+        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<VenueClusterItem>() {
             @Override
-            public boolean onClusterItemClick(PlaceClusterItem placeClusterItem) {
+            public boolean onClusterItemClick(VenueClusterItem venueClusterItem) {
                 Intent intent = new Intent(getActivity(), PlaceActivity.class);
-                if (placeClusterItem != null) {
-                    Long id = placeClusterItem.getRowId();
+                if (venueClusterItem != null) {
+                    Long id = venueClusterItem.getRowId();
                     intent.putExtra("EXTRA_PLACE_ID", id);
                     startActivity(intent);
                     return true;
@@ -210,12 +198,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
 
             }
         });
+        mLocationProvider.requestLastKnownLocation();
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        ServiceHelper.get(getActivity()).getPlacesAroundThePlayer(new LatLng(location.getLatitude(), location.getLongitude()));
-        if (mGoogleMap != null) {
+        if (mGoogleMap != null && location != null) {
             if (mMyPositionMarker == null) {
                 mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(location.getLatitude(), location.getLongitude()))
@@ -239,8 +227,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
             mClusterManager.clearItems();
             Places places = Places.fromCursor(data);
             for (Place place : places.getPlaces()) {
-                PlaceClusterItem placeClusterItem = new PlaceClusterItem(place);
-                mClusterManager.addItem(placeClusterItem);
+                VenueClusterItem venueClusterItem = new VenueClusterItem(place);
+                mClusterManager.addItem(venueClusterItem);
             }
         }
     }

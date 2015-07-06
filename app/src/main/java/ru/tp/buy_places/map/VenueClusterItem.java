@@ -8,11 +8,11 @@ import ru.tp.buy_places.service.resourses.Place;
 /**
  * Created by Ivan on 05.05.2015.
  */
-public class PlaceClusterItem implements ClusterItem {
+public class VenueClusterItem implements ClusterItem {
 
     private final Place mPlace;
 
-    public PlaceClusterItem(Place place) {
+    public VenueClusterItem(Place place) {
         mPlace = place;
     }
 
