@@ -64,7 +64,7 @@ public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHo
 
     @Override
     public MyPlacesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_object, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_object_my, parent, false);
         return new ViewHolder(v);
      }
 
