@@ -48,8 +48,8 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            mTitle = (TextView) itemView.findViewById(R.id.title_place_list);
-            mIcon = (ImageView) itemView.findViewById(R.id.icon_place_list);
+            mTitle = (TextView) itemView.findViewById(R.id.text_view_rating);
+            mIcon = (ImageView) itemView.findViewById(R.id.image_view_rating);
         }
 
         @Override

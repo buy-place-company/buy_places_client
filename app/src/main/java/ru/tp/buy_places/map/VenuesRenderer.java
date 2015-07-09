@@ -42,9 +42,9 @@ public class VenuesRenderer extends DefaultClusterRenderer<VenueClusterItem> {
 
     @Override
     protected void onBeforeClusterItemRendered(VenueClusterItem item, MarkerOptions markerOptions) {
-        //mClusterMarkerItemOptionsCreator.setTitle(item.getName());
-        //mClusterMarkerItemOptionsCreator.create(markerOptions);
-        super.onBeforeClusterItemRendered(item, markerOptions);
+        mClusterMarkerItemOptionsCreator.setTitle(item.getName());
+        mClusterMarkerItemOptionsCreator.create(markerOptions);
+        //super.onBeforeClusterItemRendered(item, markerOptions);
     }
 
     @Override

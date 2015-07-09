@@ -39,11 +39,35 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
         Bundle args = new Bundle();
         args.putLong(EXTRA_USER_ID, userId);
         getSupportLoaderManager().initLoader(USER_LOADER_ID, args, this);
-
+        mMapView = (MapView) findViewById(R.id.map_view);
         if (mMapView != null)
             mMapView.getMapAsync(this);
+        mMapView.onCreate(savedInstanceState);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
