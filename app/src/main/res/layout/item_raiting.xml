@@ -48,7 +48,7 @@
         android:layout_below="@+id/text_view_rating"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/image_view_rating"
-        
+
         android:gravity="center_vertical"/>
 
 </RelativeLayout>
