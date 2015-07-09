@@ -54,14 +54,13 @@ public class ClusterPopupListAdapter extends BaseAdapter {
         ViewHolder viewHolder;
 
         if (convertView == null) {
-            convertView =LayoutInflater.from(mContext).inflate(R.layout.item_object_cluster_popup, null);
+            convertView =LayoutInflater.from(mContext).inflate(R.layout.item_venues_cluster_popup, null);
             viewHolder = new ViewHolder();
-            viewHolder.nameTextView = (TextView) convertView.findViewById(R.id.title_place_list);
-            viewHolder.imageTextView = (ImageView) convertView.findViewById(R.id.icon_place_list);
-            viewHolder.priceTextView = (TextView) convertView.findViewById(R.id.tv_price);
-            viewHolder.checkInsTextView = (TextView) convertView.findViewById(R.id.tv_chekins);
-            viewHolder.levelTextView = (TextView) convertView.findViewById(R.id.tv_level);
-
+            viewHolder.nameTextView = (TextView) convertView.findViewById(R.id.text_view_venues_name);
+            viewHolder.imageTextView = (ImageView) convertView.findViewById(R.id.image_view_venues_icon);
+            viewHolder.priceTextView = (TextView) convertView.findViewById(R.id.text_view_venues_price);
+            viewHolder.checkInsTextView = (TextView) convertView.findViewById(R.id.text_view_venues_checkins_count);
+            viewHolder.levelTextView = (TextView) convertView.findViewById(R.id.text_view_venues_level);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();

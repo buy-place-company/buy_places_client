@@ -20,6 +20,10 @@ public class VenuesRenderer extends DefaultClusterRenderer<VenueClusterItem> {
     private final OnClusterItemRenderedListener mOnClusterItemRenderedListener;
     private final ClusterItemMarkerOptionsCreator mClusterMarkerItemOptionsCreator;
 
+    @Override
+    public void onRemove() {
+        super.onRemove();
+    }
 
     public VenuesRenderer(Context context, GoogleMap map, ClusterManager<VenueClusterItem> clusterManager, OnClusterItemRenderedListener onClusterItemRenderedListener) {
         super(context, map, clusterManager);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="statistics_key_hint">[name]</string>
-    <string name="statistics_value_hint">[value]</string>
-    <string name="venues_level_hint">[level]</string>
-    <string name="venues_owner_hint">[owner]</string>
+    <string name="statistics_key_hint" translatable="false">[name]</string>
+    <string name="statistics_value_hint" translatable="false">[value]</string>
+    <string name="venues_level_hint" translatable="false">[level]</string>
+    <string name="venues_owner_hint" translatable="false">[owner]</string>
 </resources>

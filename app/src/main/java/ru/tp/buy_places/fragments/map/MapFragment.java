@@ -198,18 +198,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
         mGoogleMap.setInfoWindowAdapter(mInfoWindowAdapter);
         mGoogleMap.setOnMarkerClickListener(mClusterManager);
         mGoogleMap.setOnInfoWindowClickListener(mClusterManager);
-
-//        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<VenueClusterItem>() {
-//            @Override
-//            public boolean onClusterItemClick(VenueClusterItem venueClusterItem) {
-//                if (venueClusterItem != null) {
-//                    PlaceActivity.VenueType venueType = PlaceActivity.VenueType.fromVenue(venueClusterItem.getPlace());
-//                    PlaceActivity.start(MapFragment.this, venueClusterItem.getRowId(), venueClusterItem.getPosition(), venueType);
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
         mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<VenueClusterItem>() {
             @Override
             public void onClusterItemInfoWindowClick(VenueClusterItem venueClusterItem) {
@@ -263,6 +251,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
             case ALL_PLACES_LOADER_ID:
                 if (mClusterManager != null) {
                     mClusterManager.clearItems();
+                    mInfoWindowAdapter.clearItems();
                     Places places = Places.fromCursor(data);
                     for (Place place : places.getPlaces()) {
                         VenueClusterItem venueClusterItem = new VenueClusterItem(place);

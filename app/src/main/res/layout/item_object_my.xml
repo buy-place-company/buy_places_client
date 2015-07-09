@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/last_visited_message"
-        android:id="@+id/text_view_price"
+        android:id="@+id/text_view_venues_price"
         android:layout_below="@+id/title_place_list"
         android:layout_toRightOf="@+id/icon_place_list"
         android:layout_toEndOf="@+id/icon_place_list" />

@@ -85,7 +85,11 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
         mAppBarLayout = (FrameLayout) findViewById(R.id.app_bar_layout);
         GoogleMapOptions googleMapOptions = new GoogleMapOptions()
                 .liteMode(true)
-                .camera(new CameraPosition.Builder().target(venuesPosition).zoom(zoomLevel).build());
+                .mapToolbarEnabled(false)
+                .camera(new CameraPosition.Builder()
+                        .target(venuesPosition)
+                        .zoom(zoomLevel)
+                        .build());
         mMapView = new MapView(this, googleMapOptions);
         mAppBarLayout.addView(mMapView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
