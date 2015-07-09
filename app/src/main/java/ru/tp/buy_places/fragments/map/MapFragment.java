@@ -96,9 +96,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
         setHasOptionsMenu(true);
         getLoaderManager().initLoader(ALL_PLACES_LOADER_ID, null, this);
 
-        final Bundle arguments = new Bundle();
-        arguments.putLong(EXTRA_PLAYER_ID, AccountManagerHelper.getPlayerId(getActivity()));
-        getLoaderManager().initLoader(PLAYER_LOADER_ID, arguments, this);
+        //final Bundle arguments = new Bundle();
+        //arguments.putLong(EXTRA_PLAYER_ID, AccountManagerHelper.getPlayerId(getActivity()));
+        //getLoaderManager().initLoader(PLAYER_LOADER_ID, arguments, this);
     }
 
     @Override
