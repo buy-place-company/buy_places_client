@@ -43,4 +43,12 @@ public class VenueClusterItem implements ClusterItem {
     public Place getPlace(){
         return mPlace;
     }
+
+    public long getCheckinsCount() {
+        return mPlace.getCheckinsCount();
+    }
+
+    public int getLevel() {
+        return mPlace.getLevel();
+    }
 }
