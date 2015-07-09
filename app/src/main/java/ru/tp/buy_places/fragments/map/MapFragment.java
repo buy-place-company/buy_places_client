@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,9 +27,12 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ru.tp.buy_places.R;
@@ -46,7 +50,7 @@ import ru.tp.buy_places.service.resourses.Places;
 import ru.tp.buy_places.utils.AccountManagerHelper;
 
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, LocationApiConnectionListener.OnLocationChangedListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, LocationApiConnectionListener.OnLocationChangedListener, DialogInterface.OnClickListener {
 
     private static final int ALL_PLACES_LOADER_ID = 0;
     private static final int PLAYER_LOADER_ID = 1;
@@ -96,9 +100,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
         setHasOptionsMenu(true);
         getLoaderManager().initLoader(ALL_PLACES_LOADER_ID, null, this);
 
-        //final Bundle arguments = new Bundle();
-        //arguments.putLong(EXTRA_PLAYER_ID, AccountManagerHelper.getPlayerId(getActivity()));
-        //getLoaderManager().initLoader(PLAYER_LOADER_ID, arguments, this);
+        final Bundle arguments = new Bundle();
+        arguments.putLong(EXTRA_PLAYER_ID, AccountManagerHelper.getPlayerId(getActivity()));
+        getLoaderManager().initLoader(PLAYER_LOADER_ID, arguments, this);
     }
 
     @Override
@@ -193,17 +197,35 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
         mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
         mGoogleMap.setInfoWindowAdapter(mInfoWindowAdapter);
         mGoogleMap.setOnMarkerClickListener(mClusterManager);
+        mGoogleMap.setOnInfoWindowClickListener(mClusterManager);
 
-        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<VenueClusterItem>() {
+//        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<VenueClusterItem>() {
+//            @Override
+//            public boolean onClusterItemClick(VenueClusterItem venueClusterItem) {
+//                if (venueClusterItem != null) {
+//                    PlaceActivity.VenueType venueType = PlaceActivity.VenueType.fromVenue(venueClusterItem.getPlace());
+//                    PlaceActivity.start(MapFragment.this, venueClusterItem.getRowId(), venueClusterItem.getPosition(), venueType);
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+        mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<VenueClusterItem>() {
             @Override
-            public boolean onClusterItemClick(VenueClusterItem venueClusterItem) {
+            public void onClusterItemInfoWindowClick(VenueClusterItem venueClusterItem) {
                 if (venueClusterItem != null) {
                     PlaceActivity.VenueType venueType = PlaceActivity.VenueType.fromVenue(venueClusterItem.getPlace());
                     PlaceActivity.start(MapFragment.this, venueClusterItem.getRowId(), venueClusterItem.getPosition(), venueType);
-                    return true;
                 }
-                return false;
-
+            }
+        });
+        mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<VenueClusterItem>() {
+            @Override
+            public boolean onClusterClick(Cluster<VenueClusterItem> cluster) {
+                List<VenueClusterItem> venues = new ArrayList<>(cluster.getItems());
+                ListAdapter adapter = new ClusterPopupListAdapter(getActivity(), venues);
+                new AlertDialog.Builder(getActivity()).setAdapter(adapter, MapFragment.this).show();
+                return true;
             }
         });
         mLocationProvider.requestLastKnownLocation();
@@ -274,5 +296,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
                 if (mGoogleMap != null)
                     mGoogleMap.animateCamera(CameraUpdateFactory.zoomOut());
         }
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+
     }
 }

@@ -33,8 +33,6 @@ public class VKOAuthActivity extends Activity {
             Uri uri = Uri.parse(url);
             String authority = uri.getAuthority();
             String protocol = uri.getScheme();
-            String v = uri.getSchemeSpecificPart();
-            v.toString();
             if ((protocol + "://" + authority).equals(REDIRECT_URI)) {
                 String code = uri.getQueryParameter("code");
                 onVKCodeReceived(code);
