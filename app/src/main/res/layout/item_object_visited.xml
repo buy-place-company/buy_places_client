@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="72dp"
     android:minHeight="?android:attr/listPreferredItemHeight"
-    android:background="?android:attr/selectableItemBackground"
-    >
+    android:background="?android:attr/selectableItemBackground">
 
     <ImageView
         android:layout_centerVertical="true"
@@ -33,21 +32,61 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/last_visited_message"
-        android:id="@+id/text_view_checkin"
+        android:text="@string/price_label_message"
+        android:id="@+id/text_view_price"
         android:layout_below="@+id/title_place_list"
-        android:layout_toRightOf="@+id/icon_place_list"
-        android:layout_toEndOf="@+id/icon_place_list" />
+        android:layout_toRightOf="@+id/icon_place_list" />
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="12"
+        android:text="1000"
+        android:id="@+id/tv_price"
+        android:layout_below="@+id/title_place_list"
+        android:layout_toRightOf="@+id/text_view_price"
+        android:layout_toEndOf="@+id/text_view_price"
+        android:layout_marginLeft="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/divider_message"
+        android:id="@+id/tv_divider"
+        android:layout_below="@+id/title_place_list"
+        android:layout_toEndOf="@+id/tv_price" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/level_message"
         android:id="@+id/text_view_object_level"
         android:layout_marginRight="27dp"
         android:layout_marginEnd="27dp"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/checkins_label_message"
+        android:id="@+id/tv_chekins_label"
+        android:layout_below="@+id/title_place_list"
+        android:layout_toEndOf="@+id/tv_divider"
+        android:layout_marginLeft="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/checkins_message"
+        android:id="@+id/tv_chekins"
+        android:layout_below="@+id/title_place_list"
+        android:layout_toEndOf="@+id/tv_chekins_label"
+        android:layout_marginLeft="5dp" />
 </RelativeLayout>

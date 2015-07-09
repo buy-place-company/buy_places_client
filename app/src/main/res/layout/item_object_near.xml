@@ -32,41 +32,61 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Цена"
-        android:id="@+id/text_view_checkin"
+        android:text="@string/price_label_message"
+        android:id="@+id/text_view_price"
         android:layout_below="@+id/title_place_list"
         android:layout_toRightOf="@+id/icon_place_list" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="12"
-        android:id="@+id/text_view_object_level"
-        android:layout_marginRight="25dp"
-        android:layout_marginEnd="25dp"
-        android:layout_centerVertical="true"
-        android:layout_alignRight="@+id/textView2"
-        android:layout_alignEnd="@+id/textView2" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="1000"
-        android:id="@+id/textView2"
+        android:id="@+id/tv_price"
         android:layout_below="@+id/title_place_list"
-        android:layout_toRightOf="@+id/text_view_checkin"
-        android:layout_toEndOf="@+id/text_view_checkin"
+        android:layout_toRightOf="@+id/text_view_price"
+        android:layout_toEndOf="@+id/text_view_price"
         android:layout_marginLeft="5dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text=","
-        android:id="@+id/textView3"
+        android:text="@string/divider_message"
+        android:id="@+id/tv_divider"
         android:layout_below="@+id/title_place_list"
-        android:layout_alignRight="@+id/title_place_list"
-        android:layout_alignEnd="@+id/title_place_list" />
+        android:layout_toEndOf="@+id/tv_price" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="12 km"
+        android:id="@+id/text_view_object_level"
+        android:layout_marginRight="27dp"
+        android:layout_marginEnd="27dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/checkins_label_message"
+        android:id="@+id/tv_chekins_label"
+        android:layout_below="@+id/title_place_list"
+        android:layout_toEndOf="@+id/tv_divider"
+        android:layout_marginLeft="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/checkins_message"
+        android:id="@+id/tv_chekins"
+        android:layout_below="@+id/title_place_list"
+        android:layout_toEndOf="@+id/tv_chekins_label"
+        android:layout_marginLeft="5dp" />
 </RelativeLayout>

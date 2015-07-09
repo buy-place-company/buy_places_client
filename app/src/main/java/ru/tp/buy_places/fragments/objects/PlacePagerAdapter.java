@@ -19,9 +19,9 @@ public class PlacePagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return MyPlacesFragment.newInstance();
             case 1:
-                return MyPlacesFragment.newInstance();
+                return NearPlacesFragment.newInstance();
             case 2:
-                return MyPlacesFragment.newInstance();
+                return VisitedPlacesFragment.newInstance();
             default:
                 return MyPlacesFragment.newInstance();
         }
@@ -40,7 +40,7 @@ public class PlacePagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return "Поблизости";
             case 2:
-                return "Посещенные";
+                return "Избранные";
             default:
                 return "Мои";
         }
