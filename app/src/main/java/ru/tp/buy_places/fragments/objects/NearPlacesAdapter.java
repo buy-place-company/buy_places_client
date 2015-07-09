@@ -45,12 +45,14 @@ public class NearPlacesAdapter extends RecyclerView.Adapter<NearPlacesAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView mTitle;
         public ImageView mIcon;
+        public TextView mLevel;
 
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            mTitle = (TextView) itemView.findViewById(R.id.title_place_list);
-            mIcon = (ImageView) itemView.findViewById(R.id.icon_place_list);
+            mLevel = (TextView) itemView.findViewById(R.id.tv_level);
+            mTitle = (TextView) itemView.findViewById(R.id.text_view_rating);
+            mIcon = (ImageView) itemView.findViewById(R.id.image_view_rating);
         }
 
         @Override
@@ -73,6 +75,7 @@ public class NearPlacesAdapter extends RecyclerView.Adapter<NearPlacesAdapter.Vi
         if(mData != null) {
             holder.mTitle.setText(mData.get(position).getName()); // Setting the Text with the array of our Titles
             holder.mIcon.setImageResource(R.mipmap.ic_object);
+            holder.mLevel.setText(Integer.toString(mData.get(position).getLevel()));
         }
     }
 
