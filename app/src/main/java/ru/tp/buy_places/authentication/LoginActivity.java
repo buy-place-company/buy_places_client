@@ -15,12 +15,12 @@ import android.widget.Button;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
 
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.service.ServiceHelper;
+import ru.tp.buy_places.service.network.Request;
 
 /**
  * Created by Ivan on 20.05.2015.
@@ -29,7 +29,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
     public static final String EXTRA_TOKEN_TYPE = "EXTRA_TOKEN_TYPE";
     private Button mLoginViaVKButton;
 
-    private String SERVER_ROOT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +40,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
 
         mLoginViaVKButton = (Button)findViewById(R.id.button_login_via_vk);
         mLoginViaVKButton.setOnClickListener(this);
-        SERVER_ROOT = getString(R.string.url_root);
     }
 
     @Override
@@ -68,7 +66,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
         }
     }
 
-    private class LoginViaVKAsyncTask extends AsyncTask<Void, Void, JSONObject> {
+    private class LoginViaVKAsyncTask extends AsyncTask<Void, Void, Bundle> {
         private final Context mContext;
         private final String mCode;
         private ProgressDialog mProgressDialog;
@@ -85,53 +83,40 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
         }
 
         @Override
-        protected JSONObject doInBackground(Void... params) {
-            StringBuilder paramsQuery = new StringBuilder();
-            JSONObject response;
+        protected Bundle doInBackground(Void... params) {
+            Map<String, String> requestParams = new HashMap<>();
+            requestParams.put("code", mCode);
+            Request request = new Request(mContext, "/auth/vk", Request.RequestMethod.GET, requestParams);
+            JSONObject response = request.execute();
+            Bundle result = new Bundle();
             try {
-                paramsQuery.append("code="+mCode);
-                URL url = new URL(SERVER_ROOT + "auth/vk" + "?" + paramsQuery.toString());
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-                String responseString = "";
-                Scanner scanner = new Scanner(httpURLConnection.getInputStream());
-                while (scanner.hasNextLine())
-                    responseString += scanner.nextLine();
-                response = new JSONObject(responseString);
-                httpURLConnection.disconnect();
-            } catch (JSONException | IOException e) {
-                response = null;
-                e.printStackTrace();
-            } catch (Exception e) {
-                response = null;
-                e.printStackTrace();
+                String username = response.getString("name");
+                long id = response.getLong("id");
+                long vkId = response.getLong("id_vk");
+                AccountManager accountManager = AccountManager.get(mContext);
+                Account account = new BuyItAccount(username);
+                String token = "token";
+                if (accountManager.addAccountExplicitly(account, null, null)) {
+                    accountManager.setUserData(account, BuyItAccount.KEY_ID, Long.toString(id));
+                    accountManager.setUserData(account, BuyItAccount.KEY_VK_ID, Long.toString(vkId));
+                    result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+                    result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+                    result.putString(AccountManager.KEY_AUTHTOKEN, token);
+                    accountManager.setAuthToken(account, account.type, token);
+                    ServiceHelper.get(mContext).getProfile();
+                } else {
+                    result.putString(AccountManager.KEY_ERROR_MESSAGE, "Failed to add user");
+                }
+            } catch (JSONException e) {
+                result.putString(AccountManager.KEY_ERROR_MESSAGE, "Invalid response");
+            } catch (NullPointerException e) {
+                result.putString(AccountManager.KEY_ERROR_MESSAGE, "Service Unavailiable");
             }
-            return response;
+            return result;
         }
 
         @Override
-        protected void onPostExecute(JSONObject jsonObject) {
-            //if (mProgressDialog != null && mProgressDialog.isShowing())
-            //    mProgressDialog.hide();
-            String username;
-
-            if (jsonObject == null) {
-                username = "USERNAME";
-            } else {
-                username = jsonObject.optString("user_name");
-            }
-            AccountManager accountManager = AccountManager.get(mContext);
-            Bundle result = new Bundle();
-            Account account = new BuyItAccount(username);
-            String token = "token";
-            if (accountManager.addAccountExplicitly(account, null, null)) {
-                result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-                result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-                result.putString(AccountManager.KEY_AUTHTOKEN, token);
-                accountManager.setAuthToken(account, account.type, token);
-            } else {
-                result.putString(AccountManager.KEY_ERROR_MESSAGE, "Failed to add user");
-            }
+        protected void onPostExecute(Bundle result) {
             setAccountAuthenticatorResult(result);
             setResult(RESULT_OK);
             finish();

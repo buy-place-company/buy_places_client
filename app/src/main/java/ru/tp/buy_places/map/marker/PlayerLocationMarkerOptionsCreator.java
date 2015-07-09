@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
  */
 public class PlayerLocationMarkerOptionsCreator extends MarkerOptionsCreator {
 
-    protected PlayerLocationMarkerOptionsCreator(Context context) {
+    public PlayerLocationMarkerOptionsCreator(Context context) {
         super(context);
     }
 

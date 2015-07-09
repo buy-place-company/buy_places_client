@@ -1,15 +1,14 @@
 package ru.tp.buy_places.fragments.map;
 
 import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
-import android.location.Location;
-import android.os.Bundle;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Loader;
+import android.database.Cursor;
+import android.location.Location;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -38,16 +37,21 @@ import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.map.CustomInfoWindowAdapter;
 import ru.tp.buy_places.map.LocationApiConnectionListener;
 import ru.tp.buy_places.map.LocationProvider;
-import ru.tp.buy_places.map.VenuesRenderer;
 import ru.tp.buy_places.map.VenueClusterItem;
+import ru.tp.buy_places.map.VenuesRenderer;
+import ru.tp.buy_places.map.marker.PlayerLocationMarkerOptionsCreator;
 import ru.tp.buy_places.service.ServiceHelper;
 import ru.tp.buy_places.service.resourses.Place;
 import ru.tp.buy_places.service.resourses.Places;
+import ru.tp.buy_places.utils.AccountManagerHelper;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, LocationApiConnectionListener.OnLocationChangedListener {
 
     private static final int ALL_PLACES_LOADER_ID = 0;
+    private static final int PLAYER_LOADER_ID = 1;
+
+    private static final String EXTRA_PLAYER_ID = "EXTRA_PLAYER_ROW_ID";
 
     private ClusterManager<VenueClusterItem> mClusterManager;
     private CustomInfoWindowAdapter mInfoWindowAdapter;
@@ -59,6 +63,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
     private ImageButton mZoomOutImageButton;
 
     private LocationProvider mLocationProvider;
+    private PlayerLocationMarkerOptionsCreator mPlayerLocationMarkerOptionsCreator;
 
 
     public MapFragment() {
@@ -86,9 +91,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPlayerLocationMarkerOptionsCreator = new PlayerLocationMarkerOptionsCreator(getActivity());
         mInfoWindowAdapter = new CustomInfoWindowAdapter(getActivity());
         setHasOptionsMenu(true);
         getLoaderManager().initLoader(ALL_PLACES_LOADER_ID, null, this);
+
+        final Bundle arguments = new Bundle();
+        arguments.putLong(EXTRA_PLAYER_ID, AccountManagerHelper.getPlayerId(getActivity()));
+        getLoaderManager().initLoader(PLAYER_LOADER_ID, arguments, this);
     }
 
     @Override
@@ -187,11 +197,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<VenueClusterItem>() {
             @Override
             public boolean onClusterItemClick(VenueClusterItem venueClusterItem) {
-                Intent intent = new Intent(getActivity(), PlaceActivity.class);
                 if (venueClusterItem != null) {
-                    Long id = venueClusterItem.getRowId();
-                    intent.putExtra("EXTRA_PLACE_ID", id);
-                    startActivity(intent);
+                    PlaceActivity.VenueType venueType = PlaceActivity.VenueType.fromVenue(venueClusterItem.getPlace());
+                    PlaceActivity.start(MapFragment.this, venueClusterItem.getRowId(), venueClusterItem.getPosition(), venueType);
                     return true;
                 }
                 return false;
@@ -205,10 +213,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
     public void onLocationChanged(Location location) {
         if (mGoogleMap != null && location != null) {
             if (mMyPositionMarker == null) {
-                mMyPositionMarker = mGoogleMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(location.getLatitude(), location.getLongitude()))
-                                .title("You are here")
-                );
+                mPlayerLocationMarkerOptionsCreator.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
+                mMyPositionMarker = mGoogleMap.addMarker(mPlayerLocationMarkerOptionsCreator.create(new MarkerOptions()));
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mMyPositionMarker.getPosition(), getResources().getInteger(R.integer.google_map_default_zoom_level)));
             } else {
                 mMyPositionMarker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
@@ -218,19 +224,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, null, null, null);
+        switch (id) {
+            case ALL_PLACES_LOADER_ID:
+                return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, null, null, null);
+            case PLAYER_LOADER_ID:
+                final long playerId = args.getLong(EXTRA_PLAYER_ID);
+                return new CursorLoader(getActivity(), BuyPlacesContract.Players.CONTENT_URI, null, BuyPlacesContract.Players.WITH_SPECIFIED_ID_SELECTION, new String[]{Long.toString(playerId)}, null);
+            default:
+                return null;
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (mClusterManager != null) {
-            mClusterManager.clearItems();
-            Places places = Places.fromCursor(data);
-            for (Place place : places.getPlaces()) {
-                VenueClusterItem venueClusterItem = new VenueClusterItem(place);
-                mClusterManager.addItem(venueClusterItem);
-            }
+        switch (loader.getId()) {
+            case ALL_PLACES_LOADER_ID:
+                if (mClusterManager != null) {
+                    mClusterManager.clearItems();
+                    Places places = Places.fromCursor(data);
+                    for (Place place : places.getPlaces()) {
+                        VenueClusterItem venueClusterItem = new VenueClusterItem(place);
+                        mClusterManager.addItem(venueClusterItem);
+                    }
+                }
+                break;
+            case PLAYER_LOADER_ID:
+                // Todo Update UI interface
         }
+
     }
 
     @Override

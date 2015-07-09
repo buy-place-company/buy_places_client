@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements
     private NavigationView mNavigationView;
     private GoogleApiClient mGoogleApiClient;
 
-
     private Set<LocationApiConnectionListener.OnLocationChangedListener> mOnLocationChangedListeners = new HashSet<>();
 
     @Override

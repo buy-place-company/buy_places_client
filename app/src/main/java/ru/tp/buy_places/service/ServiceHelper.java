@@ -16,7 +16,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class ServiceHelper {
 
-    private static final String OBJECTS = "OBJECTS";
+    private static final String VENUES = "VENUES";
+    private static final String PLAYERS = "PLAYERS";
     private static final String EXTRA_REQUEST_ID = "EXTRA_REQUEST_ID";
     private static final String EXTRA_RESULT_CODE = "EXTRA_RESULT_CODE";
     private static final String ACTION_REQUEST_RESULT = "ACTION_REQUEST_RESULT";
@@ -44,7 +45,7 @@ public class ServiceHelper {
 
     public long getPlacesAroundThePoint(LatLng position) {
         long requestId = mRequestIdGenerator.incrementAndGet();
-        mPendingRequests.put(OBJECTS, requestId);
+        mPendingRequests.put(VENUES, requestId);
         ResultReceiver serviceCallback = new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -57,7 +58,7 @@ public class ServiceHelper {
 
     public long getPlacesAroundThePlayer(LatLng position) {
         long requestId = mRequestIdGenerator.incrementAndGet();
-        mPendingRequests.put(OBJECTS, requestId);
+        mPendingRequests.put(VENUES, requestId);
         ResultReceiver serviceCallback = new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -70,7 +71,7 @@ public class ServiceHelper {
 
     public long getMyPlaces() {
         long requestId = mRequestIdGenerator.incrementAndGet();
-        mPendingRequests.put(OBJECTS, requestId);
+        mPendingRequests.put(VENUES, requestId);
         ResultReceiver serviceCallback = new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -87,7 +88,7 @@ public class ServiceHelper {
 
     public long buyPlace(String id) {
         long requestId = mRequestIdGenerator.incrementAndGet();
-        mPendingRequests.put(OBJECTS, requestId);
+        mPendingRequests.put(VENUES, requestId);
         ResultReceiver serviceCallback = new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -100,7 +101,7 @@ public class ServiceHelper {
 
     public long sellPlace(String id) {
         long requestId = mRequestIdGenerator.incrementAndGet();
-        mPendingRequests.put(OBJECTS, requestId);
+        mPendingRequests.put(VENUES, requestId);
         ResultReceiver serviceCallback = new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -113,7 +114,7 @@ public class ServiceHelper {
 
     public long upgradePlace(String id) {
         long requestId = mRequestIdGenerator.incrementAndGet();
-        mPendingRequests.put(OBJECTS, requestId);
+        mPendingRequests.put(VENUES, requestId);
         ResultReceiver serviceCallback = new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -126,7 +127,7 @@ public class ServiceHelper {
 
     public long collectLootFromPlace(String id) {
         long requestId = mRequestIdGenerator.incrementAndGet();
-        mPendingRequests.put(OBJECTS, requestId);
+        mPendingRequests.put(VENUES, requestId);
         ResultReceiver serviceCallback = new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -138,7 +139,16 @@ public class ServiceHelper {
     }
 
     public long getProfile() {
-        return 0;
+        long requestId = mRequestIdGenerator.incrementAndGet();
+        mPendingRequests.put(PLAYERS, requestId);
+        ResultReceiver serviceCallback = new ResultReceiver(null) {
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                handleGetProfileResponse(resultCode, resultData);
+            }
+        };
+        BuyItService.startGetProfileService(mContext, serviceCallback, requestId);
+        return requestId;
     }
 
     public long getRating() {
@@ -165,7 +175,19 @@ public class ServiceHelper {
         Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
         if (originalRequestIntent != null) {
             long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
-            mPendingRequests.remove(OBJECTS);
+            mPendingRequests.remove(VENUES);
+            Intent result = new Intent(ACTION_REQUEST_RESULT);
+            result.putExtra(EXTRA_REQUEST_ID, requestId);
+            result.putExtra(EXTRA_RESULT_CODE, resultCode);
+            mContext.sendBroadcast(result);
+        }
+    }
+
+    private void handleGetProfileResponse(int resultCode, Bundle resultData) {
+        Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
+        if (originalRequestIntent != null) {
+            long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
+            mPendingRequests.remove(PLAYERS);
             Intent result = new Intent(ACTION_REQUEST_RESULT);
             result.putExtra(EXTRA_REQUEST_ID, requestId);
             result.putExtra(EXTRA_RESULT_CODE, resultCode);
@@ -177,7 +199,7 @@ public class ServiceHelper {
         Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
         if (originalRequestIntent != null) {
             long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
-            mPendingRequests.remove(OBJECTS);
+            mPendingRequests.remove(VENUES);
             Intent result = new Intent(ACTION_REQUEST_RESULT);
             result.putExtra(EXTRA_REQUEST_ID, requestId);
             result.putExtra(EXTRA_RESULT_CODE, resultCode);
@@ -189,7 +211,7 @@ public class ServiceHelper {
         Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
         if (originalRequestIntent != null) {
             long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
-            mPendingRequests.remove(OBJECTS);
+            mPendingRequests.remove(VENUES);
             Intent result = new Intent(ACTION_REQUEST_RESULT);
             result.putExtra(EXTRA_REQUEST_ID, requestId);
             result.putExtra(EXTRA_RESULT_CODE, resultCode);
@@ -201,7 +223,7 @@ public class ServiceHelper {
         Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
         if (originalRequestIntent != null) {
             long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
-            mPendingRequests.remove(OBJECTS);
+            mPendingRequests.remove(VENUES);
             Intent result = new Intent(ACTION_REQUEST_RESULT);
             result.putExtra(EXTRA_REQUEST_ID, requestId);
             result.putExtra(EXTRA_RESULT_CODE, resultCode);
@@ -213,7 +235,7 @@ public class ServiceHelper {
         Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
         if (originalRequestIntent != null) {
             long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
-            mPendingRequests.remove(OBJECTS);
+            mPendingRequests.remove(VENUES);
             Intent result = new Intent(ACTION_REQUEST_RESULT);
             result.putExtra(EXTRA_REQUEST_ID, requestId);
             result.putExtra(EXTRA_RESULT_CODE, resultCode);
@@ -225,7 +247,7 @@ public class ServiceHelper {
         Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
         if (originalRequestIntent != null) {
             long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
-            mPendingRequests.remove(OBJECTS);
+            mPendingRequests.remove(VENUES);
             Intent result = new Intent(ACTION_REQUEST_RESULT);
             result.putExtra(EXTRA_REQUEST_ID, requestId);
             result.putExtra(EXTRA_RESULT_CODE, resultCode);
@@ -237,7 +259,7 @@ public class ServiceHelper {
         Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
         if (originalRequestIntent != null) {
             long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
-            mPendingRequests.remove(OBJECTS);
+            mPendingRequests.remove(VENUES);
             Intent result = new Intent(ACTION_REQUEST_RESULT);
             result.putExtra(EXTRA_REQUEST_ID, requestId);
             result.putExtra(EXTRA_RESULT_CODE, resultCode);

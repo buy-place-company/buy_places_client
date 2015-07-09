@@ -158,7 +158,7 @@ public class BuyPlacesContentProvider extends ContentProvider {
 
     private static final class DatabaseHelper extends SQLiteOpenHelper {
         private static final String DATABASE_NAME = "buy_places.db";
-        private static final int DATABASE_VERSION = 11;
+        private static final int DATABASE_VERSION = 12;
 
 
         public DatabaseHelper(Context context) {

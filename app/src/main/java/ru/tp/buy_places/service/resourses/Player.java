@@ -65,8 +65,8 @@ public class Player implements Resource {
         mMaxPlaces = maxPlaces;
     }
 
-    public Player(long rowId, long id, String username, int level, String avatar, long score, int places, int maxPlaces) {
-        this(id, username, level, avatar, score, places, maxPlaces);
+    public Player(long rowId, long id, String username, int level, String avatar, long score, int venuesCount, int maxPlaces) {
+        this(id, username, level, avatar, score, venuesCount, maxPlaces);
         mRowId = rowId;
     }
 
@@ -77,9 +77,9 @@ public class Player implements Resource {
         int level = playerJSONObject.optInt("level");
         String avatar = playerJSONObject.optString("avatar");
         long score = playerJSONObject.optLong("score");
-        int places = playerJSONObject.optInt("places");
+        int venuesCount = playerJSONObject.optInt("venues_count");
         int maxPlaces = playerJSONObject.optInt("max_places");
-        return new Player(id, username, level, avatar, score, places, maxPlaces);
+        return new Player(id, username, level, avatar, score, venuesCount, maxPlaces);
     }
 
     public static Player fromCursor(Cursor cursor) {
