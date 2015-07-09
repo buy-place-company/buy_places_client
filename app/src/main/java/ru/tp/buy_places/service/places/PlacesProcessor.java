@@ -44,7 +44,7 @@ public class PlacesProcessor extends Processor {
             case AROUND_THE_PLAYER:
                 params.put("lat", Double.toString(mPosition.latitude));
                 params.put("lng", Double.toString(mPosition.longitude));
-                path = "/objects_near";
+                path = "/objects";
                 break;
             case IN_OWNERSHIP:
                 path = "/user_objects";

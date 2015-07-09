@@ -39,4 +39,8 @@ public class VenueClusterItem implements ClusterItem {
     public long getRowId() {
         return mPlace.getRowId();
     }
+
+    public Place getPlace(){
+        return mPlace;
+    }
 }

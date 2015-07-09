@@ -335,6 +335,10 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
     public enum VenueType {
         MINE,
         ANOTHERS,
-        NOBODYS
+        NOBODYS;
+
+        public static VenueType fromVenue(Place venue) {
+            return venue.isInOwnership() ? MINE : venue.getOwner() == null ? NOBODYS : ANOTHERS;
+        }
     }
 }

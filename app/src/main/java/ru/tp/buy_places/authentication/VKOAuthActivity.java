@@ -31,7 +31,11 @@ public class VKOAuthActivity extends Activity {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Uri uri = Uri.parse(url);
-            if (uri.toString().equals(REDIRECT_URI)) {
+            String authority = uri.getAuthority();
+            String protocol = uri.getScheme();
+            String v = uri.getSchemeSpecificPart();
+            v.toString();
+            if ((protocol + "://" + authority).equals(REDIRECT_URI)) {
                 String code = uri.getQueryParameter("code");
                 onVKCodeReceived(code);
                 return true;

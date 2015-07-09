@@ -78,7 +78,7 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
     public void onItemClick(View view, int position) {
         final long venuesRowId = myPlacesAdapter.getItemId(position);
         final LatLng venuesLocation = new LatLng(myPlacesAdapter.getItem(position).getLatitude(), myPlacesAdapter.getItem(position).getLongitude());
-        final PlaceActivity.VenueType venuesType = mPlaces.getPlaces().get(position).isInOwnership() ? PlaceActivity.VenueType.MINE : mPlaces.getPlaces().get(position).getOwner() == null ? PlaceActivity.VenueType.NOBODYS : PlaceActivity.VenueType.ANOTHERS;
+        final PlaceActivity.VenueType venuesType = PlaceActivity.VenueType.fromVenue(mPlaces.getPlaces().get(position));
         PlaceActivity.start(this, venuesRowId, venuesLocation, venuesType);
     }
 

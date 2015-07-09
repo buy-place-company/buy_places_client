@@ -10,6 +10,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import ru.tp.buy_places.service.action_with_place.ActionWithPlaceProcessorCreator;
 import ru.tp.buy_places.service.places.PlacesProcessorCreator;
+import ru.tp.buy_places.service.profile.GetProfileProcessorCreator;
+import ru.tp.buy_places.utils.AccountManagerHelper;
 
 
 public class BuyItService extends IntentService implements Processor.OnProcessorResultListener {
@@ -107,6 +109,12 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         intent.putExtra(EXTRA_OBJECT_ID, id);
     }
 
+    public static void startGetProfileService(Context context, ResultReceiver serviceCallback, long requestId) {
+        Intent intent = new Intent(ACTION_GET_PROFILE, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         mOriginalRequestIntent = intent;
@@ -124,6 +132,12 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
                 final ActionWithPlace actionWithPlace = (ActionWithPlace) intent.getSerializableExtra(EXTRA_ACTION_WITH_OBJECT);
                 Processor actionWithPlaceProcessor = new ActionWithPlaceProcessorCreator(this, this, id, actionWithPlace).createProcessor();
                 actionWithPlaceProcessor.process();
+                break;
+            case ACTION_GET_PROFILE:
+                final long playerId = AccountManagerHelper.getPlayerId(this);
+                Processor getProfileProcessor = new GetProfileProcessorCreator(this, this).createProcessor();
+                getProfileProcessor.process();
+                break;
             default:
                 mCallback.send(REQUEST_INVALID, getOriginalIntentBundle());
                 break;
