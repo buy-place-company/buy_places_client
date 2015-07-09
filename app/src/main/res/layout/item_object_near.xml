@@ -89,4 +89,18 @@
         android:layout_below="@+id/title_place_list"
         android:layout_toEndOf="@+id/tv_chekins_label"
         android:layout_marginLeft="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10"
+        android:background="@drawable/circle_background"
+        android:id="@+id/tv_level"
+        android:layout_alignTop="@+id/icon_place_list"
+        android:layout_alignStart="@+id/icon_place_list"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+        android:gravity="center"
+        android:textSize="13sp"
+        android:textIsSelectable="false"
+        android:padding="3dp" />
 </RelativeLayout>

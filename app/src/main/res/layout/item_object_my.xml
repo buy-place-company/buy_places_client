@@ -42,12 +42,15 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/level_message"
-        android:id="@+id/text_view_object_level"
-        android:layout_marginRight="27dp"
-        android:layout_marginEnd="27dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:text="10"
+        android:background="@drawable/circle_background"
+        android:id="@+id/tv_level"
+        android:layout_alignTop="@+id/icon_place_list"
+        android:layout_alignStart="@+id/icon_place_list"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+        android:gravity="center"
+        android:textSize="13sp"
+        android:textIsSelectable="false"
+        android:padding="3dp" />
+
 </RelativeLayout>
