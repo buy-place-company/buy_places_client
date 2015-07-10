@@ -55,7 +55,8 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run(AccountManagerFuture<Bundle> future) {
                 try {
-                    future.getResult();
+                    Bundle result = future.getResult();
+                    result.toString();
                     MainActivity.start(SplashScreenActivity.this);
                 } catch (Exception e) {
                     SplashScreenActivity.this.finish();

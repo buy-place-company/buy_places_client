@@ -83,6 +83,7 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
         intent.putExtra(EXTRA_ACTION_WITH_OBJECT, ActionWithPlace.BUY);
         intent.putExtra(EXTRA_OBJECT_ID, id);
+        context.startService(intent);
     }
 
     public static void startSellPlaceService(Context context, ResultReceiver serviceCallback, long requestId, String id) {
@@ -91,6 +92,7 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
         intent.putExtra(EXTRA_ACTION_WITH_OBJECT, ActionWithPlace.SELL);
         intent.putExtra(EXTRA_OBJECT_ID, id);
+        context.startService(intent);
     }
 
     public static void startUpgradePlaceService(Context context, ResultReceiver serviceCallback, long requestId, String id) {
@@ -99,6 +101,7 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
         intent.putExtra(EXTRA_ACTION_WITH_OBJECT, ActionWithPlace.UPGRADE);
         intent.putExtra(EXTRA_OBJECT_ID, id);
+        context.startService(intent);
     }
 
     public static void startCollectLootFromPlaceService(Context context, ResultReceiver serviceCallback, long requestId, String id) {
@@ -107,12 +110,14 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
         intent.putExtra(EXTRA_ACTION_WITH_OBJECT, ActionWithPlace.COLLECT_LOOT);
         intent.putExtra(EXTRA_OBJECT_ID, id);
+        context.startService(intent);
     }
 
     public static void startGetProfileService(Context context, ResultReceiver serviceCallback, long requestId) {
         Intent intent = new Intent(ACTION_GET_PROFILE, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        context.startService(intent);
     }
 
     @Override
