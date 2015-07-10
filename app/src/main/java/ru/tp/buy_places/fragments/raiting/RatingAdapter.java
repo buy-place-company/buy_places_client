@@ -47,12 +47,14 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView mTitle;
+        public TextView mScore;
         public ImageView mIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             mTitle = (TextView) itemView.findViewById(R.id.text_view_rating);
+            mScore = (TextView) itemView.findViewById(R.id.tv_price);
             mIcon = (ImageView) itemView.findViewById(R.id.image_view_rating);
         }
 
@@ -75,7 +77,8 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
     public void onBindViewHolder(RatingAdapter.ViewHolder holder, int position) {
         if(mData != null) {
             holder.mTitle.setText(mData.get(position).getUsername()); // Setting the Text with the array of our Titles
-            holder.mIcon.setImageResource(R.mipmap.ic_object);
+            holder.mIcon.setImageResource(R.drawable.ic_launcher);
+            holder.mScore.setText(Long.toString(mData.get(position).getScore()));
         }
     }
 
