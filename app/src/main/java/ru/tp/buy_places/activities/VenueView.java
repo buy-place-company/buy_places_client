@@ -59,9 +59,6 @@ public class VenueView {
     }
 
     public static TableRow createStatisticsTableRow(Context context, String name, String value) {
-        //if (sStatisticsTableRow == null) {
-        //    sStatisticsTableRow = (TableRow) LayoutInflater.from(context).inflate(R.layout.statistics_table_row, null);
-        //}
         final TableRow sStatisticsTableRow = (TableRow) LayoutInflater.from(context).inflate(R.layout.statistics_table_row, null);
         final TextView nameTextView = (TextView) sStatisticsTableRow.findViewById(R.id.name);
         final TextView valueTextView = (TextView) sStatisticsTableRow.findViewById(R.id.value);

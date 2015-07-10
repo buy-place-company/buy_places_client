@@ -211,8 +211,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
             @Override
             public boolean onClusterClick(Cluster<VenueClusterItem> cluster) {
                 List<VenueClusterItem> venues = new ArrayList<>(cluster.getItems());
-                ListAdapter adapter = new ClusterPopupListAdapter(getActivity(), venues);
-                new AlertDialog.Builder(getActivity()).setAdapter(adapter, MapFragment.this).show();
+                final ListAdapter adapter = new ClusterPopupListAdapter(getActivity(), venues);
+                new AlertDialog.Builder(getActivity()).setAdapter(adapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final VenueClusterItem venueClusterItem = ((VenueClusterItem)adapter.getItem(which));
+                        PlaceActivity.VenueType venueType = PlaceActivity.VenueType.fromVenue(venueClusterItem.getPlace());
+                        PlaceActivity.start(MapFragment.this, venueClusterItem.getRowId(), venueClusterItem.getPosition(), venueType);
+                    }
+                }).show();
                 return true;
             }
         });
