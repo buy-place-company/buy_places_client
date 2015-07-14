@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="splash_screen_duration">3000</integer>
+    <string name="url_root">http://kgfq1.fvds.ru:8000</string>
+    <!--<string name="url_root" translatable="false">http://private-f5e37f-testapi901.apiary-mock.com</string>-->
+    <string name="android_geo_api_key" translatable="false">AIzaSyA6dxz7-vh3yv6TU0ec5lILH3-7QOh1Lbk</string>
+    <integer name="google_map_default_zoom_level">15</integer>
+
+    <string name="vk_app_id" translatable="false">4927495</string>
+    <string name="vk_redirect_uri" translatable="false">http://kgfq1.fvds.ru:8000</string>
+    <string name="vk_permissions" translatable="false"></string>
+    <string name="vk_protocol_version" translatable="false">5.34</string>
+</resources>

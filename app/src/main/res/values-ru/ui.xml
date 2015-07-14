@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigation_map">Карта</string>
+    <string name="navigation_venues">Места</string>
+    <string name="navigation_deals">Сделки</string>
+    <string name="navigation_rating">Рейтинг</string>
+    <string name="navigation_settings">Настройки</string>
+
+    <string name="statistics_price">Цена</string>
+    <string name="statistics_outcome">Расходы</string>
+    <string name="statistics_income">Доходы</string>
+    <string name="statistics_profit">Прибыль</string>
+
+    <string name="dialog_positive_button_title">Да</string>
+    <string name="dialog_negative_button_title">Нет</string>
+    <string name="dialog_cancel_button_title">Отменить</string>
+
+    <string name="common_wait_message">Подождите</string>
+    <string name="common_request_executes_message">Выполняется запрос</string>
+
+    <string name="filter_all_venues">Все</string>
+    <string name="filter_mine_venues">Мои</string>
+    <string name="filter_visited_venues">Посещенные</string>
+
+    <string name="menu_settings">Настройки</string>
+
+    <string name="last_visited_message">Вы были там</string>
+    <string name="level_message">10</string>
+    <string name="distance_label_message"> км</string>
+    <string name="distance_message">1.2</string>
+    <string name="checkins_label_message"> Чекины: </string>
+    <string name="checkins_message">4000</string>
+    <string name="price_label_message">Цена:</string>
+    <string name="price_message">1000</string>
+    <string name="divider_message">, </string>
+    <string name="dollar_message">$</string>
+    <string name="score_message">42345</string>
+
+</resources>
