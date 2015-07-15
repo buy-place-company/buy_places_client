@@ -3,11 +3,14 @@ package ru.tp.buy_places.fragments.raiting;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,7 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
     OnItemClickListener mItemClickListener;
     Activity activity;
     private List<Player> mData = new ArrayList<>();
+    private static int count = 0;
 
     public interface OnItemClickListener {
         public void onItemClick(View view, int position);
@@ -49,13 +53,16 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
         public TextView mTitle;
         public TextView mScore;
         public ImageView mIcon;
+        public TextView mRating;
 
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             mTitle = (TextView) itemView.findViewById(R.id.text_view_rating);
             mScore = (TextView) itemView.findViewById(R.id.tv_price);
+            mRating = (TextView) itemView.findViewById(R.id.tv_rating_number);
             mIcon = (ImageView) itemView.findViewById(R.id.image_view_rating);
+
         }
 
         @Override
@@ -76,9 +83,11 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
     @Override
     public void onBindViewHolder(RatingAdapter.ViewHolder holder, int position) {
         if(mData != null) {
-            holder.mTitle.setText(mData.get(position).getUsername()); // Setting the Text with the array of our Titles
-            holder.mIcon.setImageResource(R.drawable.ic_launcher);
+            count++;
+            holder.mTitle.setText(mData.get(position).getUsername());
             holder.mScore.setText(Long.toString(mData.get(position).getScore()));
+            //Picasso.with(activity).load(mData.get(position).getAvatar()).error(R.drawable.ic_launcher).into(holder.mIcon);
+            holder.mRating.setText(Integer.toString(count));
         }
     }
 

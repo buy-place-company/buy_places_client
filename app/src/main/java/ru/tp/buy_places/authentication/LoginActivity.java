@@ -21,6 +21,9 @@ import java.util.Map;
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.service.ServiceHelper;
 import ru.tp.buy_places.service.network.Request;
+import ru.tp.buy_places.service.network.Response;
+import ru.tp.buy_places.service.network.UnknownErrorResponse;
+import ru.tp.buy_places.service.resourses.Player;
 
 /**
  * Created by Ivan on 20.05.2015.
@@ -88,27 +91,57 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
             requestParams.put("code", mCode);
             Request request = new Request(mContext, "/auth/vk", Request.RequestMethod.GET, requestParams);
             JSONObject response = request.execute();
+            // Start
+            if (response == null) {
+                Response resp = new UnknownErrorResponse();
+            }
+            int status = response.optInt("status");
+            String message = response.optString("message", null);
+            JSONObject dataJSONArray = response.optJSONObject("user");
+            Player player = Player.fromJSONObject(dataJSONArray);
+            Response resp = new Response(status, message, player);
+            player = (Player)resp.getData();
+            player.writeToDatabase(mContext);
+
             Bundle result = new Bundle();
             try {
-                String username = response.getString("name");
-                long id = response.getLong("id");
-                long vkId = response.getLong("id_vk");
+//                String username = response.getString("name");
+//                long id = response.getLong("id");
+//                long vkId = response.getLong("id_vk");
                 AccountManager accountManager = AccountManager.get(mContext);
-                Account account = new BuyItAccount(username);
+                Account account = new BuyItAccount(player.getUsername());
                 String token = "token";
                 if (accountManager.addAccountExplicitly(account, null, null)) {
-                    accountManager.setUserData(account, BuyItAccount.KEY_ID, Long.toString(id));
-                    accountManager.setUserData(account, BuyItAccount.KEY_VK_ID, Long.toString(vkId));
+                    accountManager.setUserData(account, BuyItAccount.KEY_ID, Long.toString(player.getId()));
+                    //accountManager.setUserData(account, BuyItAccount.KEY_VK_ID, Long.toString(vkId));
                     result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
                     result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
                     result.putString(AccountManager.KEY_AUTHTOKEN, token);
                     accountManager.setAuthToken(account, account.type, token);
-                    ServiceHelper.get(mContext).getProfile();
+                    //ServiceHelper.get(mContext).getProfile();
+
+
+            //End
+//            try {
+//                String username = response.getString("name");
+//                long id = response.getLong("id");
+//                long vkId = response.getLong("id_vk");
+//                AccountManager accountManager = AccountManager.get(mContext);
+//                Account account = new BuyItAccount(username);
+//                String token = "token";
+//                if (accountManager.addAccountExplicitly(account, null, null)) {
+//                    accountManager.setUserData(account, BuyItAccount.KEY_ID, Long.toString(id));
+//                    //accountManager.setUserData(account, BuyItAccount.KEY_VK_ID, Long.toString(vkId));
+//                    result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+//                    result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+//                    result.putString(AccountManager.KEY_AUTHTOKEN, token);
+//                    accountManager.setAuthToken(account, account.type, token);
+//                    ServiceHelper.get(mContext).getProfile();
                 } else {
                     result.putString(AccountManager.KEY_ERROR_MESSAGE, "Failed to add user");
                 }
-            } catch (JSONException e) {
-                result.putString(AccountManager.KEY_ERROR_MESSAGE, "Invalid response");
+//            } catch (JSONException e) {
+//                result.putString(AccountManager.KEY_ERROR_MESSAGE, "Invalid response");
             } catch (NullPointerException e) {
                 result.putString(AccountManager.KEY_ERROR_MESSAGE, "Service Unavailiable");
             }

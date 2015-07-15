@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="72dp"
     android:minHeight="?android:attr/listPreferredItemHeight"
-    android:background="?android:attr/selectableItemBackground"
-    >
+    android:background="?android:attr/selectableItemBackground">
 
     <TextView
         android:layout_width="40dp"
@@ -50,5 +49,15 @@
         android:layout_toRightOf="@+id/image_view_rating"
 
         android:gravity="center_vertical"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/dollar_message"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/text_view_rating"
+        android:layout_toEndOf="@+id/tv_price"
+        android:layout_marginLeft="5dp" />
 
 </RelativeLayout>

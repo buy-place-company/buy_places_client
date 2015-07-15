@@ -72,7 +72,7 @@ public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(MyPlacesAdapter.ViewHolder holder, int position) {
-        if(mData != null) {
+        if(mData != null && mData.get(position).isInOwnership()) {
             holder.mTitle.setText(mData.get(position).getName()); // Setting the Text with the array of our Titles
             holder.mIcon.setImageResource(R.mipmap.ic_object);
             holder.mLevel.setText(Integer.toString(mData.get(position).getLevel()));

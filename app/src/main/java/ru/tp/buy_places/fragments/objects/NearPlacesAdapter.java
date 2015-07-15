@@ -46,13 +46,18 @@ public class NearPlacesAdapter extends RecyclerView.Adapter<NearPlacesAdapter.Vi
         public TextView mTitle;
         public ImageView mIcon;
         public TextView mLevel;
+        public TextView mPrice;
+        public TextView mCheckin;
 
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             mLevel = (TextView) itemView.findViewById(R.id.tv_level);
             mTitle = (TextView) itemView.findViewById(R.id.text_view_rating);
+            mPrice = (TextView) itemView.findViewById(R.id.tv_price);
+            mCheckin = (TextView) itemView.findViewById(R.id.tv_chekins);
             mIcon = (ImageView) itemView.findViewById(R.id.image_view_rating);
+
         }
 
         @Override
@@ -76,6 +81,8 @@ public class NearPlacesAdapter extends RecyclerView.Adapter<NearPlacesAdapter.Vi
             holder.mTitle.setText(mData.get(position).getName()); // Setting the Text with the array of our Titles
             holder.mIcon.setImageResource(R.mipmap.ic_object);
             holder.mLevel.setText(Integer.toString(mData.get(position).getLevel()));
+            holder.mPrice.setText(Long.toString(mData.get(position).getPrice()));
+            holder.mCheckin.setText(Long.toString(mData.get(position).getCheckinsCount()));
         }
     }
 

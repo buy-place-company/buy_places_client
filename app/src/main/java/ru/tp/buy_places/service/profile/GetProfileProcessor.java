@@ -27,7 +27,7 @@ public class GetProfileProcessor extends Processor {
         if (responseJSONObject == null) {
             return new UnknownErrorResponse();
         }
-        int status = responseJSONObject.optInt("code");
+        int status = responseJSONObject.optInt("status");
         String message = responseJSONObject.optString("message", null);
         JSONObject dataJSONArray = responseJSONObject.optJSONObject("user");
         Player player = Player.fromJSONObject(dataJSONArray);

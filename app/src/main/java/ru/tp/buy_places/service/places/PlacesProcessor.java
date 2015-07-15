@@ -42,12 +42,12 @@ public class PlacesProcessor extends Processor {
         switch (mObjectsRequestMode) {
             case AROUND_THE_POINT:
             case AROUND_THE_PLAYER:
-                params.put("lat", Double.toString(mPosition.latitude));
                 params.put("lng", Double.toString(mPosition.longitude));
-                path = "/objects";
+                params.put("lat", Double.toString(mPosition.latitude));
+                path = "/zone/venues";
                 break;
             case IN_OWNERSHIP:
-                path = "/user_objects";
+                path = "/user/venues";
                 break;
             default:
                 path = null;
@@ -62,7 +62,7 @@ public class PlacesProcessor extends Processor {
         }
         int status = responseJSONObject.optInt("code");
         String message = responseJSONObject.optString("message", null);
-        JSONArray dataJSONArray = responseJSONObject.optJSONArray("places");
+        JSONArray dataJSONArray = responseJSONObject.optJSONArray("venues");
         Places places = Places.fromJSONArray(dataJSONArray);
         return new Response(status, message, places);
     }

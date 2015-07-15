@@ -46,6 +46,8 @@ public class VisitedPlacesAdapter extends RecyclerView.Adapter<VisitedPlacesAdap
         public TextView mTitle;
         public TextView mLevel;
         public ImageView mIcon;
+        public TextView mPrice;
+        public TextView mCheckin;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -53,6 +55,8 @@ public class VisitedPlacesAdapter extends RecyclerView.Adapter<VisitedPlacesAdap
             mTitle = (TextView) itemView.findViewById(R.id.text_view_rating);
             mIcon = (ImageView) itemView.findViewById(R.id.image_view_rating);
             mLevel = (TextView) itemView.findViewById(R.id.tv_level);
+            mPrice = (TextView) itemView.findViewById(R.id.tv_price);
+            mCheckin = (TextView) itemView.findViewById(R.id.tv_chekins);
         }
 
         @Override
@@ -76,6 +80,8 @@ public class VisitedPlacesAdapter extends RecyclerView.Adapter<VisitedPlacesAdap
             holder.mTitle.setText(mData.get(position).getName()); // Setting the Text with the array of our Titles
             holder.mIcon.setImageResource(R.mipmap.ic_object);
             holder.mLevel.setText(Integer.toString(mData.get(position).getLevel()));
+            holder.mPrice.setText(Long.toString(mData.get(position).getPrice()));
+            holder.mCheckin.setText(Long.toString(mData.get(position).getCheckinsCount()));
         }
     }
 
