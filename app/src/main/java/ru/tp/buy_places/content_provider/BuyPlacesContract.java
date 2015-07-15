@@ -125,6 +125,8 @@ public final class BuyPlacesContract {
                 COLUMN_IS_IN_OWNERSHIP,
                 COLUMN_STATE_UPDATING};
 
+        public static final String[] ROW_ID_COLUMN_PROJECTION = {_ID};
+
         static final String SQL_CREATE = "CREATE TABLE " + TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT" + "," +
                 COLUMN_ID + " TEXT NOT NULL UNIQUE" + "," +

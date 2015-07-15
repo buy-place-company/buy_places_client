@@ -3,6 +3,8 @@ package ru.tp.buy_places.service.resourses;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -43,6 +45,7 @@ public class Place implements Resource {
     private boolean mIsInOwnershipIsSet = false;
     private boolean mIsVisitedInThePastIsSet = false;
     private boolean mStateUpdatingIsSet = false;
+    private static final String LOG_TAG = Place.class.getSimpleName();
 
     private Place(String id, long checkinsCount, long usersCount, long tipCount, String name, String category, String type, int level, Player owner, long buyPrice, long sellPrice, long dealPrice, long upgradePrice, long loot, long maxLoot, long income, long expense, double latitude, double longitude) {
         mId = id;
@@ -283,8 +286,12 @@ public class Place implements Resource {
 
         values.put(BuyPlacesContract.Places.COLUMN_STATE_UPDATING, mStateUpdating);
 
-        if (context.getContentResolver().update(BuyPlacesContract.Places.CONTENT_URI, values, BuyPlacesContract.Places.WITH_SPECIFIED_ID_SELECTION, new String[]{mId}) == 0)
-            context.getContentResolver().insert(BuyPlacesContract.Places.CONTENT_URI, values);
+        Uri uri = Uri.withAppendedPath(BuyPlacesContract.Places.CONTENT_URI, mId);
+        context.getContentResolver().insert(uri, values);
 
+        //if (context.getContentResolver().update(BuyPlacesContract.Places.CONTENT_URI, values, BuyPlacesContract.Places.WITH_SPECIFIED_ID_SELECTION, new String[]{mId}) == 0) {
+        //    context.getContentResolver().insert(BuyPlacesContract.Places.CONTENT_URI, values);
+        Log.d(LOG_TAG, mId + " inserted");
+        //}
     }
 }

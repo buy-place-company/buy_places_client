@@ -3,16 +3,21 @@ package ru.tp.buy_places.service.resourses;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.tp.buy_places.content_provider.BuyPlacesContract;
+import ru.tp.buy_places.utils.AccountManagerHelper;
+
 /**
  * Created by Ivan on 19.04.2015.
  */
 public class Places implements Resource {
+    private static final String LOG_TAG = Places.class.getSimpleName();
     private List<Place> mPlaces = new ArrayList<>();
 
     public Places(){}
@@ -47,15 +52,12 @@ public class Places implements Resource {
             place.setIsInOwnership(checkIsInOwnership(context, place.getOwner()));
             place.writeToDatabase(context);
         }
+        context.getContentResolver().notifyChange(BuyPlacesContract.Places.CONTENT_URI, null);
+        Log.d(LOG_TAG, "places list updated");
     }
 
-    private boolean checkIsInOwnership(Context context, Player id) {
-        // TODO Request Account Manager player's id and compare with parameter
-        if (id == null)
-            return false;
-        else if (id.getId() == 43)
-            return true;
-        return false;
+    private boolean checkIsInOwnership(Context context, Player player) {
+         return player != null && player.getId()== AccountManagerHelper.getPlayerId(context);
     }
 
 

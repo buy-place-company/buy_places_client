@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
+import ru.tp.buy_places.service.BuyItService;
 import ru.tp.buy_places.service.Processor;
 import ru.tp.buy_places.service.network.Request;
 import ru.tp.buy_places.service.network.Response;
@@ -23,8 +24,8 @@ public class ActionWithPlaceProcessor extends Processor {
     private final String mId;
     private final ActionWithPlace mActionWithPlace;
 
-    public ActionWithPlaceProcessor(Context context, OnProcessorResultListener listener, String id, ActionWithPlace actionWithPlace) {
-        super(context, listener);
+    public ActionWithPlaceProcessor(Context context, OnProcessorResultListener listener, OnProcessorReceivedResponseListener onProcessorReceivedResponseListener, String id, ActionWithPlace actionWithPlace, BuyItService.ResourceType resourceType, long requestId) {
+        super(context, listener, onProcessorReceivedResponseListener, resourceType, requestId);
         mId = id;
         mActionWithPlace = actionWithPlace;
     }
@@ -43,7 +44,7 @@ public class ActionWithPlaceProcessor extends Processor {
         Map<String, String> params = new HashMap<>();
         params.put("id", mId);
         params.put("action", mActionWithPlace.name().toLowerCase());
-        return new Request(mContext, "/object", Request.RequestMethod.POST, params);
+        return new Request(mContext, "/object", Request.RequestMethod.POST, params, this);
     }
 
     @Override

@@ -23,14 +23,16 @@ public class BuyPlacesContentProvider extends ContentProvider {
     private DatabaseHelper helper;
 
     private static final int PLACES = 0;
-    private static final int PLACES_ID = 1;
-    private static final int PLAYERS = 2;
-    private static final int PLAYERS_ID = 3;
+    private static final int PLACES_ROW_ID = 1;
+    private static final int PLACES_ID = 2;
+    private static final int PLAYERS = 3;
+    private static final int PLAYERS_ID = 4;
 
     static {
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
         URI_MATCHER.addURI(AUTHORITY, Places.TABLE_NAME, PLACES);
-        URI_MATCHER.addURI(AUTHORITY, Places.TABLE_NAME + "/#", PLACES_ID);
+        URI_MATCHER.addURI(AUTHORITY, Places.TABLE_NAME + "/#", PLACES_ROW_ID);
+        URI_MATCHER.addURI(AUTHORITY, Places.TABLE_NAME + "/*", PLACES_ID);
         URI_MATCHER.addURI(AUTHORITY, Players.TABLE_NAME, PLAYERS);
         URI_MATCHER.addURI(AUTHORITY, Players.TABLE_NAME + "/#", PLAYERS_ID);
     }
@@ -49,7 +51,7 @@ public class BuyPlacesContentProvider extends ContentProvider {
         switch (URI_MATCHER.match(uri)) {
             case PLACES:
                 return Places.CONTENT_TYPE;
-            case PLACES_ID:
+            case PLACES_ROW_ID:
                 return Places.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -61,7 +63,7 @@ public class BuyPlacesContentProvider extends ContentProvider {
         int deleted;
         SQLiteDatabase db = helper.getWritableDatabase();
         switch (URI_MATCHER.match(uri)) {
-            case PLACES_ID:
+            case PLACES_ROW_ID:
                 final long id = ContentUris.parseId(uri);
                 deleted = db.delete(Places.TABLE_NAME, Places.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(id)});
                 break;
@@ -82,16 +84,29 @@ public class BuyPlacesContentProvider extends ContentProvider {
         final SQLiteDatabase db = helper.getWritableDatabase();
         switch (URI_MATCHER.match(uri)) {
             case PLACES_ID:
+                String venuesId = uri.getLastPathSegment();
+                db.beginTransaction();
+                if (db.update(Places.TABLE_NAME, values, Places.WITH_SPECIFIED_ID_SELECTION, new String[]{venuesId})==0) {
+                    id = db.insert(Places.TABLE_NAME, null, values);
+                } else {
+                    Cursor cursor = db.query(Places.TABLE_NAME, Places.ROW_ID_COLUMN_PROJECTION, Places.WITH_SPECIFIED_ID_SELECTION, new String[]{venuesId}, null, null, null);
+                    cursor.moveToFirst();
+                    id = cursor.getLong(cursor.getColumnIndex(Places._ID));
+                    cursor.close();
+                }
+                db.setTransactionSuccessful();
+                db.endTransaction();
+                result = ContentUris.withAppendedId(Places.CONTENT_URI, id);
+                break;
+            case PLACES_ROW_ID:
             case PLACES:
                 id = db.insert(Places.TABLE_NAME, null, values);
                 result = ContentUris.withAppendedId(uri, id);
-                getContext().getContentResolver().notifyChange(result, null);
                 break;
             case PLAYERS_ID:
             case PLAYERS:
                 id = db.insert(Players.TABLE_NAME, null, values);
                 result = ContentUris.withAppendedId(uri, id);
-                getContext().getContentResolver().notifyChange(result, null);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -105,7 +120,7 @@ public class BuyPlacesContentProvider extends ContentProvider {
         Cursor cursor;
         final SQLiteDatabase db = helper.getReadableDatabase();
         switch (URI_MATCHER.match(uri)) {
-            case PLACES_ID:
+            case PLACES_ROW_ID:
                 final long placesRowId = ContentUris.parseId(uri);
                 cursor = db.query(Places.WITH_OWNERS_TABLE_NAME, Places.WITH_OWNERS_COLUMNS_PROJECTION, Places.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(placesRowId)}, null, null, null, null);
                 break;
@@ -132,22 +147,19 @@ public class BuyPlacesContentProvider extends ContentProvider {
         int updated;
         SQLiteDatabase db = helper.getWritableDatabase();
         switch (URI_MATCHER.match(uri)) {
-            case PLACES_ID:
+            case PLACES_ROW_ID:
                 final long placesId = ContentUris.parseId(uri);
                 updated = db.update(Places.TABLE_NAME, values, Places.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(placesId)});
                 break;
             case PLACES:
                 updated = db.update(Places.TABLE_NAME, values, selection, selectionArgs);
-                getContext().getContentResolver().notifyChange(Places.CONTENT_URI, null);
                 break;
             case PLAYERS_ID:
                 final long playersId = ContentUris.parseId(uri);
                 updated = db.update(Players.TABLE_NAME, values, Players.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(playersId)});
-                getContext().getContentResolver().notifyChange(Places.CONTENT_URI, null);
                 break;
             case PLAYERS:
                 updated = db.update(Players.TABLE_NAME, values, selection, selectionArgs);
-                getContext().getContentResolver().notifyChange(Players.CONTENT_URI, null);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);

@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -57,6 +58,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
     private static final int PLAYER_LOADER_ID = 1;
 
     private static final String EXTRA_PLAYER_ID = "EXTRA_PLAYER_ROW_ID";
+    private static final String LOG_TAG = MapFragment.class.getSimpleName();
 
     private ClusterManager<VenueClusterItem> mClusterManager;
     private CustomInfoWindowAdapter mInfoWindowAdapter;
@@ -194,6 +196,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
                 ServiceHelper.get(getActivity()).getPlacesAroundThePoint(cameraPosition.target);
             }
         });
+
         mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
         mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
         mGoogleMap.setInfoWindowAdapter(mInfoWindowAdapter);
@@ -255,9 +258,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
         switch (loader.getId()) {
             case ALL_PLACES_LOADER_ID:
                 if (mClusterManager != null) {
+                    Log.d(LOG_TAG, "loaded");
                     mClusterManager.clearItems();
                     mInfoWindowAdapter.clearItems();
                     Places places = Places.fromCursor(data);

@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
+import ru.tp.buy_places.service.BuyItService;
 import ru.tp.buy_places.service.Processor;
 import ru.tp.buy_places.service.network.Request;
 import ru.tp.buy_places.service.network.Response;
@@ -28,8 +29,8 @@ public class PlacesProcessor extends Processor {
     private final ObjectsRequestMode mObjectsRequestMode;
     private final LatLng mPosition;
 
-    PlacesProcessor(Context context, OnProcessorResultListener listener, LatLng position, ObjectsRequestMode objectsRequestMode) {
-        super(context, listener);
+    PlacesProcessor(Context context, OnProcessorResultListener listener, OnProcessorReceivedResponseListener onProcessorReceivedResponseListener, LatLng position, ObjectsRequestMode objectsRequestMode, BuyItService.ResourceType resourceType, long requestId) {
+        super(context, listener, onProcessorReceivedResponseListener, resourceType, requestId);
         mPosition = position;
         mObjectsRequestMode = objectsRequestMode;
 
@@ -52,7 +53,7 @@ public class PlacesProcessor extends Processor {
             default:
                 path = null;
         }
-        return new Request(mContext, path, Request.RequestMethod.GET, params);
+        return new Request(mContext, path, Request.RequestMethod.GET, params, this);
     }
 
     @Override
@@ -75,6 +76,8 @@ public class PlacesProcessor extends Processor {
     @Override
     protected void updateContentProviderAfterExecutingRequest(Response result) {
         Places places = (Places) result.getData();
+        if (places == null)
+            return;
         switch (mObjectsRequestMode) {
             case AROUND_THE_POINT:
                 deleteOrMarkPlacesAroundTheLastPoint(mContext);

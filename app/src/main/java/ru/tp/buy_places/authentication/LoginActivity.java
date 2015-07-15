@@ -15,12 +15,16 @@ import android.widget.Button;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Scanner;
 
 import ru.tp.buy_places.R;
-import ru.tp.buy_places.service.ServiceHelper;
-import ru.tp.buy_places.service.network.Request;
 import ru.tp.buy_places.service.network.Response;
 import ru.tp.buy_places.service.network.UnknownErrorResponse;
 import ru.tp.buy_places.service.resourses.Player;
@@ -89,15 +93,38 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
         protected Bundle doInBackground(Void... params) {
             Map<String, String> requestParams = new HashMap<>();
             requestParams.put("code", mCode);
-            Request request = new Request(mContext, "/auth/vk", Request.RequestMethod.GET, requestParams);
-            JSONObject response = request.execute();
+            Iterator<Map.Entry<String, String>> iterator = requestParams.entrySet().iterator();
+            StringBuilder paramsQuery = new StringBuilder();
+            JSONObject responseJSONObject;
+            try {
+                while (iterator.hasNext()) {
+                    Map.Entry entry = iterator.next();
+                    paramsQuery.append(entry.getKey()).append("=").append(URLEncoder.encode((String) entry.getValue(), "UTF-8"));
+                    if (iterator.hasNext()) {
+                        paramsQuery.append("&");
+                    }
+                }
+
+                URL url = new URL(mContext.getString(R.string.url_root) + "/auth/vk" + "?" + paramsQuery.toString());
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                String responseString = "";
+                Scanner scanner = new Scanner(httpURLConnection.getInputStream());
+                while (scanner.hasNextLine())
+                    responseString += scanner.nextLine();
+                responseJSONObject = new JSONObject(responseString);
+                httpURLConnection.disconnect();
+
+            } catch (JSONException | IOException e) {
+                responseJSONObject = null;
+                e.printStackTrace();
+            }
             // Start
-            if (response == null) {
+            if (responseJSONObject == null) {
                 Response resp = new UnknownErrorResponse();
             }
-            int status = response.optInt("status");
-            String message = response.optString("message", null);
-            JSONObject dataJSONArray = response.optJSONObject("user");
+            int status = responseJSONObject.optInt("status");
+            String message = responseJSONObject.optString("message", null);
+            JSONObject dataJSONArray = responseJSONObject.optJSONObject("user");
             Player player = Player.fromJSONObject(dataJSONArray);
             Response resp = new Response(status, message, player);
             player = (Player)resp.getData();

@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import ru.tp.buy_places.service.BuyItService;
 import ru.tp.buy_places.service.Processor;
 import ru.tp.buy_places.service.network.Request;
 import ru.tp.buy_places.service.network.Response;
@@ -18,8 +19,8 @@ import ru.tp.buy_places.service.resourses.Player;
  */
 public class GetProfileProcessor extends Processor {
 
-    protected GetProfileProcessor(Context context, OnProcessorResultListener listener) {
-        super(context, listener);
+    protected GetProfileProcessor(Context context, OnProcessorResultListener listener, OnProcessorReceivedResponseListener onProcessorReceivedResponseListener, BuyItService.ResourceType resourceType, long requestId) {
+        super(context, listener, onProcessorReceivedResponseListener, resourceType, requestId);
     }
 
     @Override
@@ -38,7 +39,7 @@ public class GetProfileProcessor extends Processor {
     protected Request prepareRequest() {
         Map<String, String> params = new HashMap<>();
         String path = "/profile";
-        return new Request(mContext, path, Request.RequestMethod.GET, params);
+        return new Request(mContext, path, Request.RequestMethod.GET, params, this);
     }
 
     @Override

@@ -20,7 +20,7 @@ import ru.tp.buy_places.R;
 /**
  * Created by Ivan on 22.04.2015.
  */
-public class Request {
+public class Request extends Thread {
 
     private static final String LOG_TAG = Request.class.getSimpleName();
 
@@ -29,13 +29,21 @@ public class Request {
     private final String mPath;
     private final RequestMethod mRequestMethod;
     private final Map<String, String> mParams;
+    private final OnResponseReceivedListener mOnResponseReceivedListener;
 
-    public Request(Context context, String path, RequestMethod requestMethod, Map<String, String> params) {
+    public Request(Context context, String path, RequestMethod requestMethod, Map<String, String> params, OnResponseReceivedListener onResponseReceivedListener) {
         mContext = context;
         mUrlRoot = context.getString(R.string.url_root);
         mPath = path;
         mRequestMethod = requestMethod;
         mParams = params;
+        mOnResponseReceivedListener = onResponseReceivedListener;
+    }
+
+    @Override
+    public void run() {
+        JSONObject jsonObject = execute();
+        mOnResponseReceivedListener.onResponseReceived(jsonObject);
     }
 
     public JSONObject execute() {
@@ -127,5 +135,9 @@ public class Request {
     public enum RequestMethod {
         GET,
         POST
+    }
+
+    public interface OnResponseReceivedListener {
+        void onResponseReceived(JSONObject jsonObject);
     }
 }

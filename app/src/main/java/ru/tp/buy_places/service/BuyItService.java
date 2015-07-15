@@ -5,16 +5,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ru.tp.buy_places.service.action_with_place.ActionWithPlaceProcessorCreator;
+import ru.tp.buy_places.service.network.Response;
 import ru.tp.buy_places.service.places.PlacesProcessorCreator;
 import ru.tp.buy_places.service.profile.GetProfileProcessorCreator;
 import ru.tp.buy_places.utils.AccountManagerHelper;
 
 
-public class BuyItService extends IntentService implements Processor.OnProcessorResultListener {
+public class BuyItService extends IntentService implements Processor.OnProcessorResultListener, Processor.OnProcessorReceivedResponseListener {
     public static final String EXTRA_ORIGINAL_INTENT = "EXTRA_ORIGINAL_INTENT";
 
     private static final String EXTRA_SERVICE_CALLBACK = "EXTRA_SERVICE_CALLBACK";
@@ -26,8 +31,12 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
     private static final String EXTRA_OBJECT_ID = "EXTRA_OBJECT_ID";
 
     private static final int REQUEST_INVALID = -1;
+    private static final String LOG_TAG = BuyItService.class.getSimpleName();
     private Intent mOriginalRequestIntent;
     private ResultReceiver mCallback;
+
+    private static final Map<ResourceType, Long> sResourceToRequestMap = new HashMap<>();
+
 
     public BuyItService() {
         super("BuyItService");
@@ -48,7 +57,6 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
 
     private static final String ACTION_SUGGEST_DEAL = "ru.mail.buy_it.service.ACTION_SUGGEST_DEAL";
     private static final String ACTION_REJECT_DEAL = "ru.mail.buy_it.service.ACTION_REJECT_DEAL";
-
 
 
     public static void startGetPlacesAroundThePlayerService(Context context, ResultReceiver serviceCallback, long requestId, LatLng position) {
@@ -121,38 +129,64 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.d(LOG_TAG, "onCreate()");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy()");
+    }
+
+    @Override
     protected void onHandleIntent(Intent intent) {
+        Log.d(LOG_TAG, "start onHandleIntent()");
         mOriginalRequestIntent = intent;
         mCallback = intent.getParcelableExtra(EXTRA_SERVICE_CALLBACK);
         String action = intent.getAction();
+        long requestId = intent.getLongExtra(EXTRA_REQUEST_ID, -1);
         switch (action) {
             case ACTION_GET_OBJECTS:
                 final LatLng position = intent.getParcelableExtra(EXTRA_POSITION);
                 final ObjectsRequestMode objectsRequestMode = (ObjectsRequestMode) intent.getSerializableExtra(EXTRA_OBJECTS_REQUEST_MODE);
-                Processor placesProcessor = new PlacesProcessorCreator(this, this, position, objectsRequestMode).createProcessor();
+                Processor placesProcessor = new PlacesProcessorCreator(this, this, this, position, objectsRequestMode, ResourceType.VENUES, requestId).createProcessor();
+                sResourceToRequestMap.put(ResourceType.VENUES, requestId);
                 placesProcessor.process();
                 break;
             case ACTION_POST_OBJECT:
                 final String id = intent.getStringExtra(EXTRA_OBJECT_ID);
                 final ActionWithPlace actionWithPlace = (ActionWithPlace) intent.getSerializableExtra(EXTRA_ACTION_WITH_OBJECT);
-                Processor actionWithPlaceProcessor = new ActionWithPlaceProcessorCreator(this, this, id, actionWithPlace).createProcessor();
+                Processor actionWithPlaceProcessor = new ActionWithPlaceProcessorCreator(this, this, this, id, actionWithPlace, ResourceType.VENUES, requestId).createProcessor();
+                sResourceToRequestMap.put(ResourceType.VENUES, requestId);
                 actionWithPlaceProcessor.process();
                 break;
             case ACTION_GET_PROFILE:
                 final long playerId = AccountManagerHelper.getPlayerId(this);
-                Processor getProfileProcessor = new GetProfileProcessorCreator(this, this).createProcessor();
+                Processor getProfileProcessor = new GetProfileProcessorCreator(this, this, this, ResourceType.PLAYERS, requestId).createProcessor();
+                sResourceToRequestMap.put(ResourceType.PLAYERS, requestId);
                 getProfileProcessor.process();
                 break;
             default:
                 mCallback.send(REQUEST_INVALID, getOriginalIntentBundle());
                 break;
         }
+        Log.d(LOG_TAG, "stop onHandleIntent()");
     }
 
     @Override
     public void send(int resultCode) {
         if (mCallback != null) {
             mCallback.send(resultCode, getOriginalIntentBundle());
+        }
+    }
+
+    @Override
+    public void onProcessorReceivedResponse(Processor processor, Response response) {
+        Log.d(LOG_TAG, "REQUEST ID: " + processor.getRequestId() + "; RESOURCE_REQUEST_ID: " + sResourceToRequestMap.get(processor.getResourceType()));
+        if (sResourceToRequestMap.containsKey(processor.getResourceType()) && sResourceToRequestMap.get(processor.getResourceType()).equals(processor.getRequestId())) {
+            processor.updateContentProviderAfterExecutingRequest(response);
         }
     }
 
@@ -174,5 +208,10 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         SELL,
         UPGRADE,
         COLLECT_LOOT
+    }
+
+    public enum ResourceType {
+        VENUES,
+        PLAYERS
     }
 }

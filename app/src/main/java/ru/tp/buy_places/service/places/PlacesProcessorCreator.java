@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import ru.tp.buy_places.service.BuyItService;
 import ru.tp.buy_places.service.Processor;
 import ru.tp.buy_places.service.ProcessorCreator;
 
@@ -18,13 +19,13 @@ public class PlacesProcessorCreator extends ProcessorCreator {
     private final ObjectsRequestMode mObjectsRequestMode;
 
 
-    public PlacesProcessorCreator(Context context, Processor.OnProcessorResultListener listener, LatLng position, ObjectsRequestMode objectsRequestMode) {
-        super(context, listener);
+    public PlacesProcessorCreator(Context context, Processor.OnProcessorResultListener listener, Processor.OnProcessorReceivedResponseListener onProcessorResponseListener, LatLng position, ObjectsRequestMode objectsRequestMode, BuyItService.ResourceType resourceType, long requestId) {
+        super(context, listener, onProcessorResponseListener, resourceType, requestId);
         mPosition = position;
         mObjectsRequestMode = objectsRequestMode;
     }
     @Override
     public Processor createProcessor() {
-        return new PlacesProcessor(mContext, mListener, mPosition, mObjectsRequestMode);
+        return new PlacesProcessor(mContext, mListener, mOnProcessorReceivedResponseListener, mPosition, mObjectsRequestMode, mResourceType, mRequestId);
     }
 }
