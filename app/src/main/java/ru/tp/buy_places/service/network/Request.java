@@ -66,8 +66,7 @@ public class Request {
                     paramsQuery.append("&");
                 }
             }
-//            CookieManager cookieManager = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
-//            cookieManager.getCookieStore().getCookies().get(0).
+            
             URL url = new URL(mUrlRoot + path + "?" + paramsQuery.toString());
             Log.i(LOG_TAG, "REQUEST: GET " + url.toString());
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
