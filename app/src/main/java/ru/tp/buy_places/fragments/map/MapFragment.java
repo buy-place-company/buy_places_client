@@ -47,6 +47,7 @@ import ru.tp.buy_places.map.marker.PlayerLocationMarkerOptionsCreator;
 import ru.tp.buy_places.service.ServiceHelper;
 import ru.tp.buy_places.service.resourses.Place;
 import ru.tp.buy_places.service.resourses.Places;
+import ru.tp.buy_places.service.resourses.Player;
 import ru.tp.buy_places.utils.AccountManagerHelper;
 
 
@@ -266,6 +267,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
                 }
                 break;
             case PLAYER_LOADER_ID:
+                if (data.moveToFirst()) {
+                    Player player = Player.fromCursor(data);
+                    player.toString();
+                }
                 // Todo Update UI interface
         }
 

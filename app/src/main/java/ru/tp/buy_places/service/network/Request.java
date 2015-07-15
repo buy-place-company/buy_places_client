@@ -1,6 +1,7 @@
 package ru.tp.buy_places.service.network;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +22,9 @@ import ru.tp.buy_places.R;
  */
 public class Request {
 
-    public final Context mContext;
+    private static final String LOG_TAG = Request.class.getSimpleName();
+
+    private final Context mContext;
     private final String mUrlRoot;
     private final String mPath;
     private final RequestMethod mRequestMethod;
@@ -63,14 +66,15 @@ public class Request {
                     paramsQuery.append("&");
                 }
             }
-            //CookieManager cookieManager = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
-            //cookieManager.getCookieStore().getCookies().
+            
             URL url = new URL(mUrlRoot + path + "?" + paramsQuery.toString());
+            Log.i(LOG_TAG, "REQUEST: GET " + url.toString());
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             String responseString = "";
             Scanner scanner = new Scanner(httpURLConnection.getInputStream());
             while (scanner.hasNextLine())
                 responseString += scanner.nextLine();
+            Log.i(LOG_TAG, "RESPONSE: " + responseString);
             responseJSONObject = new JSONObject(responseString);
             httpURLConnection.disconnect();
 
@@ -94,6 +98,7 @@ public class Request {
                 }
             }
             URL url = new URL(mUrlRoot + path);
+            Log.i(LOG_TAG, "REQUEST: POST " + url.toString());
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setDoOutput(true);
             httpURLConnection.setRequestMethod("POST");
@@ -108,6 +113,7 @@ public class Request {
             Scanner scanner = new Scanner(httpURLConnection.getInputStream());
             while (scanner.hasNextLine())
                 responseString += scanner.nextLine();
+            Log.i(LOG_TAG, "RESPONSE: " + responseString);
             response = new JSONObject(responseString);
             httpURLConnection.disconnect();
         } catch (JSONException | IOException e) {
