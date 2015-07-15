@@ -72,13 +72,13 @@ public class Player implements Resource {
 
 
     public static Player fromJSONObject(JSONObject playerJSONObject) {
-        long id = playerJSONObject.optLong("id");
         String username = playerJSONObject.optString("username");
-        int level = playerJSONObject.optInt("level");
+        int venuesCount = playerJSONObject.optInt("objects_count");
         String avatar = playerJSONObject.optString("avatar");
+        int level = playerJSONObject.optInt("level");
         long score = playerJSONObject.optLong("score");
-        int venuesCount = playerJSONObject.optInt("venues_count");
-        int maxPlaces = playerJSONObject.optInt("max_places");
+        int maxPlaces = playerJSONObject.optInt("max_objects");
+        long id = playerJSONObject.optLong("id");
         return new Player(id, username, level, avatar, score, venuesCount, maxPlaces);
     }
 

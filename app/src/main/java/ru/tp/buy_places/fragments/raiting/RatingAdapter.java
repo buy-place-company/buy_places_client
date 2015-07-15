@@ -3,6 +3,7 @@ package ru.tp.buy_places.fragments.raiting;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,7 +86,7 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
             count++;
             holder.mTitle.setText(mData.get(position).getUsername());
             holder.mScore.setText(Long.toString(mData.get(position).getScore()));
-            Picasso.with(activity).load(mData.get(position).getAvatar()).error(R.drawable.ic_launcher).into(holder.mIcon);
+            //Picasso.with(activity).load(mData.get(position).getAvatar()).error(R.drawable.ic_launcher).into(holder.mIcon);
             holder.mRating.setText(Integer.toString(count));
         }
     }
