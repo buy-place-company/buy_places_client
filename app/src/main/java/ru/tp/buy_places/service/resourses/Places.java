@@ -7,12 +7,13 @@ import android.database.Cursor;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by Ivan on 19.04.2015.
  */
-public class Places implements Resource {
+public class Places implements Resource, Iterable<Place> {
     private List<Place> mPlaces = new ArrayList<>();
 
     public Places(){}
@@ -44,20 +45,10 @@ public class Places implements Resource {
 
     public void writeToDatabase(Context context) {
         for (Place place: mPlaces) {
-            place.setIsInOwnership(checkIsInOwnership(context, place.getOwner()));
+            place.setIsInOwnership(Place.checkIsInOwnership(context, place.getOwner()));
             place.writeToDatabase(context);
         }
     }
-
-    private boolean checkIsInOwnership(Context context, Player id) {
-        // TODO Request Account Manager player's id and compare with parameter
-        if (id == null)
-            return false;
-        else if (id.getId() == 43)
-            return true;
-        return false;
-    }
-
 
     public void setIsAroundThePoint(boolean isAroundThePoint) {
         for (Place place : mPlaces) {
@@ -71,12 +62,6 @@ public class Places implements Resource {
         }
     }
 
-    public void setIsVisitedInThePast(boolean isVisitedInThePast) {
-        for (Place place : mPlaces) {
-            place.setIsVisitedInThePast(isVisitedInThePast);
-        }
-    }
-
     public void add(Place place) {
         mPlaces.add(place);
     }
@@ -85,5 +70,14 @@ public class Places implements Resource {
         for (Place place: mPlaces) {
             place.setIsInOwnership(true);
         }
+    }
+
+    public boolean isEmpty() {
+        return mPlaces.isEmpty();
+    }
+
+    @Override
+    public Iterator<Place> iterator() {
+        return mPlaces.iterator();
     }
 }

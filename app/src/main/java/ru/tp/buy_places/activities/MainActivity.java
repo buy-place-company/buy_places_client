@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements
                 .addConnectionCallbacks(mLocationApiConnectionListener)
                 .addOnConnectionFailedListener(mLocationApiConnectionListener)
                 .build();
+        ServiceHelper.get(this).getMyPlaces();
     }
 
     @Override

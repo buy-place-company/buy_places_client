@@ -32,7 +32,7 @@ public abstract class Processor {
         else {
             response = new UnknownErrorResponse();
         }
-        mListener.send(response.getStatus());
+        mListener.send(response);
     }
 
     abstract protected Response parseResponseJSONObject(JSONObject responseJSONObject);
@@ -44,6 +44,6 @@ public abstract class Processor {
     abstract protected void updateContentProviderAfterExecutingRequest(Response response);
 
     public interface OnProcessorResultListener {
-        void send(int result);
+        void send(Response response);
     }
 }

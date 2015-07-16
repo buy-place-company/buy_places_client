@@ -12,11 +12,14 @@ import ru.tp.buy_places.service.network.Request;
 import ru.tp.buy_places.service.network.Response;
 import ru.tp.buy_places.service.network.UnknownErrorResponse;
 import ru.tp.buy_places.service.resourses.Player;
+import ru.tp.buy_places.service.resourses.Resource;
 
 /**
  * Created by Ivan on 09.07.2015.
  */
 public class GetProfileProcessor extends Processor {
+
+    private static final String KEY_PROFILE = "KEY_PROFILE";
 
     protected GetProfileProcessor(Context context, OnProcessorResultListener listener) {
         super(context, listener);
@@ -31,7 +34,9 @@ public class GetProfileProcessor extends Processor {
         String message = responseJSONObject.optString("message", null);
         JSONObject dataJSONArray = responseJSONObject.optJSONObject("user");
         Player player = Player.fromJSONObject(dataJSONArray);
-        return new Response(status, message, player);
+        Map<String, Resource> data = new HashMap<>();
+        data.put(KEY_PROFILE, player);
+        return new Response(status, message, data);
     }
 
     @Override
@@ -48,7 +53,7 @@ public class GetProfileProcessor extends Processor {
 
     @Override
     protected void updateContentProviderAfterExecutingRequest(Response response) {
-        Player player = (Player)response.getData();
+        Player player = (Player)response.getData().get(KEY_PROFILE);
         player.writeToDatabase(mContext);
     }
 }

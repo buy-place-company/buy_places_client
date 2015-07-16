@@ -38,7 +38,7 @@ public class NearPlacesFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public void onDestroyView() {
-        super.onDestroy();
+        super.onDestroyView();
         getLoaderManager().destroyLoader(0);
     }
 
@@ -60,7 +60,7 @@ public class NearPlacesFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, null, null, null);
+        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, BuyPlacesContract.Places.ALL_COLUMNS_PROJECTION, BuyPlacesContract.Places.AROUND_THE_PLAYER_SELECTION, null, null);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class NearPlacesFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        nearPlacesAdapter.setData(null);
     }
 
     @Override

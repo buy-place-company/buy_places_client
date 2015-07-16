@@ -11,6 +11,8 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import ru.tp.buy_places.R;
+
 /**
  * Created by Ivan on 05.07.2015.
  */
@@ -33,8 +35,8 @@ public class LocationApiConnectionListener implements GoogleApiClient.Connection
             mOnLocationChangedListener.onLocationChanged(lastKnownLocation);
         }
         final LocationRequest locationRequest = new LocationRequest()
-                .setInterval(10000)
-                .setFastestInterval(5000)
+                .setInterval(mContext.getResources().getInteger(R.integer.location_request_interval))
+                .setFastestInterval(R.integer.location_request_fastest_interval)
                 .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
         Toast.makeText(mContext, "Connected", Toast.LENGTH_LONG).show();
