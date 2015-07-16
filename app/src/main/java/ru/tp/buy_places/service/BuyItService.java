@@ -9,8 +9,11 @@ import android.os.ResultReceiver;
 import com.google.android.gms.maps.model.LatLng;
 
 import ru.tp.buy_places.service.action_with_place.ActionWithPlaceProcessorCreator;
+import ru.tp.buy_places.service.authentication.AuthenticationProcessorCreator;
+import ru.tp.buy_places.service.network.Response;
 import ru.tp.buy_places.service.places.PlacesProcessorCreator;
 import ru.tp.buy_places.service.profile.GetProfileProcessorCreator;
+import ru.tp.buy_places.service.resourses.Player;
 import ru.tp.buy_places.utils.AccountManagerHelper;
 
 
@@ -24,8 +27,11 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
     private static final String EXTRA_OBJECTS_REQUEST_MODE = "EXTRA_OBJECTS_REQUEST_MODE";
     private static final String EXTRA_ACTION_WITH_OBJECT = "EXTRA_ACTION_WITH_OBJECT";
     private static final String EXTRA_OBJECT_ID = "EXTRA_OBJECT_ID";
+    private static final String EXTRA_CODE = "EXTRA_CODE";
 
     private static final int REQUEST_INVALID = -1;
+    public static final String EXTRA_ID = "EXTRA_ID";
+    public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
     private Intent mOriginalRequestIntent;
     private ResultReceiver mCallback;
 
@@ -36,6 +42,7 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
 
     private static final String ACTION_GET_OBJECTS = "ru.mail.buy_it.service.ACTION_GET_NEAREST_PLACES";
     private static final String ACTION_POST_OBJECT = "ru.mail.buy_it.service.ACTION_POST_OBJECT";
+    private static final String ACTION_AUTHENTICATE = "ru.mail.buy_it.service.ACTION_AUTHENTICATE";
 
     private static final String ACTION_GET_PROFILE = "ru.mail.buy_it.service.ACTION_GET_PROFILE";
     private static final String ACTION_GET_USERS = "ru.mail.buy_it.service.ACTION_GET_USERS";
@@ -120,12 +127,41 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         context.startService(intent);
     }
 
+    public static void startAuthenticateService(Context context, ResultReceiver serviceCallback, long requestId, String code) {
+        Intent intent = new Intent(ACTION_AUTHENTICATE, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        intent.putExtra(EXTRA_CODE, code);
+        context.startService(intent);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         mOriginalRequestIntent = intent;
         mCallback = intent.getParcelableExtra(EXTRA_SERVICE_CALLBACK);
         String action = intent.getAction();
         switch (action) {
+            case ACTION_AUTHENTICATE:
+                final String code = intent.getStringExtra(EXTRA_CODE);
+                Processor authenticationProcessor = new AuthenticationProcessorCreator(this, new Processor.OnProcessorResultListener() {
+                    @Override
+                    public void send(Response response) {
+                        //AuthenticationResult result = (AuthenticationResult) response.getData();
+                        //long id = result.getId();
+                        //String username = result.getUsername();
+
+                        Player player = (Player) response.getData();
+                        long id = player.getId();
+                        String username = player.getUsername();
+
+                        Bundle data = new Bundle();
+                        data.putLong(EXTRA_ID, id);
+                        data.putString(EXTRA_USERNAME, username);
+                        mCallback.send(response.getStatus(), data);
+                    }
+                }, code).createProcessor();
+                authenticationProcessor.process();
+                break;
             case ACTION_GET_OBJECTS:
                 final LatLng position = intent.getParcelableExtra(EXTRA_POSITION);
                 final ObjectsRequestMode objectsRequestMode = (ObjectsRequestMode) intent.getSerializableExtra(EXTRA_OBJECTS_REQUEST_MODE);
@@ -150,9 +186,9 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
     }
 
     @Override
-    public void send(int resultCode) {
+    public void send(Response response) {
         if (mCallback != null) {
-            mCallback.send(resultCode, getOriginalIntentBundle());
+            mCallback.send(response.getStatus(), getOriginalIntentBundle());
         }
     }
 

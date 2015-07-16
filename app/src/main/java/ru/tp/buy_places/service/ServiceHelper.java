@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -20,7 +21,7 @@ public class ServiceHelper {
     private static final String PLAYERS = "PLAYERS";
     private static final String EXTRA_REQUEST_ID = "EXTRA_REQUEST_ID";
     private static final String EXTRA_RESULT_CODE = "EXTRA_RESULT_CODE";
-    private static final String ACTION_REQUEST_RESULT = "ACTION_REQUEST_RESULT";
+    public static final String ACTION_REQUEST_RESULT = "ACTION_REQUEST_RESULT";
 
 
     private static ServiceHelper instance;
@@ -96,6 +97,18 @@ public class ServiceHelper {
             }
         };
         BuyItService.startBuyPlaceService(mContext, serviceCallback, requestId, id);
+        return requestId;
+    }
+
+    public long authenticate(String code) {
+        long requestId = mRequestIdGenerator.incrementAndGet();
+        ResultReceiver serviceCallback = new ResultReceiver(null) {
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                handleAuthenticateResponse(resultCode, resultData);
+            }
+        };
+        BuyItService.startAuthenticateService(mContext, serviceCallback, requestId, code);
         return requestId;
     }
 
@@ -265,5 +278,15 @@ public class ServiceHelper {
             result.putExtra(EXTRA_RESULT_CODE, resultCode);
             mContext.sendBroadcast(result);
         }
+    }
+
+    private void handleAuthenticateResponse(int resultCode, Bundle resultData) {
+
+        long id = resultData.getLong(BuyItService.EXTRA_ID);
+        String username = resultData.getString(BuyItService.EXTRA_USERNAME);
+        Intent result = new Intent(ACTION_REQUEST_RESULT);
+        result.putExtra(BuyItService.EXTRA_ID, id);
+        result.putExtra(BuyItService.EXTRA_USERNAME, username);
+        LocalBroadcastManager.getInstance(mContext).sendBroadcast(result);
     }
 }
