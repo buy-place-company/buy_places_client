@@ -38,10 +38,9 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onDestroyView() {
-        super.onDestroy();
+        super.onDestroyView();
         getLoaderManager().destroyLoader(0);
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,7 +59,7 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, null, null, null);
+        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, BuyPlacesContract.Places.ALL_COLUMNS_PROJECTION, BuyPlacesContract.Places.IS_IN_OWNERSHIP_SELECTION, null, null);
     }
 
     @Override
@@ -71,7 +70,7 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        myPlacesAdapter.setData(null);
     }
 
     @Override

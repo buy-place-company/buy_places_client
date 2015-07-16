@@ -38,7 +38,7 @@ public class VisitedPlacesFragment extends Fragment implements LoaderManager.Loa
 
     @Override
     public void onDestroyView() {
-        super.onDestroy();
+        super.onDestroyView();
         getLoaderManager().destroyLoader(0);
     }
 

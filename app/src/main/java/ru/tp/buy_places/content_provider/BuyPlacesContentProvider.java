@@ -85,13 +85,11 @@ public class BuyPlacesContentProvider extends ContentProvider {
             case PLACES:
                 id = db.insert(Places.TABLE_NAME, null, values);
                 result = ContentUris.withAppendedId(uri, id);
-                getContext().getContentResolver().notifyChange(result, null);
                 break;
             case PLAYERS_ID:
             case PLAYERS:
                 id = db.insert(Players.TABLE_NAME, null, values);
                 result = ContentUris.withAppendedId(uri, id);
-                getContext().getContentResolver().notifyChange(result, null);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -138,16 +136,13 @@ public class BuyPlacesContentProvider extends ContentProvider {
                 break;
             case PLACES:
                 updated = db.update(Places.TABLE_NAME, values, selection, selectionArgs);
-                getContext().getContentResolver().notifyChange(Places.CONTENT_URI, null);
                 break;
             case PLAYERS_ID:
                 final long playersId = ContentUris.parseId(uri);
                 updated = db.update(Players.TABLE_NAME, values, Players.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(playersId)});
-                getContext().getContentResolver().notifyChange(Places.CONTENT_URI, null);
                 break;
             case PLAYERS:
                 updated = db.update(Players.TABLE_NAME, values, selection, selectionArgs);
-                getContext().getContentResolver().notifyChange(Players.CONTENT_URI, null);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -158,7 +153,7 @@ public class BuyPlacesContentProvider extends ContentProvider {
 
     private static final class DatabaseHelper extends SQLiteOpenHelper {
         private static final String DATABASE_NAME = "buy_places.db";
-        private static final int DATABASE_VERSION = 12;
+        private static final int DATABASE_VERSION = 13;
 
 
         public DatabaseHelper(Context context) {

@@ -17,6 +17,7 @@ import ru.tp.buy_places.service.network.Request;
 import ru.tp.buy_places.service.network.Response;
 import ru.tp.buy_places.service.network.UnknownErrorResponse;
 import ru.tp.buy_places.service.resourses.Places;
+import ru.tp.buy_places.service.resourses.Resource;
 
 import static ru.tp.buy_places.service.BuyItService.ObjectsRequestMode;
 
@@ -25,6 +26,7 @@ import static ru.tp.buy_places.service.BuyItService.ObjectsRequestMode;
  */
 public class PlacesProcessor extends Processor {
 
+    private static final String KEY_VENUES = "KEY_VENUES";
     private final ObjectsRequestMode mObjectsRequestMode;
     private final LatLng mPosition;
 
@@ -64,7 +66,9 @@ public class PlacesProcessor extends Processor {
         String message = responseJSONObject.optString("message", null);
         JSONArray dataJSONArray = responseJSONObject.optJSONArray("venues");
         Places places = Places.fromJSONArray(dataJSONArray);
-        return new Response(status, message, places);
+        Map<String, Resource> data = new HashMap<>();
+        data.put(KEY_VENUES, places);
+        return new Response(status, message, data);
     }
 
     @Override
@@ -74,17 +78,18 @@ public class PlacesProcessor extends Processor {
 
     @Override
     protected void updateContentProviderAfterExecutingRequest(Response result) {
-        Places places = (Places) result.getData();
+        Places places = (Places) result.getData().get(KEY_VENUES);
         switch (mObjectsRequestMode) {
             case AROUND_THE_POINT:
-                deleteOrMarkPlacesAroundTheLastPoint(mContext);
-                places.setIsAroundThePoint(true);
-                places.writeToDatabase(mContext);
+                if (!places.isEmpty()) {
+                    deleteOrMarkPlacesAroundTheLastPoint(mContext);
+                    places.setIsAroundThePoint(true);
+                    places.writeToDatabase(mContext);
+                }
                 break;
             case AROUND_THE_PLAYER:
                 markPlacesAroundTheLastPlayerPosition(mContext);
                 places.setIsAroundThePlayer(true);
-                places.setIsVisitedInThePast(true);
                 places.writeToDatabase(mContext);
                 break;
             case IN_OWNERSHIP:
@@ -92,6 +97,7 @@ public class PlacesProcessor extends Processor {
                 places.setIsInOwnership(true);
                 places.writeToDatabase(mContext);
         }
+        mContext.getContentResolver().notifyChange(BuyPlacesContract.Places.CONTENT_URI, null);
     }
 
     private void markPlacesInOwnership(Context context) {
@@ -103,7 +109,6 @@ public class PlacesProcessor extends Processor {
     private void deleteOrMarkPlacesAroundTheLastPoint(Context context) {
         ContentValues aroundThePointIsFalseContentValues = new ContentValues();
         aroundThePointIsFalseContentValues.put(BuyPlacesContract.Places.COLUMN_IS_AROUND_THE_POINT, false);
-        context.getContentResolver().delete(BuyPlacesContract.Places.CONTENT_URI, BuyPlacesContract.Places.ONLY_AROUND_THE_POINT_SELECTION, null);
         context.getContentResolver().update(BuyPlacesContract.Places.CONTENT_URI, aroundThePointIsFalseContentValues, BuyPlacesContract.Places.AROUND_THE_POINT_SELECTION, null);
     }
 

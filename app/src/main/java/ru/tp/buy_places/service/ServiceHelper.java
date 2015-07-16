@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -19,9 +20,11 @@ public class ServiceHelper {
 
     private static final String VENUES = "VENUES";
     private static final String PLAYERS = "PLAYERS";
+    private static final String VENUES_AROUND_THE_POINT = "VENUES_AROUND_THE_POINT";
     private static final String EXTRA_REQUEST_ID = "EXTRA_REQUEST_ID";
     private static final String EXTRA_RESULT_CODE = "EXTRA_RESULT_CODE";
     public static final String ACTION_REQUEST_RESULT = "ACTION_REQUEST_RESULT";
+    private static final String LOG_TAG = ServiceHelper.class.getSimpleName();
 
 
     private static ServiceHelper instance;
@@ -45,8 +48,13 @@ public class ServiceHelper {
 
 
     public long getPlacesAroundThePoint(LatLng position) {
+        if (mPendingRequests.containsKey(VENUES_AROUND_THE_POINT)) {
+            Log.d(LOG_TAG, "Request cancelled");
+            return 0;
+
+        }
         long requestId = mRequestIdGenerator.incrementAndGet();
-        mPendingRequests.put(VENUES, requestId);
+        mPendingRequests.put(VENUES_AROUND_THE_POINT, requestId);
         ResultReceiver serviceCallback = new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -257,6 +265,7 @@ public class ServiceHelper {
     }
 
     private void handleGetObjectsAroundThePointResponse(int resultCode, Bundle resultData) {
+        mPendingRequests.remove(VENUES_AROUND_THE_POINT);
         Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
         if (originalRequestIntent != null) {
             long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
