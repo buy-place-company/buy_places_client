@@ -44,20 +44,10 @@ public class Places implements Resource {
 
     public void writeToDatabase(Context context) {
         for (Place place: mPlaces) {
-            place.setIsInOwnership(checkIsInOwnership(context, place.getOwner()));
+            place.setIsInOwnership(Place.checkIsInOwnership(context, place.getOwner()));
             place.writeToDatabase(context);
         }
     }
-
-    private boolean checkIsInOwnership(Context context, Player id) {
-        // TODO Request Account Manager player's id and compare with parameter
-        if (id == null)
-            return false;
-        else if (id.getId() == 43)
-            return true;
-        return false;
-    }
-
 
     public void setIsAroundThePoint(boolean isAroundThePoint) {
         for (Place place : mPlaces) {
@@ -79,5 +69,9 @@ public class Places implements Resource {
         for (Place place: mPlaces) {
             place.setIsInOwnership(true);
         }
+    }
+
+    public boolean isEmpty() {
+        return mPlaces.isEmpty();
     }
 }

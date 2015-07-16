@@ -40,7 +40,7 @@ import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.ServiceHelper;
 import ru.tp.buy_places.service.resourses.Place;
 
-public class PlaceActivity extends AppCompatActivity implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnMapReadyCallback {
+public class PlaceActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, OnMapReadyCallback {
     public static final String EXTRA_VENUES_ROW_ID = "EXTRA_VENUES_ROW_ID";
     public static final String EXTRA_VENUES_LOCATION = "EXTRA_VENUES_LOCATION";
     public static final String EXTRA_VENUES_TYPE = "EXTRA_VENUES_TYPE";
@@ -152,17 +152,12 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onClick(View v) {
-
-    }
-
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         final long placesRowId = args.getLong(EXTRA_VENUES_ROW_ID);
         final Uri placesUri = ContentUris.withAppendedId(BuyPlacesContract.Places.CONTENT_URI, placesRowId);
-        return new CursorLoader(this, placesUri, null, null, null, null);
+        return new CursorLoader(this, placesUri, BuyPlacesContract.Places.WITH_OWNERS_COLUMNS_PROJECTION, null, null, null);
     }
 
     @Override
@@ -181,7 +176,7 @@ public class PlaceActivity extends AppCompatActivity implements OnClickListener,
             mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_profit), Long.toString(mPlace.getIncome() - mPlace.getExpense())));
             LayoutInflater inflater = LayoutInflater.from(this);
             mVenueType = mPlace.isInOwnership() ? VenueType.MINE : mPlace.getOwner() == null ? VenueType.NOBODYS : VenueType.ANOTHERS;
-
+            mVenueView.getButtonsContainerLayout().removeAllViews();
             switch (mVenueType) {
                 case MINE:
                     View mineVenueButtons = inflater.inflate(R.layout.buttons_my_place, mVenueView.getButtonsContainerLayout());

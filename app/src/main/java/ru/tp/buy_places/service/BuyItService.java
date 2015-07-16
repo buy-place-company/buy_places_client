@@ -9,6 +9,7 @@ import android.os.ResultReceiver;
 import com.google.android.gms.maps.model.LatLng;
 
 import ru.tp.buy_places.service.action_with_place.ActionWithPlaceProcessorCreator;
+import ru.tp.buy_places.service.authentication.AuthenticationProcessor;
 import ru.tp.buy_places.service.authentication.AuthenticationProcessorCreator;
 import ru.tp.buy_places.service.network.Response;
 import ru.tp.buy_places.service.places.PlacesProcessorCreator;
@@ -150,7 +151,7 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
                         //long id = result.getId();
                         //String username = result.getUsername();
 
-                        Player player = (Player) response.getData();
+                        Player player = (Player) response.getData().get(AuthenticationProcessor.KET_AUTHENTICATION_RESULT);
                         long id = player.getId();
                         String username = player.getUsername();
 

@@ -39,6 +39,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mAuthenticationCompletedReceiver);
     }
 

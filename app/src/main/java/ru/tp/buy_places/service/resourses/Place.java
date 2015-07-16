@@ -7,6 +7,7 @@ import android.database.Cursor;
 import org.json.JSONObject;
 
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
+import ru.tp.buy_places.utils.AccountManagerHelper;
 
 /**
  * Created by Ivan on 19.04.2015.
@@ -40,6 +41,8 @@ public class Place implements Resource {
     private boolean mIsAroundThePointIsSet = false;
     private boolean mIsAroundThePlayerIsSet = false;
     private boolean mIsInOwnershipIsSet = false;
+    private boolean mIsVisitedInThePastIsSet = false;
+    private boolean mStateUpdatingIsSet = false;
 
     private Place(String id, long checkinsCount, long usersCount, long tipCount, String name, String category, String type, int level, Player owner, long buyPrice, long sellPrice, long dealPrice, long upgradePrice, long loot, long maxLoot, long income, long expense, double latitude, double longitude) {
         mId = id;
@@ -183,6 +186,11 @@ public class Place implements Resource {
 
     }
 
+    public static boolean checkIsInOwnership(Context context, Player player) {
+        // TODO Request Account Manager player's id and compare with parameter
+        return player != null && player.getId() == AccountManagerHelper.getPlayerId(context);
+    }
+
     public Player getOwner() {
         return mOwner;
     }
@@ -269,6 +277,5 @@ public class Place implements Resource {
 
         if (context.getContentResolver().update(BuyPlacesContract.Places.CONTENT_URI, values, BuyPlacesContract.Places.WITH_SPECIFIED_ID_SELECTION, new String[]{mId}) == 0)
             context.getContentResolver().insert(BuyPlacesContract.Places.CONTENT_URI, values);
-
     }
 }
