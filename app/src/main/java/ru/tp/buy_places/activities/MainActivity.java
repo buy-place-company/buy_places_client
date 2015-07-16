@@ -14,6 +14,7 @@ import android.view.MenuItem;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,6 +27,7 @@ import ru.tp.buy_places.fragments.raiting.RaitingFragment;
 import ru.tp.buy_places.fragments.settings.SettingFragment;
 import ru.tp.buy_places.map.LocationApiConnectionListener;
 import ru.tp.buy_places.map.LocationProvider;
+import ru.tp.buy_places.service.ServiceHelper;
 
 public class MainActivity extends AppCompatActivity implements
         LocationApiConnectionListener.GoogleApiClientHolder,
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements
                 .addConnectionCallbacks(mLocationApiConnectionListener)
                 .addOnConnectionFailedListener(mLocationApiConnectionListener)
                 .build();
+        ServiceHelper.get(this).getMyPlaces();
     }
 
     @Override
@@ -163,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLocationChanged(Location location) {
-        //ServiceHelper.get(this).getPlacesAroundThePlayer(new LatLng(location.getLatitude(), location.getLongitude()));
+        ServiceHelper.get(this).getPlacesAroundThePlayer(new LatLng(location.getLatitude(), location.getLongitude()));
         notifyLocationChanged(location);
     }
 

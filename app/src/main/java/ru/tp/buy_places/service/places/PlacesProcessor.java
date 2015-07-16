@@ -88,14 +88,18 @@ public class PlacesProcessor extends Processor {
                 }
                 break;
             case AROUND_THE_PLAYER:
-                markPlacesAroundTheLastPlayerPosition(mContext);
-                places.setIsAroundThePlayer(true);
-                places.writeToDatabase(mContext);
+                if (!places.isEmpty()) {
+                    markPlacesAroundTheLastPlayerPosition(mContext);
+                    places.setIsAroundThePlayer(true);
+                    places.writeToDatabase(mContext);
+                }
                 break;
             case IN_OWNERSHIP:
-                markPlacesInOwnership(mContext);
-                places.setIsInOwnership(true);
-                places.writeToDatabase(mContext);
+                if (!places.isEmpty()) {
+                    markPlacesInOwnership(mContext);
+                    places.setIsInOwnership(true);
+                    places.writeToDatabase(mContext);
+                }
         }
         mContext.getContentResolver().notifyChange(BuyPlacesContract.Places.CONTENT_URI, null);
     }
