@@ -35,14 +35,11 @@ public class Place implements Resource {
     private boolean mIsAroundThePoint;
     private boolean mIsAroundThePlayer;
     private boolean mIsInOwnership;
-    private boolean mIsVisitedInThePast;
     private boolean mStateUpdating;
 
     private boolean mIsAroundThePointIsSet = false;
     private boolean mIsAroundThePlayerIsSet = false;
     private boolean mIsInOwnershipIsSet = false;
-    private boolean mIsVisitedInThePastIsSet = false;
-    private boolean mStateUpdatingIsSet = false;
 
     private Place(String id, long checkinsCount, long usersCount, long tipCount, String name, String category, String type, int level, Player owner, long buyPrice, long sellPrice, long dealPrice, long upgradePrice, long loot, long maxLoot, long income, long expense, double latitude, double longitude) {
         mId = id;
@@ -131,14 +128,12 @@ public class Place implements Resource {
         double longitude = row.getDouble(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_ALIAS_LONGITUDE));
         final boolean isAroundThePoint = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_ALIAS_IS_AROUND_THE_POINT)) != 0;
         final boolean isAroundThePlayer = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_ALIAS_IS_AROUND_THE_PLAYER)) != 0;
-        final boolean isVisitedInThePast = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_ALIAS_IS_VISITED_IN_THE_PAST)) != 0;
         final boolean isInOwnership = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_ALIAS_IS_IN_OWNERSHIP)) != 0;
         final boolean stateUpdating = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_ALIAS_STATE_UPDATING)) != 0;
         Place place = new Place(rowId, id, checkinsCount, usersCount, tipCount, name, category, type, level, owner, buyPrice, sellPrice, dealPrice, upgradePrice, loot, maxLoot, income, expense, latitude, longitude);
         place.setIsAroundThePoint(isAroundThePoint);
         place.setIsAroundThePlayer(isAroundThePlayer);
         place.setIsInOwnership(isInOwnership);
-        place.setIsVisitedInThePast(isVisitedInThePast);
         place.setStateUpdating(stateUpdating);
         return place;
     }
@@ -220,11 +215,6 @@ public class Place implements Resource {
         mIsInOwnershipIsSet = true;
     }
 
-    public void setIsVisitedInThePast(boolean isVisitedInThePast) {
-        mIsVisitedInThePast = isVisitedInThePast;
-        mIsVisitedInThePastIsSet = true;
-    }
-
     public void setStateUpdating(boolean stateUpdating) {
         mStateUpdating = stateUpdating;
     }
@@ -243,10 +233,6 @@ public class Place implements Resource {
 
     public boolean isInOwnership() {
         return mIsInOwnership;
-    }
-
-    public boolean getIsVisitedInThePastIsSet() {
-        return mIsVisitedInThePastIsSet;
     }
 
     public void writeToDatabase(Context context) {
@@ -278,8 +264,6 @@ public class Place implements Resource {
             values.put(BuyPlacesContract.Places.COLUMN_IS_AROUND_THE_PLAYER, mIsAroundThePlayer);
         if (mIsInOwnershipIsSet)
             values.put(BuyPlacesContract.Places.COLUMN_IS_IN_OWNERSHIP, mIsInOwnership);
-        if (mIsVisitedInThePastIsSet)
-            values.put(BuyPlacesContract.Places.COLUMN_IS_VISITED_IN_THE_PAST, mIsVisitedInThePast);
 
         values.put(BuyPlacesContract.Places.COLUMN_STATE_UPDATING, mStateUpdating);
 

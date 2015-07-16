@@ -71,12 +71,6 @@ public class Places implements Resource {
         }
     }
 
-    public void setIsVisitedInThePast(boolean isVisitedInThePast) {
-        for (Place place : mPlaces) {
-            place.setIsVisitedInThePast(isVisitedInThePast);
-        }
-    }
-
     public void add(Place place) {
         mPlaces.add(place);
     }

@@ -40,7 +40,6 @@ public final class BuyPlacesContract {
         public static final String COLUMN_UPGRADE_PRICE = "upgrade_price";
         public static final String COLUMN_IS_AROUND_THE_POINT = "is_around_the_point";
         public static final String COLUMN_IS_AROUND_THE_PLAYER = "is_around_the_player";
-        public static final String COLUMN_IS_VISITED_IN_THE_PAST = "is_visited_in_the_past";
         public static final String COLUMN_IS_IN_OWNERSHIP = "is_in_ownership";
         public static final String COLUMN_STATE_UPDATING = "state_updating";
 
@@ -66,7 +65,6 @@ public final class BuyPlacesContract {
         public static final String COLUMN_FULL_UPGRADE_PRICE = TABLE_NAME + "." + COLUMN_UPGRADE_PRICE;
         public static final String COLUMN_FULL_IS_AROUND_THE_POINT = TABLE_NAME + "." + COLUMN_IS_AROUND_THE_POINT;
         public static final String COLUMN_FULL_IS_AROUND_THE_PLAYER = TABLE_NAME + "." + COLUMN_IS_AROUND_THE_PLAYER;
-        public static final String COLUMN_FULL_IS_VISITED_IN_THE_PAST = TABLE_NAME + "." + COLUMN_IS_VISITED_IN_THE_PAST;
         public static final String COLUMN_FULL_IS_IN_OWNERSHIP = TABLE_NAME + "." + COLUMN_IS_IN_OWNERSHIP;
         public static final String COLUMN_FULL_STATE_UPDATING = TABLE_NAME + "." + COLUMN_STATE_UPDATING;
 
@@ -92,7 +90,6 @@ public final class BuyPlacesContract {
         public static final String COLUMN_ALIAS_UPGRADE_PRICE = "places_upgrade_price";
         public static final String COLUMN_ALIAS_IS_AROUND_THE_POINT = "places_is_around_the_point";
         public static final String COLUMN_ALIAS_IS_AROUND_THE_PLAYER = "places_is_around_the_player";
-        public static final String COLUMN_ALIAS_IS_VISITED_IN_THE_PAST = "places_is_visited_in_the_past";
         public static final String COLUMN_ALIAS_IS_IN_OWNERSHIP = "places_is_in_ownership";
         public static final String COLUMN_ALIAS_STATE_UPDATING = "places_state_updating";
 
@@ -121,7 +118,6 @@ public final class BuyPlacesContract {
                 COLUMN_UPGRADE_PRICE,
                 COLUMN_IS_AROUND_THE_POINT,
                 COLUMN_IS_AROUND_THE_PLAYER,
-                COLUMN_IS_VISITED_IN_THE_PAST,
                 COLUMN_IS_IN_OWNERSHIP,
                 COLUMN_STATE_UPDATING};
 
@@ -148,7 +144,6 @@ public final class BuyPlacesContract {
                 COLUMN_UPGRADE_PRICE + " INTEGER" + "," +
                 COLUMN_IS_AROUND_THE_POINT + " INTEGER DEFAULT 0" + "," +
                 COLUMN_IS_AROUND_THE_PLAYER + " INTEGER DEFAULT 0" + "," +
-                COLUMN_IS_VISITED_IN_THE_PAST + " INTEGER DEFAULT 0" + "," +
                 COLUMN_IS_IN_OWNERSHIP + " INTEGER DEFAULT 0" + "," +
                 COLUMN_STATE_UPDATING + " INTEGER DEFAULT 0" + "," +
                 "FOREIGN KEY" + "(" + COLUMN_OWNER + ")" + " REFERENCES " + Players.TABLE_NAME + "(" + Players._ID + ")" +
@@ -176,7 +171,6 @@ public final class BuyPlacesContract {
                 Places.COLUMN_FULL_UPGRADE_PRICE + " AS " + Places.COLUMN_ALIAS_UPGRADE_PRICE,
                 Places.COLUMN_FULL_IS_AROUND_THE_POINT + " AS " + Places.COLUMN_ALIAS_IS_AROUND_THE_POINT,
                 Places.COLUMN_FULL_IS_AROUND_THE_PLAYER + " AS " + Places.COLUMN_ALIAS_IS_AROUND_THE_PLAYER,
-                Places.COLUMN_FULL_IS_VISITED_IN_THE_PAST + " AS " + Places.COLUMN_ALIAS_IS_VISITED_IN_THE_PAST,
                 Places.COLUMN_FULL_IS_IN_OWNERSHIP + " AS " + Places.COLUMN_ALIAS_IS_IN_OWNERSHIP,
                 Places.COLUMN_FULL_STATE_UPDATING + " AS " + Places.COLUMN_ALIAS_STATE_UPDATING,
                 Players.COLUMN_FULL_ROW_ID + " AS " + Players.COLUMN_ALIAS_ROW_ID,
@@ -195,8 +189,7 @@ public final class BuyPlacesContract {
         public static final String WITH_OWNERS_TABLE_NAME = Places.TABLE_NAME + " LEFT JOIN " + Players.TABLE_NAME + " ON " + "(" + Places.COLUMN_FULL_OWNER + "=" + Players.COLUMN_FULL_ROW_ID + ")";
         public static final String ONLY_AROUND_THE_POINT_SELECTION =
                 COLUMN_FULL_IS_AROUND_THE_POINT + "=1 AND " +
-                        COLUMN_FULL_IS_AROUND_THE_PLAYER + "=0 AND " +
-                        COLUMN_FULL_IS_VISITED_IN_THE_PAST + "=0";
+                        COLUMN_FULL_IS_AROUND_THE_PLAYER + "=0";
         public static final String WITH_SPECIFIED_ROW_ID_SELECTION =COLUMN_FULL_ROW_ID + "=?";
         public static final String WITH_SPECIFIED_ID_SELECTION = COLUMN_FULL_ID + "=?";
         public static final String AROUND_THE_POINT_SELECTION = COLUMN_FULL_IS_AROUND_THE_POINT + "=1";

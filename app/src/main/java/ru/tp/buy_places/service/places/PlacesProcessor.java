@@ -84,7 +84,6 @@ public class PlacesProcessor extends Processor {
             case AROUND_THE_PLAYER:
                 markPlacesAroundTheLastPlayerPosition(mContext);
                 places.setIsAroundThePlayer(true);
-                places.setIsVisitedInThePast(true);
                 places.writeToDatabase(mContext);
                 break;
             case IN_OWNERSHIP:

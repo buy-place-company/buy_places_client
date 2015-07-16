@@ -41,9 +41,9 @@ public class ActionWithPlaceProcessor extends Processor {
     @Override
     protected Request prepareRequest() {
         Map<String, String> params = new HashMap<>();
-        params.put("id", mId);
+        params.put("venue_id", mId);
         params.put("action", mActionWithPlace.name().toLowerCase());
-        return new Request(mContext, "/object", Request.RequestMethod.POST, params);
+        return new Request(mContext, "/venue/action", Request.RequestMethod.POST, params);
     }
 
     @Override

@@ -265,6 +265,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
                         VenueClusterItem venueClusterItem = new VenueClusterItem(place);
                         mClusterManager.addItem(venueClusterItem);
                     }
+                    mClusterManager.cluster();
                 }
                 break;
             case PLAYER_LOADER_ID:
