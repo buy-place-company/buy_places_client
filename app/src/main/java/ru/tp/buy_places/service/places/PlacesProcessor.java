@@ -109,7 +109,6 @@ public class PlacesProcessor extends Processor {
     private void deleteOrMarkPlacesAroundTheLastPoint(Context context) {
         ContentValues aroundThePointIsFalseContentValues = new ContentValues();
         aroundThePointIsFalseContentValues.put(BuyPlacesContract.Places.COLUMN_IS_AROUND_THE_POINT, false);
-        context.getContentResolver().delete(BuyPlacesContract.Places.CONTENT_URI, BuyPlacesContract.Places.ONLY_AROUND_THE_POINT_SELECTION, null);
         context.getContentResolver().update(BuyPlacesContract.Places.CONTENT_URI, aroundThePointIsFalseContentValues, BuyPlacesContract.Places.AROUND_THE_POINT_SELECTION, null);
     }
 

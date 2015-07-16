@@ -36,7 +36,6 @@ public final class BuyPlacesContract {
         public static final String COLUMN_LOOT = "loot";
         public static final String COLUMN_BUY_PRICE = "buy_price";
         public static final String COLUMN_SELL_PRICE = "sell_price";
-        public static final String COLUMN_DEAL_PRICE = "deal_price";
         public static final String COLUMN_UPGRADE_PRICE = "upgrade_price";
         public static final String COLUMN_IS_AROUND_THE_POINT = "is_around_the_point";
         public static final String COLUMN_IS_AROUND_THE_PLAYER = "is_around_the_player";
@@ -61,7 +60,6 @@ public final class BuyPlacesContract {
         public static final String COLUMN_FULL_LOOT = TABLE_NAME + "." + COLUMN_LOOT;
         public static final String COLUMN_FULL_BUY_PRICE = TABLE_NAME + "." + COLUMN_BUY_PRICE;
         public static final String COLUMN_FULL_SELL_PRICE = TABLE_NAME + "." + COLUMN_SELL_PRICE;
-        public static final String COLUMN_FULL_DEAL_PRICE = TABLE_NAME + "." + COLUMN_DEAL_PRICE;
         public static final String COLUMN_FULL_UPGRADE_PRICE = TABLE_NAME + "." + COLUMN_UPGRADE_PRICE;
         public static final String COLUMN_FULL_IS_AROUND_THE_POINT = TABLE_NAME + "." + COLUMN_IS_AROUND_THE_POINT;
         public static final String COLUMN_FULL_IS_AROUND_THE_PLAYER = TABLE_NAME + "." + COLUMN_IS_AROUND_THE_PLAYER;
@@ -86,7 +84,6 @@ public final class BuyPlacesContract {
         public static final String COLUMN_ALIAS_LOOT = "places_loot";
         public static final String COLUMN_ALIAS_BUY_PRICE = "places_buy_price";
         public static final String COLUMN_ALIAS_SELL_PRICE = "places_sell_price";
-        public static final String COLUMN_ALIAS_DEAL_PRICE = "places_deal_price";
         public static final String COLUMN_ALIAS_UPGRADE_PRICE = "places_upgrade_price";
         public static final String COLUMN_ALIAS_IS_AROUND_THE_POINT = "places_is_around_the_point";
         public static final String COLUMN_ALIAS_IS_AROUND_THE_PLAYER = "places_is_around_the_player";
@@ -114,7 +111,6 @@ public final class BuyPlacesContract {
                 COLUMN_LOOT,
                 COLUMN_BUY_PRICE,
                 COLUMN_SELL_PRICE,
-                COLUMN_DEAL_PRICE,
                 COLUMN_UPGRADE_PRICE,
                 COLUMN_IS_AROUND_THE_POINT,
                 COLUMN_IS_AROUND_THE_PLAYER,
@@ -140,7 +136,6 @@ public final class BuyPlacesContract {
                 COLUMN_LOOT + " INTEGER" + "," +
                 COLUMN_BUY_PRICE + " INTEGER" + "," +
                 COLUMN_SELL_PRICE + " INTEGER" + "," +
-                COLUMN_DEAL_PRICE + " INTEGER" + "," +
                 COLUMN_UPGRADE_PRICE + " INTEGER" + "," +
                 COLUMN_IS_AROUND_THE_POINT + " INTEGER DEFAULT 0" + "," +
                 COLUMN_IS_AROUND_THE_PLAYER + " INTEGER DEFAULT 0" + "," +
@@ -167,7 +162,6 @@ public final class BuyPlacesContract {
                 Places.COLUMN_FULL_LOOT + " AS " + Places.COLUMN_ALIAS_LOOT,
                 Places.COLUMN_FULL_BUY_PRICE + " AS " + Places.COLUMN_ALIAS_BUY_PRICE,
                 Places.COLUMN_FULL_SELL_PRICE + " AS " + Places.COLUMN_ALIAS_SELL_PRICE,
-                Places.COLUMN_FULL_DEAL_PRICE + " AS " + Places.COLUMN_ALIAS_DEAL_PRICE,
                 Places.COLUMN_FULL_UPGRADE_PRICE + " AS " + Places.COLUMN_ALIAS_UPGRADE_PRICE,
                 Places.COLUMN_FULL_IS_AROUND_THE_POINT + " AS " + Places.COLUMN_ALIAS_IS_AROUND_THE_POINT,
                 Places.COLUMN_FULL_IS_AROUND_THE_PLAYER + " AS " + Places.COLUMN_ALIAS_IS_AROUND_THE_PLAYER,

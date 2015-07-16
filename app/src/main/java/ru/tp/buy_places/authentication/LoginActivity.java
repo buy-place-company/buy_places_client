@@ -80,6 +80,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
                 accountManager.setUserData(account, BuyItAccount.KEY_ID, Long.toString(id));
                 result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
                 result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+                ServiceHelper.get(LoginActivity.this).getProfile();
             } else {
                 result.putString(AccountManager.KEY_ERROR_MESSAGE, "Failed to add user");
             }

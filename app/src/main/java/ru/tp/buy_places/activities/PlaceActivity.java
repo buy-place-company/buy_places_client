@@ -1,20 +1,21 @@
 package ru.tp.buy_places.activities;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.LoaderManager;
 import android.content.ContentUris;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,7 +45,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
     public static final String EXTRA_VENUES_ROW_ID = "EXTRA_VENUES_ROW_ID";
     public static final String EXTRA_VENUES_LOCATION = "EXTRA_VENUES_LOCATION";
     public static final String EXTRA_VENUES_TYPE = "EXTRA_VENUES_TYPE";
-
+    private static final String LOG_TAG = PlaceActivity.class.getSimpleName();
 
 
     public static void start(Fragment fragment, long venuesRowId, LatLng venuesLocation, VenueType type) {
@@ -116,6 +117,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
 
         mMapView.onCreate(savedInstanceState);
         mMapView.getMapAsync(this);
+        Log.d(LOG_TAG, "onCreate(); venuesRowId: " + venuesRowId);
     }
 
     @Override
@@ -162,6 +164,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d(LOG_TAG, "onLoadFinished(); data.getCount(): " + data.getCount());
         if (data.moveToFirst()) {
             mPlace = Place.fromCursor(data);
             mVenueView.getNameTextView().setText(mPlace.getName());
@@ -170,10 +173,14 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
             mVenueView.getLevelTextView().setText(Integer.toString(mPlace.getLevel()));
 
             mVenueView.getStatisticsTableLayout().removeAllViews();
-            mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_price), Long.toString(mPlace.getPrice())));
-            mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_outcome), Long.toString(mPlace.getExpense())));
-            mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_income), Long.toString(mPlace.getIncome())));
-            mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_profit), Long.toString(mPlace.getIncome() - mPlace.getExpense())));
+            if (mPlace.getPrice() != null)
+                mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_price), Long.toString(mPlace.getPrice())));
+            if (mPlace.getExpense() != null)
+                mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_outcome), Long.toString(mPlace.getExpense())));
+            if (mPlace.getIncome() != null)
+                mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_income), Long.toString(mPlace.getIncome())));
+            if (mPlace.getIncome() != null && mPlace.getExpense() != null)
+                mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_profit), Long.toString(mPlace.getIncome() - mPlace.getExpense())));
             LayoutInflater inflater = LayoutInflater.from(this);
             mVenueType = mPlace.isInOwnership() ? VenueType.MINE : mPlace.getOwner() == null ? VenueType.NOBODYS : VenueType.ANOTHERS;
             mVenueView.getButtonsContainerLayout().removeAllViews();

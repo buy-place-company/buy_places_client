@@ -7,12 +7,13 @@ import android.database.Cursor;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by Ivan on 19.04.2015.
  */
-public class Places implements Resource {
+public class Places implements Resource, Iterable<Place> {
     private List<Place> mPlaces = new ArrayList<>();
 
     public Places(){}
@@ -73,5 +74,10 @@ public class Places implements Resource {
 
     public boolean isEmpty() {
         return mPlaces.isEmpty();
+    }
+
+    @Override
+    public Iterator<Place> iterator() {
+        return mPlaces.iterator();
     }
 }

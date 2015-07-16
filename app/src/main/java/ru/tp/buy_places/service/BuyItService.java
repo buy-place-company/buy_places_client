@@ -14,7 +14,7 @@ import ru.tp.buy_places.service.authentication.AuthenticationProcessorCreator;
 import ru.tp.buy_places.service.network.Response;
 import ru.tp.buy_places.service.places.PlacesProcessorCreator;
 import ru.tp.buy_places.service.profile.GetProfileProcessorCreator;
-import ru.tp.buy_places.service.resourses.Player;
+import ru.tp.buy_places.service.resourses.AuthenticationResult;
 import ru.tp.buy_places.utils.AccountManagerHelper;
 
 
@@ -147,14 +147,9 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
                 Processor authenticationProcessor = new AuthenticationProcessorCreator(this, new Processor.OnProcessorResultListener() {
                     @Override
                     public void send(Response response) {
-                        //AuthenticationResult result = (AuthenticationResult) response.getData();
-                        //long id = result.getId();
-                        //String username = result.getUsername();
-
-                        Player player = (Player) response.getData().get(AuthenticationProcessor.KET_AUTHENTICATION_RESULT);
-                        long id = player.getId();
-                        String username = player.getUsername();
-
+                        AuthenticationResult result = (AuthenticationResult) response.getData().get(AuthenticationProcessor.KET_AUTHENTICATION_RESULT);
+                        long id = result.getId();
+                        String username = result.getUsername();
                         Bundle data = new Bundle();
                         data.putLong(EXTRA_ID, id);
                         data.putString(EXTRA_USERNAME, username);
