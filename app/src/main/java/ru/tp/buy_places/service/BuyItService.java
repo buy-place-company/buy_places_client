@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 import ru.tp.buy_places.service.action_with_place.ActionWithPlaceProcessorCreator;
 import ru.tp.buy_places.service.authentication.AuthenticationProcessor;
 import ru.tp.buy_places.service.authentication.AuthenticationProcessorCreator;
+import ru.tp.buy_places.service.deals.DealsProcessorCreator;
 import ru.tp.buy_places.service.network.Response;
 import ru.tp.buy_places.service.places.PlacesProcessorCreator;
 import ru.tp.buy_places.service.profile.GetProfileProcessorCreator;
@@ -136,6 +137,13 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         context.startService(intent);
     }
 
+    public static void startGetDealsService(Context context, ResultReceiver serviceCallback, long requestId) {
+        Intent intent = new Intent(ACTION_GET_DEALS, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        context.startService(intent);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         mOriginalRequestIntent = intent;
@@ -163,6 +171,10 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
                 final ObjectsRequestMode objectsRequestMode = (ObjectsRequestMode) intent.getSerializableExtra(EXTRA_OBJECTS_REQUEST_MODE);
                 Processor placesProcessor = new PlacesProcessorCreator(this, this, position, objectsRequestMode).createProcessor();
                 placesProcessor.process();
+                break;
+            case ACTION_GET_DEALS:
+                Processor getDealsProcessor = new DealsProcessorCreator(this, this).createProcessor();
+                getDealsProcessor.process();
                 break;
             case ACTION_POST_OBJECT:
                 final String id = intent.getStringExtra(EXTRA_OBJECT_ID);
@@ -195,6 +207,8 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         return originalRequest;
     }
 
+
+
     public enum ObjectsRequestMode {
         AROUND_THE_PLAYER,
         AROUND_THE_POINT,
@@ -206,5 +220,12 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         SELL,
         UPGRADE,
         COLLECT_LOOT
+    }
+
+    public enum ActionWithDeal {
+        SUGGEST,
+        ACCEPT,
+        REJECT,
+        CANCEL
     }
 }

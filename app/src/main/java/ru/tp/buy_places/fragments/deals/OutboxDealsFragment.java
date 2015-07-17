@@ -1,6 +1,10 @@
 package ru.tp.buy_places.fragments.deals;
 
 
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,13 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.content_provider.BuyPlacesContract;
+import ru.tp.buy_places.service.resourses.Deals;
+import ru.tp.buy_places.utils.AccountManagerHelper;
 
-public class OutboxDealsFragment extends Fragment {
-    private static final String TEXT_FIELD = "text";
-    private static final String IMAGE_FIELD = "image";
+public class OutboxDealsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+    private static final String AGR_TYPE = "ARG_TYPE";
     private RecyclerView mRecycleView;
     private DealsAdapter mDealsAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private DealsFragment.DealsFragmentType mType;
+
     public OutboxDealsFragment() {
         // Required empty public constructor
     }
@@ -24,11 +32,15 @@ public class OutboxDealsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDealsAdapter = new DealsAdapter(getActivity());
+        mType = (DealsFragment.DealsFragmentType) getArguments().getSerializable(AGR_TYPE);
+        mDealsAdapter = new DealsAdapter(getActivity(), mType);
     }
 
-    public static Fragment newInstance() {
+    public static Fragment newInstance(DealsFragment.DealsFragmentType type) {
         Fragment fragment = new OutboxDealsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(AGR_TYPE, type);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -48,7 +60,32 @@ public class OutboxDealsFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecycleView.setLayoutManager(mLayoutManager);
         mRecycleView.setAdapter(mDealsAdapter);
+        getLoaderManager().initLoader(0, getArguments(), this);
         return mRecycleView;
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        DealsFragment.DealsFragmentType type = (DealsFragment.DealsFragmentType) args.getSerializable(AGR_TYPE);
+        long playerId = AccountManagerHelper.getPlayerId(getActivity());
+        switch (type) {
+            case INCOMING:
+                return new CursorLoader(getActivity(), BuyPlacesContract.Deals.CONTENT_URI, BuyPlacesContract.Deals.WITH_RELATED_ENTITIES_PROJECTION, BuyPlacesContract.Deals.WITH_SPECIFIED_PLAYER_TO_ID, new String[]{Long.toString(playerId)}, null);
+            case OUTGOING:
+                return new CursorLoader(getActivity(), BuyPlacesContract.Deals.CONTENT_URI, BuyPlacesContract.Deals.WITH_RELATED_ENTITIES_PROJECTION, BuyPlacesContract.Deals.WITH_SPECIFIED_PLAYER_FROM_ID, new String[]{Long.toString(playerId)}, null);
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Deals deals = Deals.fromCursor(data);
+        mDealsAdapter.setData(deals.getDeals());
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
 }
