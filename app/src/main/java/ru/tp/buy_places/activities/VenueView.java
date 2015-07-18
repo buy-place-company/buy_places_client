@@ -3,7 +3,6 @@ package ru.tp.buy_places.activities;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -17,10 +16,7 @@ public class VenueView {
     private TextView mOwnerTextView;
     private TextView mLevelTextView;
     private TextView mNameTextView;
-    private TableLayout mStatisticsTableLayout;
     private FrameLayout mButtonsContainerLayout;
-
-    private static TableRow sStatisticsTableRow;
 
     public VenueView(Context context) {
         mContext = context;
@@ -54,10 +50,6 @@ public class VenueView {
         return mLevelTextView;
     }
 
-    public TableLayout getStatisticsTableLayout() {
-        return mStatisticsTableLayout;
-    }
-
     public static TableRow createStatisticsTableRow(Context context, String name, String value) {
         final TableRow sStatisticsTableRow = (TableRow) LayoutInflater.from(context).inflate(R.layout.statistics_table_row, null);
         final TextView nameTextView = (TextView) sStatisticsTableRow.findViewById(R.id.name);
@@ -69,9 +61,5 @@ public class VenueView {
 
     public FrameLayout getButtonsContainerLayout() {
         return mButtonsContainerLayout;
-    }
-
-    public void setStatisticsTableLayout(TableLayout statisticsTableLayout) {
-        this.mStatisticsTableLayout = statisticsTableLayout;
     }
 }

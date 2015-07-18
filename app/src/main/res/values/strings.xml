@@ -1,11 +1,15 @@
 <resources>
     <string name="app_name" translatable="false">Buy It</string>
     <string name="title_activity_main" translatable="false">Buy It</string>
-    <string name="title_activity_splash_screen">SplashScreenActivity</string>
-    <string name="title_activity_user">UserActivity</string>
-    <string name="title_activity_object">ObjectActivity</string>
+    <string name="title_activity_splash_screen" translatable="false">SplashScreenActivity</string>
+    <string name="title_activity_user" translatable="false">UserActivity</string>
+    <string name="title_activity_object" translatable="false">ObjectActivity</string>
 
     <string name="places_filter_dialog_title">Filter</string>
-    <string name="buy_it">Buy It</string>
+    <string name="buy_it" translatable="false">Buy It</string>
+    <string name="checkins_label_message">Checkins: </string>
+    <string name="checkins_message" translatable="false">4000</string>
+    <string name="score_message" translatable="false">42345</string>
+    <string name="dollar_message" translatable="false">$</string>
 
 </resources>

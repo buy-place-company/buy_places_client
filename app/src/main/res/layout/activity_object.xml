@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -12,65 +13,75 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
-            android:layout_height="240dp">
+            android:layout_height="240dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginEnd="64dp">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
         </android.support.design.widget.CollapsingToolbarLayout>
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
+            android:minHeight="80dp"
             android:background="?attr/colorPrimary">
 
             <ImageView
-                android:id="@+id/image_view_place"
+                android:id="@+id/image_view_venues_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_margin="20dp"
-                android:src="@drawable/h0" />
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_home_white_48dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignWithParentIfMissing="true"
-                android:layout_toRightOf="@+id/image_view_place"
-                android:layout_toEndOf="@+id/image_view_place"
-                android:orientation="vertical"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp"
-                android:layout_toLeftOf="@+id/text_view_place_level"
-                android:layout_toStartOf="@+id/text_view_place_level">
-
-                <TextView
-                    android:id="@+id/text_view_object_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="МГТУ им Баумана"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="checkins: 400000"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"/>
-
-            </LinearLayout>
             <TextView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="20dp"
-                android:text="user user"
-                android:id="@+id/text_view_place_level"
+                android:id="@+id/text_view_venues_level"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:gravity="center"
+                android:background="@drawable/circle_background"
+                android:padding="4dp"
+                android:text="10"
+                android:textSize="8sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+                android:layout_alignTop="@+id/image_view_venues_icon"
+                android:layout_alignStart="@+id/image_view_venues_icon" />
+
+            <TextView
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
-                android:background="@drawable/circle_background"/>
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/image_view_venues_icon"
+                android:id="@+id/text_view_venues_name"
+                android:text="МГТУ им. Н. Э. Баумана"/>
+
+            <TextView
+                android:id="@+id/text_view_venues_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:drawableLeft="@drawable/ic_cash_usd_white_18dp"
+                tools:ignore="RtlHardcoded"
+                android:layout_below="@+id/text_view_venues_name"
+                android:layout_toEndOf="@+id/image_view_venues_icon" />
+
+            <TextView
+                android:id="@+id/text_view_venues_checkins_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_foursquare_white_18dp"
+                android:layout_marginEnd="16dp"
+                tools:ignore="RtlHardcoded"
+                android:layout_below="@+id/text_view_venues_price"
+                android:layout_toEndOf="@+id/image_view_venues_icon" />
         </RelativeLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -101,14 +112,10 @@
         </LinearLayout>
 
 
-        <TableLayout
-            android:id="@+id/table_layout_statistics"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center_horizontal">
-            <include layout="@layout/statistics_table_row"/>
-        </TableLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_info"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
 
         <View
             android:layout_width="match_parent"

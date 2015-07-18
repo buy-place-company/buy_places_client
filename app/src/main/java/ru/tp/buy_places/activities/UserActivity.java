@@ -1,6 +1,7 @@
 package ru.tp.buy_places.activities;
 
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -116,5 +117,11 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    public static void start(Context context, Player player) {
+        Intent intent = new Intent(context, UserActivity.class);
+        intent.putExtra(EXTRA_USER_ID, player.getRowId());
+        context.startActivity(intent);
     }
 }

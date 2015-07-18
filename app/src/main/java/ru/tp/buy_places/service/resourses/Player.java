@@ -122,4 +122,8 @@ public class Player implements Resource {
         }
         return id;
     }
+
+    public long getCash() {
+        return mCash;
+    }
 }
