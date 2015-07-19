@@ -11,81 +11,37 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            />
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             tools:context="ru.tp.buy_places.fragments.objects.ObjectFragment"
-            >
+            android:background="@drawable/nabrosok">
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="38dp"
+                android:id="@+id/image_view_user"
+                android:src="@mipmap/ava" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="LVL1"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/text_view_user_level"
-                android:layout_alignTop="@+id/text_view_dollar"
-                android:layout_centerHorizontal="true" />
-
-            <ImageView
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:id="@+id/image_view_user"
-                android:src="@mipmap/ic_pupkin"
-                android:layout_below="@+id/image_view_icon_dollar"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="100"
-                android:id="@+id/text_view_dollar"
-                android:layout_alignTop="@+id/image_view_icon_dollar"
-                android:layout_toRightOf="@+id/image_view_icon_dollar"
-                android:layout_toEndOf="@+id/image_view_icon_dollar" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="22"
-                android:id="@+id/text_view_user_object_amount"
-                android:layout_alignTop="@+id/text_view_user_level"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="20dp" />
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="25dp"
-                android:id="@+id/image_view_user_object_amount"
-                android:src="@mipmap/ic_object"
-                android:layout_alignTop="@+id/text_view_user_level"
-                android:layout_toLeftOf="@+id/text_view_user_object_amount"
-                android:layout_toStartOf="@+id/text_view_user_object_amount" />
-
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/map_view"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@+id/text_view_user_name"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentStart="true" />
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="25dp"
-                android:id="@+id/image_view_icon_dollar"
-                android:src="@mipmap/ic_currency_usd"
-                android:layout_alignParentTop="true"
-                android:layout_alignLeft="@+id/map_view"
-                android:layout_alignStart="@+id/map_view"
-                android:layout_marginTop="10dp" />
+                android:text="10"
+                android:background="@drawable/circle_background"
+                android:id="@+id/tv_level"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+                android:gravity="center"
+                android:textSize="35sp"
+                android:textIsSelectable="false"
+                android:padding="3dp"
+                android:layout_alignTop="@+id/image_view_user"
+                android:layout_alignStart="@+id/image_view_user" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -93,8 +49,30 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:id="@+id/text_view_user_name"
                 android:text="Юзернейм"
-                android:layout_below="@+id/image_view_user"
-                android:layout_centerHorizontal="true" />
+                android:layout_below="@+id/tv_level"
+                android:layout_toEndOf="@+id/image_view_user"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="10000"
+                android:id="@+id/tv_score"
+                android:layout_below="@+id/text_view_user_name"
+                android:layout_alignStart="@+id/text_view_user_name" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/dollar_message"
+                android:id="@+id/textView3"
+                android:layout_alignTop="@+id/tv_score"
+                android:layout_toEndOf="@+id/tv_score"
+                android:layout_marginLeft="5dp" />
+
         </RelativeLayout>
 
     </LinearLayout>
