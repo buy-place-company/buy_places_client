@@ -25,6 +25,7 @@ public class ServiceHelper {
     private static final String EXTRA_RESULT_CODE = "EXTRA_RESULT_CODE";
     public static final String ACTION_REQUEST_RESULT = "ACTION_REQUEST_RESULT";
     private static final String LOG_TAG = ServiceHelper.class.getSimpleName();
+    private static final String DEALS = "DEALS";
 
 
     private static ServiceHelper instance;
@@ -177,7 +178,28 @@ public class ServiceHelper {
     }
 
     public long getDeals() {
-        return 0;
+        long requestId = mRequestIdGenerator.incrementAndGet();
+        mPendingRequests.put(DEALS, requestId);
+        ResultReceiver serviceCallback = new ResultReceiver(null) {
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                handleGetDealsResponse(resultCode, resultData);
+            }
+        };
+        BuyItService.startGetDealsService(mContext, serviceCallback, requestId);
+        return requestId;
+    }
+
+    private void handleGetDealsResponse(int resultCode, Bundle resultData) {
+        Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
+        if (originalRequestIntent != null) {
+            long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
+            mPendingRequests.remove(VENUES);
+            Intent result = new Intent(ACTION_REQUEST_RESULT);
+            result.putExtra(EXTRA_REQUEST_ID, requestId);
+            result.putExtra(EXTRA_RESULT_CODE, resultCode);
+            mContext.sendBroadcast(result);
+        }
     }
 
     public long acceptDeal(long id) {

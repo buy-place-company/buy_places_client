@@ -26,6 +26,8 @@ public class BuyPlacesContentProvider extends ContentProvider {
     private static final int PLACES_ID = 1;
     private static final int PLAYERS = 2;
     private static final int PLAYERS_ID = 3;
+    private static final int DEALS = 4;
+    private static final int DEALS_ID = 5;
 
     static {
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
@@ -33,6 +35,8 @@ public class BuyPlacesContentProvider extends ContentProvider {
         URI_MATCHER.addURI(AUTHORITY, Places.TABLE_NAME + "/#", PLACES_ID);
         URI_MATCHER.addURI(AUTHORITY, Players.TABLE_NAME, PLAYERS);
         URI_MATCHER.addURI(AUTHORITY, Players.TABLE_NAME + "/#", PLAYERS_ID);
+        URI_MATCHER.addURI(AUTHORITY, Deals.TABLE_NAME, DEALS);
+        URI_MATCHER.addURI(AUTHORITY, Deals.TABLE_NAME + "/#", DEALS_ID);
     }
 
     public BuyPlacesContentProvider() {
@@ -91,6 +95,11 @@ public class BuyPlacesContentProvider extends ContentProvider {
                 id = db.insert(Players.TABLE_NAME, null, values);
                 result = ContentUris.withAppendedId(uri, id);
                 break;
+            case DEALS_ID:
+            case DEALS:
+                id = db.insert(Deals.TABLE_NAME, null, values);
+                result = ContentUris.withAppendedId(Deals.CONTENT_URI, id);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -108,14 +117,21 @@ public class BuyPlacesContentProvider extends ContentProvider {
                 cursor = db.query(Places.WITH_OWNERS_TABLE_NAME, Places.WITH_OWNERS_COLUMNS_PROJECTION, Places.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(placesRowId)}, null, null, null, null);
                 break;
             case PLACES:
-                cursor = db.query(Places.WITH_OWNERS_TABLE_NAME, Places.WITH_OWNERS_COLUMNS_PROJECTION, selection, null, null, null, null);
+                cursor = db.query(Places.WITH_OWNERS_TABLE_NAME, Places.WITH_OWNERS_COLUMNS_PROJECTION, selection, selectionArgs, null, null, null);
                 break;
             case PLAYERS_ID:
                 final long playersRowId = ContentUris.parseId(uri);
                 cursor = db.query(Players.TABLE_NAME, Players.ALL_COLUMNS_PROJECTION, Players.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(playersRowId)}, null, null, null);
                 break;
             case PLAYERS:
-                cursor = db.query(Players.TABLE_NAME, Players.ALL_COLUMNS_PROJECTION, null, null, null, null, null);
+                cursor = db.query(Players.TABLE_NAME, Players.ALL_COLUMNS_PROJECTION, selection, selectionArgs, null, null, null);
+                break;
+            case DEALS_ID:
+                final long dealsRowId = ContentUris.parseId(uri);
+                cursor = db.query(Deals.WITH_RELATED_ENTITIES_TABLE_NAME, Deals.WITH_RELATED_ENTITIES_PROJECTION, Deals.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(dealsRowId)}, null, null, null);
+                break;
+            case DEALS:
+                cursor = db.query(Deals.WITH_RELATED_ENTITIES_TABLE_NAME, Deals.WITH_RELATED_ENTITIES_PROJECTION, selection, selectionArgs, null, null, null);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -144,6 +160,13 @@ public class BuyPlacesContentProvider extends ContentProvider {
             case PLAYERS:
                 updated = db.update(Players.TABLE_NAME, values, selection, selectionArgs);
                 break;
+            case DEALS_ID:
+                final long dealsId = ContentUris.parseId(uri);
+                updated = db.update(Deals.TABLE_NAME, values, Deals.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(dealsId)});
+                break;
+            case DEALS:
+                updated = db.update(Deals.TABLE_NAME, values, selection, selectionArgs);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -153,7 +176,7 @@ public class BuyPlacesContentProvider extends ContentProvider {
 
     private static final class DatabaseHelper extends SQLiteOpenHelper {
         private static final String DATABASE_NAME = "buy_places.db";
-        private static final int DATABASE_VERSION = 13;
+        private static final int DATABASE_VERSION = 1;
 
 
         public DatabaseHelper(Context context) {

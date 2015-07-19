@@ -1,25 +1,37 @@
 package ru.tp.buy_places.activities;
 
 import android.app.Fragment;
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.fragments.deals.DealsFragment;
 import ru.tp.buy_places.fragments.map.MapFragment;
 import ru.tp.buy_places.fragments.objects.PlaceListFragment;
@@ -28,12 +40,18 @@ import ru.tp.buy_places.fragments.settings.SettingFragment;
 import ru.tp.buy_places.map.LocationApiConnectionListener;
 import ru.tp.buy_places.map.LocationProvider;
 import ru.tp.buy_places.service.ServiceHelper;
+import ru.tp.buy_places.service.resourses.Player;
+import ru.tp.buy_places.utils.AccountManagerHelper;
 
 public class MainActivity extends AppCompatActivity implements
         LocationApiConnectionListener.GoogleApiClientHolder,
         LocationApiConnectionListener.OnLocationChangedListener,
         LocationProvider,
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener,
+        LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final int PLAYER_LOADER_ID = 0;
+    private static final String KEY_PLAYER_ID = "KEY_PLAYER_ID";
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -42,30 +60,47 @@ public class MainActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
 
     private Set<LocationApiConnectionListener.OnLocationChangedListener> mOnLocationChangedListeners = new HashSet<>();
+    private View mHeaderView;
+    private CircleImageView mHeaderAvatar;
+    private TextView mHeaderUsername;
+    private TextView mHeaderCash;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mNavigationView = (NavigationView)findViewById(R.id.navigation);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        if (mToolbar != null)
-            setSupportActionBar(mToolbar);
+        mNavigationView = (NavigationView)findViewById(R.id.navigation);
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.app_name, R.string.app_name);
-        mActionBarDrawerToggle.setDrawerIndicatorEnabled(true);
-        mActionBarDrawerToggle.syncState();
-        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        mNavigationView.setNavigationItemSelectedListener(this);
-        showPage(Page.MAP);
+        setSupportActionBar(mToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+            actionBar.setDisplayShowHomeEnabled(true);
 
+        mActionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
+
+        mHeaderView = LayoutInflater.from(this).inflate(R.layout.header, null);
+        mHeaderAvatar = (CircleImageView) mHeaderView.findViewById(R.id.image);
+        mHeaderCash = (TextView) mHeaderView.findViewById(R.id.text_view_cash);
+        mHeaderUsername = (TextView) mHeaderView.findViewById(R.id.name);
+        mNavigationView.addHeaderView(mHeaderView);
+
+        mNavigationView.setNavigationItemSelectedListener(this);
+        
+        showPage(Page.MAP);
         final LocationApiConnectionListener mLocationApiConnectionListener = new LocationApiConnectionListener(this, this, this);
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(mLocationApiConnectionListener)
                 .addOnConnectionFailedListener(mLocationApiConnectionListener)
                 .build();
+        long playerId = AccountManagerHelper.getPlayerId(this);
+        Bundle args = new Bundle();
+        args.putLong(KEY_PLAYER_ID, playerId);
+        getLoaderManager().initLoader(PLAYER_LOADER_ID, args, this);
+
         ServiceHelper.get(this).getMyPlaces();
     }
 
@@ -188,8 +223,40 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void requestLastKnownLocation() {
-        if (mGoogleApiClient != null)
-            notifyLocationChanged(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));
+        if (mGoogleApiClient != null) {
+            Location lastKnownLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (lastKnownLocation != null)
+                notifyLocationChanged(lastKnownLocation);
+        }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        final long playerId = args.getLong(KEY_PLAYER_ID);
+        return new CursorLoader(this, BuyPlacesContract.Players.CONTENT_URI, BuyPlacesContract.Players.ALL_COLUMNS_PROJECTION, BuyPlacesContract.Players.WITH_SPECIFIED_ID_SELECTION, new String[]{Long.toString(playerId)}, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data.moveToFirst()) {
+            final Player player = Player.fromCursor(data);
+            if (!TextUtils.isEmpty(player.getAvatar())) {
+                Picasso.with(this).load(player.getAvatar()).into(mHeaderAvatar);
+            }
+            mHeaderUsername.setText(player.getUsername());
+            mHeaderCash.setText(Long.toString(player.getCash()));
+            mHeaderView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UserActivity.start(MainActivity.this, player);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 
     public enum Page {

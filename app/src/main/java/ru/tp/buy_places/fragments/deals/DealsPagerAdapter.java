@@ -17,11 +17,11 @@ public class DealsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int i) {
         switch (i) {
             case 0:
-                return OutboxDealsFragment.newInstance();
+                return OutboxDealsFragment.newInstance(DealsFragment.DealsFragmentType.INCOMING);
             case 1:
-                return OutboxDealsFragment.newInstance();
+                return OutboxDealsFragment.newInstance(DealsFragment.DealsFragmentType.OUTGOING);
             default:
-                return OutboxDealsFragment.newInstance();
+                throw new IllegalStateException();
         }
     }
 
@@ -38,7 +38,7 @@ public class DealsPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return "Исходящие";
             default:
-                return "Входящие";
+                throw new IllegalStateException();
         }
     }
 }

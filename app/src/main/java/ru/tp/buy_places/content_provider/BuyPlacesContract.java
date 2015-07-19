@@ -25,7 +25,6 @@ public final class BuyPlacesContract {
         public static final String COLUMN_TIP_COUNT = "tip_count";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_CATEGORY = "category";
-        public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_LEVEL = "level";
         public static final String COLUMN_OWNER = "owner";
         public static final String COLUMN_LATITUDE = "latitude";
@@ -49,7 +48,6 @@ public final class BuyPlacesContract {
         public static final String COLUMN_FULL_TIP_COUNT = TABLE_NAME + "." + COLUMN_TIP_COUNT;
         public static final String COLUMN_FULL_NAME = TABLE_NAME + "." + COLUMN_NAME;
         public static final String COLUMN_FULL_CATEGORY = TABLE_NAME + "." + COLUMN_CATEGORY;
-        public static final String COLUMN_FULL_TYPE = TABLE_NAME + "." + COLUMN_TYPE;
         public static final String COLUMN_FULL_LEVEL = TABLE_NAME + "." + COLUMN_LEVEL;
         public static final String COLUMN_FULL_OWNER = TABLE_NAME + "." + COLUMN_OWNER;
         public static final String COLUMN_FULL_LATITUDE = TABLE_NAME + "." + COLUMN_LATITUDE;
@@ -100,7 +98,6 @@ public final class BuyPlacesContract {
                 COLUMN_TIP_COUNT,
                 COLUMN_NAME,
                 COLUMN_CATEGORY,
-                COLUMN_TYPE,
                 COLUMN_LEVEL,
                 COLUMN_OWNER,
                 COLUMN_LATITUDE,
@@ -125,7 +122,6 @@ public final class BuyPlacesContract {
                 COLUMN_TIP_COUNT + " INTEGER" + "," +
                 COLUMN_NAME + " TEXT" + "," +
                 COLUMN_CATEGORY + " TEXT" + "," +
-                COLUMN_TYPE + " TEXT" + "," +
                 COLUMN_LEVEL + " INTEGER" + "," +
                 COLUMN_OWNER + " INTEGER" + "," +
                 COLUMN_LATITUDE + " REAL" + "," +
@@ -152,7 +148,6 @@ public final class BuyPlacesContract {
                 Places.COLUMN_FULL_TIP_COUNT + " AS " + Places.COLUMN_ALIAS_TIP_COUNT,
                 Places.COLUMN_FULL_NAME + " AS " + Places.COLUMN_ALIAS_NAME,
                 Places.COLUMN_FULL_CATEGORY + " AS " + Places.COLUMN_ALIAS_CATEGORY,
-                Places.COLUMN_FULL_TYPE + " AS " + Places.COLUMN_ALIAS_TYPE,
                 Places.COLUMN_FULL_LEVEL + " AS " + Places.COLUMN_ALIAS_LEVEL,
                 Places.COLUMN_FULL_LATITUDE + " AS " + Places.COLUMN_ALIAS_LATITUDE,
                 Places.COLUMN_FULL_LONGITUDE + " AS " + Places.COLUMN_ALIAS_LONGITUDE,
@@ -173,6 +168,7 @@ public final class BuyPlacesContract {
                 Players.COLUMN_FULL_LEVEL + " AS " + Players.COLUMN_ALIAS_LEVEL,
                 Players.COLUMN_FULL_AVATAR + " AS " + Players.COLUMN_ALIAS_AVATAR,
                 Players.COLUMN_FULL_SCORE + " AS " + Players.COLUMN_ALIAS_SCORE,
+                Players.COLUMN_FULL_CASH + " AS " + Players.COLUMN_ALIAS_CASH,
                 Players.COLUMN_FULL_PLACES + " AS " + Players.COLUMN_ALIAS_PLACES,
                 Players.COLUMN_FULL_MAX_PLACES + " AS " + Players.COLUMN_ALIAS_MAX_PLACES
         };
@@ -203,6 +199,7 @@ public final class BuyPlacesContract {
         public static final String COLUMN_LEVEL = "level";
         public static final String COLUMN_AVATAR = "avatar";
         public static final String COLUMN_SCORE = "score";
+        public static final String COLUMN_CASH = "cash";
         public static final String COLUMN_PLACES = "places";
         public static final String COLUMN_MAX_PLACES = "max_places";
 
@@ -212,6 +209,7 @@ public final class BuyPlacesContract {
         public static final String COLUMN_FULL_LEVEL = TABLE_NAME + "." + COLUMN_LEVEL;
         public static final String COLUMN_FULL_AVATAR = TABLE_NAME + "." + COLUMN_AVATAR;
         public static final String COLUMN_FULL_SCORE = TABLE_NAME + "." + COLUMN_SCORE;
+        public static final String COLUMN_FULL_CASH = TABLE_NAME + "." + COLUMN_CASH;
         public static final String COLUMN_FULL_PLACES = TABLE_NAME + "." + COLUMN_PLACES;
         public static final String COLUMN_FULL_MAX_PLACES = TABLE_NAME + "." + COLUMN_MAX_PLACES;
 
@@ -221,6 +219,7 @@ public final class BuyPlacesContract {
         public static final String COLUMN_ALIAS_LEVEL = "players_level";
         public static final String COLUMN_ALIAS_AVATAR = "players_avatar";
         public static final String COLUMN_ALIAS_SCORE = "players_score";
+        public static final String COLUMN_ALIAS_CASH = "players_cash";
         public static final String COLUMN_ALIAS_PLACES = "players_places";
         public static final String COLUMN_ALIAS_MAX_PLACES = "players_max_places";
 
@@ -231,6 +230,7 @@ public final class BuyPlacesContract {
                 COLUMN_LEVEL,
                 COLUMN_AVATAR,
                 COLUMN_SCORE,
+                COLUMN_CASH,
                 COLUMN_PLACES,
                 COLUMN_MAX_PLACES
         };
@@ -242,6 +242,7 @@ public final class BuyPlacesContract {
                 COLUMN_LEVEL + " INTEGER" + "," +
                 COLUMN_AVATAR + " TEXT" + "," +
                 COLUMN_SCORE + " INTEGER" + "," +
+                COLUMN_CASH + " INTEGER" + "," +
                 COLUMN_PLACES + " INTEGER" + "," +
                 COLUMN_MAX_PLACES + " INTEGER" + ");";
 
@@ -259,29 +260,180 @@ public final class BuyPlacesContract {
         public static final String TABLE_NAME = "deals";
 
         public static final String COLUMN_ID = "id";
+        public static final String COLUMN_PLAYER_FROM = "player_from_id";
+        public static final String COLUMN_PLAYER_TO = "player_to_id";
+        public static final String COLUMN_DATE_EXPIRED = "date_expired";
+        public static final String COLUMN_DATE_ADDED = "date_added";
+        public static final String COLUMN_STATUS = "status";
+        public static final String COLUMN_AMOUNT = "amount";
         public static final String COLUMN_TYPE = "type";
-        public static final String COLUMN_PLAYER = "player";
-        public static final String COLUMN_PLACE = "place";
-
-        public static final String [] ALL_COLUMNS_PROJECTION = {
-                _ID,
-                COLUMN_ID,
-                COLUMN_TYPE,
-                COLUMN_PLAYER,
-                COLUMN_PLACE
-        };
+        public static final String COLUMN_VENUE = "venue_id";
 
         public static final String SQL_CREATE = "CREATE TABLE " + TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT" + "," +
                 COLUMN_ID + " INTEGER NOT NULL UNIQUE" + "," +
+                COLUMN_PLAYER_FROM + " INTEGER" + "," +
+                COLUMN_PLAYER_TO + " INTEGER" + "," +
+                COLUMN_DATE_EXPIRED + " TEXT" + "," +
+                COLUMN_DATE_ADDED + " TEXT" + "," +
+                COLUMN_STATUS + " TEXT" + "," +
+                COLUMN_AMOUNT + " INTEGER" + "," +
                 COLUMN_TYPE + " TEXT" + "," +
-                COLUMN_PLAYER + " INTEGER" + "," +
-                COLUMN_PLACE + " INTEGER" + "," +
-                "FOREIGN KEY" + "(" + COLUMN_PLAYER + ")" + " REFERENCES " + Players.TABLE_NAME + "(" + Players._ID + ")" + "," +
-                "FOREIGN KEY" + "(" + COLUMN_PLACE + ")" + " REFERENCES " + Places.TABLE_NAME + "(" + Places._ID + ")" +
+                COLUMN_VENUE + " INTEGER" + "," +
+                "FOREIGN KEY" + "(" + COLUMN_PLAYER_FROM + ")" + " REFERENCES " + Players.TABLE_NAME + "(" + Players._ID + ")" + "," +
+                "FOREIGN KEY" + "(" + COLUMN_PLAYER_TO + ")" + " REFERENCES " + Players.TABLE_NAME + "(" + Players._ID + ")" + "," +
+                "FOREIGN KEY" + "(" + COLUMN_VENUE + ")" + " REFERENCES " + Places.TABLE_NAME + "(" + Places._ID + ")" +
                 ");";
+
+        public static final String VENUE_ALIAS = "venue";
+        public static final String VENUE_OWNER_ALIAS = "venue_owner";
+        public static final String PLAYER_FROM_ALIAS = "player_from";
+        public static final String PLAYER_TO_ALIAS = "player_to";
+
+        public static final String WITH_RELATED_ENTITIES_TABLE_NAME = TABLE_NAME + " JOIN " + Players.TABLE_NAME + " AS " + PLAYER_FROM_ALIAS + " ON " + COLUMN_PLAYER_FROM + "=" + PLAYER_FROM_ALIAS + "." + Players._ID +
+                " JOIN " + Players.TABLE_NAME + " AS " + PLAYER_TO_ALIAS + " ON " + COLUMN_PLAYER_TO + "=" + PLAYER_TO_ALIAS + "." + Players._ID +
+                " JOIN " + Places.TABLE_NAME + " AS " + VENUE_ALIAS + " ON " + COLUMN_VENUE+"="+ VENUE_ALIAS + "." + Places._ID +
+                " JOIN " + Players.TABLE_NAME + " AS " + VENUE_OWNER_ALIAS + " ON " + VENUE_ALIAS + "." + Places.COLUMN_OWNER + "=" + VENUE_OWNER_ALIAS + "." + Players._ID;
+
+        public static final String COLUMN_ALIAS_ROW_ID = _ID;
+        public static final String COLUMN_ALIAS_ID = "deal_id";
+        public static final String COLUMN_ALIAS_DATE_EXPIRED = "deal_date_expired";
+        public static final String COLUMN_ALIAS_DATE_ADDED = "deal_date_added";
+        public static final String COLUMN_ALIAS_STATUS = "deal_status";
+        public static final String COLUMN_ALIAS_AMOUNT = "deal_amount";
+        public static final String COLUMN_ALIAS_TYPE = "deal_type";
+
+        public static final String COLUMN_ALIAS_PLAYER_FROM_ROW_ID = "player_from_row_id";
+        public static final String COLUMN_ALIAS_PLAYER_FROM_ID = "player_from_id";
+        public static final String COLUMN_ALIAS_PLAYER_FROM_USERNAME = "player_from_username";
+        public static final String COLUMN_ALIAS_PLAYER_FROM_LEVEL = "player_from_level";
+        public static final String COLUMN_ALIAS_PLAYER_FROM_AVATAR = "player_from_avatar";
+        public static final String COLUMN_ALIAS_PLAYER_FROM_SCORE = "player_from_score";
+        public static final String COLUMN_ALIAS_PLAYER_FROM_CASH = "player_from_cash";
+        public static final String COLUMN_ALIAS_PLAYER_FROM_PLACES = "player_from_venues";
+        public static final String COLUMN_ALIAS_PLAYER_FROM_MAX_PLACES = "player_from_max_venues";
+
+        public static final String COLUMN_ALIAS_PLAYER_TO_ROW_ID = "player_to_row_id";
+        public static final String COLUMN_ALIAS_PLAYER_TO_ID = "player_to_id";
+        public static final String COLUMN_ALIAS_PLAYER_TO_USERNAME = "player_to_username";
+        public static final String COLUMN_ALIAS_PLAYER_TO_LEVEL = "player_to_level";
+        public static final String COLUMN_ALIAS_PLAYER_TO_AVATAR = "player_to_avatar";
+        public static final String COLUMN_ALIAS_PLAYER_TO_SCORE = "player_to_score";
+        public static final String COLUMN_ALIAS_PLAYER_TO_CASH = "player_to_cash";
+        public static final String COLUMN_ALIAS_PLAYER_TO_PLACES = "player_to_venues";
+        public static final String COLUMN_ALIAS_PLAYER_TO_MAX_PLACES = "player_to_max_venues";
+
+        public static final String COLUMN_ALIAS_VENUE_ROW_ID = "venue_row_id";
+        public static final String COLUMN_ALIAS_VENUE_ID = "venue_id";
+        public static final String COLUMN_ALIAS_VENUE_CHECKINS_COUNT = "venue_checkins_count";
+        public static final String COLUMN_ALIAS_VENUE_USERS_COUNT = "venue_users_count";
+        public static final String COLUMN_ALIAS_VENUE_TIP_COUNT = "venue_tip_count";
+        public static final String COLUMN_ALIAS_VENUE_NAME = "venue_name";
+        public static final String COLUMN_ALIAS_VENUE_CATEGORY = "venue_category";
+        public static final String COLUMN_ALIAS_VENUE_LEVEL = "venue_level";
+        public static final String COLUMN_ALIAS_VENUE_LATITUDE = "venue_latitude";
+        public static final String COLUMN_ALIAS_VENUE_LONGITUDE = "venue_longitude";
+        public static final String COLUMN_ALIAS_VENUE_INCOME = "venue_income";
+        public static final String COLUMN_ALIAS_VENUE_EXPENSE = "venue_expense";
+        public static final String COLUMN_ALIAS_VENUE_MAX_LOOT = "venue_max_loot";
+        public static final String COLUMN_ALIAS_VENUE_LOOT = "venue_loot";
+        public static final String COLUMN_ALIAS_VENUE_BUY_PRICE = "venue_buy_price";
+        public static final String COLUMN_ALIAS_VENUE_SELL_PRICE = "venue_sell_price";
+        public static final String COLUMN_ALIAS_VENUE_UPGRADE_PRICE = "venue_upgrade_price";
+        public static final String COLUMN_ALIAS_VENUE_IS_AROUND_THE_POINT = "venue_is_around_the_point";
+        public static final String COLUMN_ALIAS_VENUE_IS_AROUND_THE_PLAYER = "venue_is_around_the_player";
+        public static final String COLUMN_ALIAS_VENUE_IS_IN_OWNERSHIP = "venue_is_in_ownership";
+        public static final String COLUMN_ALIAS_VENUE_STATE_UPDATING = "venue_state_updating";
+
+        public static final String COLUMN_ALIAS_VENUE_OWNER_ROW_ID = "venue_owner_row_id";
+        public static final String COLUMN_ALIAS_VENUE_OWNER_ID = "venue_owner_id";
+        public static final String COLUMN_ALIAS_VENUE_OWNER_USERNAME = "venue_owner_username";
+        public static final String COLUMN_ALIAS_VENUE_OWNER_LEVEL = "venue_owner_level";
+        public static final String COLUMN_ALIAS_VENUE_OWNER_AVATAR = "venue_owner_avatar";
+        public static final String COLUMN_ALIAS_VENUE_OWNER_SCORE = "venue_owner_score";
+        public static final String COLUMN_ALIAS_VENUE_OWNER_CASH = "venue_owner_cash";
+        public static final String COLUMN_ALIAS_VENUE_OWNER_PLACES = "venue_owner_venues";
+        public static final String COLUMN_ALIAS_VENUE_OWNER_MAX_PLACES = "venue_owner_max_venues";
+
+        public static final String[] WITH_RELATED_ENTITIES_PROJECTION = {
+                TABLE_NAME + "." + _ID + " AS " + COLUMN_ALIAS_ROW_ID,
+                TABLE_NAME + "." + COLUMN_ID + " AS " + COLUMN_ALIAS_ID,
+                TABLE_NAME + "." + COLUMN_DATE_EXPIRED + " AS " + COLUMN_ALIAS_DATE_EXPIRED,
+                TABLE_NAME + "." + COLUMN_DATE_ADDED + " AS " + COLUMN_ALIAS_DATE_ADDED,
+                TABLE_NAME + "." + COLUMN_STATUS + " AS " + COLUMN_ALIAS_STATUS,
+                TABLE_NAME + "." + COLUMN_AMOUNT + " AS " + COLUMN_ALIAS_AMOUNT,
+                TABLE_NAME + "." + COLUMN_TYPE + " AS " + COLUMN_ALIAS_TYPE,
+
+                PLAYER_FROM_ALIAS + "." + Players._ID + " AS " + COLUMN_ALIAS_PLAYER_FROM_ROW_ID,
+                PLAYER_FROM_ALIAS + "." + Players.COLUMN_ID + " AS " + COLUMN_ALIAS_PLAYER_FROM_ID,
+                PLAYER_FROM_ALIAS + "." + Players.COLUMN_USERNAME + " AS " + COLUMN_ALIAS_PLAYER_FROM_USERNAME,
+                PLAYER_FROM_ALIAS + "." + Players.COLUMN_LEVEL + " AS " + COLUMN_ALIAS_PLAYER_FROM_LEVEL,
+                PLAYER_FROM_ALIAS + "." + Players.COLUMN_AVATAR + " AS " + COLUMN_ALIAS_PLAYER_FROM_AVATAR,
+                PLAYER_FROM_ALIAS + "." + Players.COLUMN_SCORE + " AS " + COLUMN_ALIAS_PLAYER_FROM_SCORE,
+                PLAYER_FROM_ALIAS + "." + Players.COLUMN_CASH + " AS " + COLUMN_ALIAS_PLAYER_FROM_CASH,
+                PLAYER_FROM_ALIAS + "." + Players.COLUMN_PLACES + " AS " + COLUMN_ALIAS_PLAYER_FROM_PLACES,
+                PLAYER_FROM_ALIAS + "." + Players.COLUMN_MAX_PLACES + " AS " + COLUMN_ALIAS_PLAYER_FROM_MAX_PLACES,
+
+                PLAYER_TO_ALIAS + "." + Players._ID + " AS " + COLUMN_ALIAS_PLAYER_TO_ROW_ID,
+                PLAYER_TO_ALIAS + "." + Players.COLUMN_ID + " AS " + COLUMN_ALIAS_PLAYER_TO_ID,
+                PLAYER_TO_ALIAS + "." + Players.COLUMN_USERNAME + " AS " + COLUMN_ALIAS_PLAYER_TO_USERNAME,
+                PLAYER_TO_ALIAS + "." + Players.COLUMN_LEVEL + " AS " + COLUMN_ALIAS_PLAYER_TO_LEVEL,
+                PLAYER_TO_ALIAS + "." + Players.COLUMN_AVATAR + " AS " + COLUMN_ALIAS_PLAYER_TO_AVATAR,
+                PLAYER_TO_ALIAS + "." + Players.COLUMN_SCORE + " AS " + COLUMN_ALIAS_PLAYER_TO_SCORE,
+                PLAYER_TO_ALIAS + "." + Players.COLUMN_CASH + " AS " + COLUMN_ALIAS_PLAYER_TO_CASH,
+                PLAYER_TO_ALIAS + "." + Players.COLUMN_PLACES + " AS " + COLUMN_ALIAS_PLAYER_TO_PLACES,
+                PLAYER_TO_ALIAS + "." + Players.COLUMN_MAX_PLACES + " AS " + COLUMN_ALIAS_PLAYER_TO_MAX_PLACES,
+
+                VENUE_ALIAS + "." + Places._ID + " AS " + COLUMN_ALIAS_VENUE_ROW_ID,
+                VENUE_ALIAS + "." + Places.COLUMN_ID + " AS " + COLUMN_ALIAS_VENUE_ID,
+                VENUE_ALIAS + "." + Places.COLUMN_CHECKINS_COUNT + " AS " + COLUMN_ALIAS_VENUE_CHECKINS_COUNT,
+                VENUE_ALIAS + "." + Places.COLUMN_USERS_COUNT + " AS " + COLUMN_ALIAS_VENUE_USERS_COUNT,
+                VENUE_ALIAS + "." + Places.COLUMN_TIP_COUNT + " AS " + COLUMN_ALIAS_VENUE_TIP_COUNT,
+                VENUE_ALIAS + "." + Places.COLUMN_NAME + " AS " + COLUMN_ALIAS_VENUE_NAME,
+                VENUE_ALIAS + "." + Places.COLUMN_CATEGORY + " AS " + COLUMN_ALIAS_VENUE_CATEGORY,
+                VENUE_ALIAS + "." + Places.COLUMN_LEVEL + " AS " + COLUMN_ALIAS_VENUE_LEVEL,
+                VENUE_ALIAS + "." + Places.COLUMN_LATITUDE + " AS " + COLUMN_ALIAS_VENUE_LATITUDE,
+                VENUE_ALIAS + "." + Places.COLUMN_LONGITUDE + " AS " + COLUMN_ALIAS_VENUE_LONGITUDE,
+                VENUE_ALIAS + "." + Places.COLUMN_INCOME + " AS " + COLUMN_ALIAS_VENUE_INCOME,
+                VENUE_ALIAS + "." + Places.COLUMN_EXPENSE + " AS " + COLUMN_ALIAS_VENUE_EXPENSE,
+                VENUE_ALIAS + "." + Places.COLUMN_MAX_LOOT + " AS " + COLUMN_ALIAS_VENUE_MAX_LOOT,
+                VENUE_ALIAS + "." + Places.COLUMN_LOOT + " AS " + COLUMN_ALIAS_VENUE_LOOT,
+                VENUE_ALIAS + "." + Places.COLUMN_BUY_PRICE + " AS " + COLUMN_ALIAS_VENUE_BUY_PRICE,
+                VENUE_ALIAS + "." + Places.COLUMN_SELL_PRICE + " AS " + COLUMN_ALIAS_VENUE_SELL_PRICE,
+                VENUE_ALIAS + "." + Places.COLUMN_UPGRADE_PRICE + " AS " + COLUMN_ALIAS_VENUE_UPGRADE_PRICE,
+                VENUE_ALIAS + "." + Places.COLUMN_IS_AROUND_THE_POINT + " AS " + COLUMN_ALIAS_VENUE_IS_AROUND_THE_POINT,
+                VENUE_ALIAS + "." + Places.COLUMN_IS_AROUND_THE_PLAYER + " AS " + COLUMN_ALIAS_VENUE_IS_AROUND_THE_PLAYER,
+                VENUE_ALIAS + "." + Places.COLUMN_IS_IN_OWNERSHIP + " AS " + COLUMN_ALIAS_VENUE_IS_IN_OWNERSHIP,
+                VENUE_ALIAS + "." + Places.COLUMN_STATE_UPDATING + " AS " + COLUMN_ALIAS_VENUE_STATE_UPDATING,
+
+                VENUE_OWNER_ALIAS + "." + Players._ID + " AS " + COLUMN_ALIAS_VENUE_OWNER_ROW_ID,
+                VENUE_OWNER_ALIAS + "." + Players.COLUMN_ID + " AS " + COLUMN_ALIAS_VENUE_OWNER_ID,
+                VENUE_OWNER_ALIAS + "." + Players.COLUMN_USERNAME + " AS " + COLUMN_ALIAS_VENUE_OWNER_USERNAME,
+                VENUE_OWNER_ALIAS + "." + Players.COLUMN_LEVEL + " AS " + COLUMN_ALIAS_VENUE_OWNER_LEVEL,
+                VENUE_OWNER_ALIAS + "." + Players.COLUMN_AVATAR + " AS " + COLUMN_ALIAS_VENUE_OWNER_AVATAR,
+                VENUE_OWNER_ALIAS + "." + Players.COLUMN_SCORE + " AS " + COLUMN_ALIAS_VENUE_OWNER_SCORE,
+                VENUE_OWNER_ALIAS + "." + Players.COLUMN_CASH + " AS " + COLUMN_ALIAS_VENUE_OWNER_CASH,
+                VENUE_OWNER_ALIAS + "." + Players.COLUMN_PLACES + " AS " + COLUMN_ALIAS_VENUE_OWNER_PLACES,
+                VENUE_OWNER_ALIAS + "." + Players.COLUMN_MAX_PLACES + " AS " + COLUMN_ALIAS_VENUE_OWNER_MAX_PLACES
+        };
+
+        public static final String[] COLUMN_ID_PROJECTION = {
+                TABLE_NAME + "." + _ID + " AS " + COLUMN_ALIAS_ROW_ID,
+                TABLE_NAME + "." + COLUMN_ID + " AS " + COLUMN_ALIAS_ID
+        };
+
 
         static final String SQL_DROP = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, TABLE_NAME);
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.buy_places." + TABLE_NAME;
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.buy_places." + TABLE_NAME;
+        public static final String WITH_SPECIFIED_ID_SELECTION = TABLE_NAME + "." + COLUMN_ID +"=?";
+        public static final String WITH_SPECIFIED_ROW_ID_SELECTION = _ID + "=?";
+
+
+
+        public static final String WITH_SPECIFIED_PLAYER_TO_ID = PLAYER_TO_ALIAS + "." + Players.COLUMN_ID + "=?";
+        public static final String WITH_SPECIFIED_PLAYER_FROM_ID = PLAYER_FROM_ALIAS + "." + Players.COLUMN_ID + "=?";
     }
 }

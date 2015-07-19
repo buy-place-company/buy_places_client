@@ -18,6 +18,7 @@ public class Player implements Resource {
     private final String mUsername;
     private final int mLevel;
     private final String mAvatar;
+    private final long mCash;
     private final long mScore;
     private final int mPlaces;
     private final int mMaxPlaces;
@@ -55,18 +56,19 @@ public class Player implements Resource {
         return mRowId;
     }
 
-    public Player(long id, String username, int level, String avatar, long score, int places, int maxPlaces) {
+    public Player(long id, String username, int level, String avatar, long cash, long score, int places, int maxPlaces) {
         mId = id;
         mUsername = username;
         mLevel = level;
         mAvatar = avatar;
+        mCash = cash;
         mScore = score;
         mPlaces = places;
         mMaxPlaces = maxPlaces;
     }
 
-    public Player(long rowId, long id, String username, int level, String avatar, long score, int venuesCount, int maxPlaces) {
-        this(id, username, level, avatar, score, venuesCount, maxPlaces);
+    public Player(long rowId, long id, String username, int level, String avatar, long cash, long score, int venuesCount, int maxPlaces) {
+        this(id, username, level, avatar, cash, score, venuesCount, maxPlaces);
         mRowId = rowId;
     }
 
@@ -76,10 +78,11 @@ public class Player implements Resource {
         int venuesCount = playerJSONObject.optInt("objects_count");
         String avatar = playerJSONObject.optString("avatar");
         int level = playerJSONObject.optInt("level");
+        long cash = playerJSONObject.optLong("cash");
         long score = playerJSONObject.optLong("score");
         int maxPlaces = playerJSONObject.optInt("max_objects");
         long id = playerJSONObject.optLong("id");
-        return new Player(id, username, level, avatar, score, venuesCount, maxPlaces);
+        return new Player(id, username, level, avatar, cash, score, venuesCount, maxPlaces);
     }
 
     public static Player fromCursor(Cursor cursor) {
@@ -88,10 +91,11 @@ public class Player implements Resource {
         String username = cursor.getString(cursor.getColumnIndex(BuyPlacesContract.Players.COLUMN_USERNAME));
         int level = cursor.getInt(cursor.getColumnIndex(BuyPlacesContract.Players.COLUMN_LEVEL));
         String avatar = cursor.getString(cursor.getColumnIndex(BuyPlacesContract.Players.COLUMN_AVATAR));
+        long cash = cursor.getLong(cursor.getColumnIndex(BuyPlacesContract.Players.COLUMN_CASH));
         long score = cursor.getLong(cursor.getColumnIndex(BuyPlacesContract.Players.COLUMN_SCORE));
         int places = cursor.getInt(cursor.getColumnIndex(BuyPlacesContract.Players.COLUMN_PLACES));
         int maxPlaces = cursor.getInt(cursor.getColumnIndex(BuyPlacesContract.Players.COLUMN_MAX_PLACES));
-        return new Player(rowId, id, username, level, avatar, score, places, maxPlaces);
+        return new Player(rowId, id, username, level, avatar, cash, score, places, maxPlaces);
     }
 
     public long writeToDatabase(Context context) {
@@ -100,6 +104,7 @@ public class Player implements Resource {
         values.put(BuyPlacesContract.Players.COLUMN_USERNAME, mUsername);
         values.put(BuyPlacesContract.Players.COLUMN_LEVEL, mLevel);
         values.put(BuyPlacesContract.Players.COLUMN_AVATAR, mAvatar);
+        values.put(BuyPlacesContract.Players.COLUMN_CASH, mCash);
         values.put(BuyPlacesContract.Players.COLUMN_SCORE, mScore);
         values.put(BuyPlacesContract.Players.COLUMN_PLACES, mPlaces);
         values.put(BuyPlacesContract.Players.COLUMN_MAX_PLACES, mMaxPlaces);
@@ -116,5 +121,9 @@ public class Player implements Resource {
             cursor.close();
         }
         return id;
+    }
+
+    public long getCash() {
+        return mCash;
     }
 }

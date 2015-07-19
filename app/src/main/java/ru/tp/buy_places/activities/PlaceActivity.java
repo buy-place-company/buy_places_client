@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,9 +12,13 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +29,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +40,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.ServiceHelper;
@@ -46,7 +53,8 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
     public static final String EXTRA_VENUES_LOCATION = "EXTRA_VENUES_LOCATION";
     public static final String EXTRA_VENUES_TYPE = "EXTRA_VENUES_TYPE";
     private static final String LOG_TAG = PlaceActivity.class.getSimpleName();
-
+    private RecyclerView mInfoList;
+    private VenueInfoListAdapter mVenueInfoListAdapter;
 
     public static void start(Fragment fragment, long venuesRowId, LatLng venuesLocation, VenueType type) {
         Intent intent = new Intent(fragment.getActivity(), PlaceActivity.class);
@@ -83,7 +91,11 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
         final LatLng venuesPosition = getIntent().getParcelableExtra(EXTRA_VENUES_LOCATION);
         final int zoomLevel = getResources().getInteger(R.integer.google_map_default_zoom_level);
         mVenueType = (VenueType) getIntent().getSerializableExtra(EXTRA_VENUES_TYPE);
-        mAppBarLayout = (FrameLayout) findViewById(R.id.app_bar_layout);
+        mInfoList = (RecyclerView) findViewById(R.id.recycler_view_info);
+        mInfoList.setLayoutManager(new LinearLayoutManager(this));
+        mVenueInfoListAdapter = new VenueInfoListAdapter(this);
+        mInfoList.setAdapter(mVenueInfoListAdapter);
+        mAppBarLayout = (CollapsingToolbarLayout) findViewById(R.id.app_bar_layout);
         GoogleMapOptions googleMapOptions = new GoogleMapOptions()
                 .liteMode(true)
                 .mapToolbarEnabled(false)
@@ -93,13 +105,11 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                         .build());
         mMapView = new MapView(this, googleMapOptions);
         mAppBarLayout.addView(mMapView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
         mVenueView = new VenueView(this);
-        mVenueView.setNameTextView((TextView) findViewById(R.id.text_view_object_name));
+        mVenueView.setNameTextView((TextView) findViewById(R.id.text_view_venues_name));
         mVenueView.setOwnerTextView((TextView) findViewById(R.id.text_view_owner));
-        mVenueView.setLevelTextView((TextView) findViewById(R.id.text_view_place_level));
+        mVenueView.setLevelTextView((TextView) findViewById(R.id.text_view_venues_level));
         mVenueView.setButtonsContainerLayout((FrameLayout) findViewById(R.id.button_container));
-        mVenueView.setStatisticsTableLayout((TableLayout) findViewById(R.id.table_layout_statistics));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null)
@@ -172,15 +182,17 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                 mVenueView.getOwnerTextView().setText(mPlace.getOwner().getUsername());
             mVenueView.getLevelTextView().setText(Integer.toString(mPlace.getLevel()));
 
-            mVenueView.getStatisticsTableLayout().removeAllViews();
+            List<InfoItem> infoItems = new ArrayList<>();
             if (mPlace.getPrice() != null)
-                mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_price), Long.toString(mPlace.getPrice())));
+                infoItems.add(new InfoItem(getString(R.string.statistics_price), InfoType.PRICE, Long.toString(mPlace.getPrice())));
             if (mPlace.getExpense() != null)
-                mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_outcome), Long.toString(mPlace.getExpense())));
+                infoItems.add(new InfoItem(getString(R.string.statistics_outcome), InfoType.PRICE, Long.toString(mPlace.getExpense())));
             if (mPlace.getIncome() != null)
-                mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_income), Long.toString(mPlace.getIncome())));
+                infoItems.add(new InfoItem(getString(R.string.statistics_income), InfoType.PRICE, Long.toString(mPlace.getIncome())));
             if (mPlace.getIncome() != null && mPlace.getExpense() != null)
-                mVenueView.getStatisticsTableLayout().addView(VenueView.createStatisticsTableRow(this, getString(R.string.statistics_profit), Long.toString(mPlace.getIncome() - mPlace.getExpense())));
+                infoItems.add(new InfoItem(getString(R.string.statistics_profit), InfoType.PRICE, Long.toString(mPlace.getIncome() - mPlace.getExpense())));
+
+            mVenueInfoListAdapter.setInfoItems(infoItems);
             LayoutInflater inflater = LayoutInflater.from(this);
             mVenueType = mPlace.isInOwnership() ? VenueType.MINE : mPlace.getOwner() == null ? VenueType.NOBODYS : VenueType.ANOTHERS;
             mVenueView.getButtonsContainerLayout().removeAllViews();
@@ -263,8 +275,8 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
     private void setMineVenueButtonsOnClickListeners(View mineVenueButtons) {
         final AlertDialog.Builder sellDialogBuilder = new AlertDialog.Builder(this);
         final AlertDialog.Builder upgradeDialogBuilder = new AlertDialog.Builder(this);
-        Button upgradeVenueButton = (Button) mineVenueButtons.findViewById(R.id.button_upgrade_place);
-        Button sellVenueButton = (Button) mineVenueButtons.findViewById(R.id.button_sell_place);
+        FloatingActionButton upgradeVenueButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_upgrade_place);
+        FloatingActionButton sellVenueButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_sell_place);
         upgradeVenueButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -346,5 +358,81 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
         public static VenueType fromVenue(Place venue) {
             return venue.isInOwnership() ? MINE : venue.getOwner() == null ? NOBODYS : ANOTHERS;
         }
+    }
+
+    private class InfoItem {
+        private String mKey;
+        private InfoType mType;
+        private String mValue;
+
+        public InfoItem(String key, InfoType type, String value) {
+            mKey = key;
+            mType = type;
+            mValue = value;
+        }
+
+        public String getKey() {
+            return mKey;
+        }
+
+        public String getValue() {
+            return mValue;
+        }
+    }
+
+    private class VenueInfoListAdapter extends RecyclerView.Adapter<VenueInfoListAdapter.ViewHolder> {
+
+        private final Context mContext;
+        List<InfoItem> mInfoItems = new ArrayList<>();
+
+        public VenueInfoListAdapter(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        public VenueInfoListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v;
+            switch (InfoType.values()[viewType]) {
+                case PRICE:
+                    v = LayoutInflater.from(mContext).inflate(R.layout.item_venues_price_info, parent, false);
+                    break;
+                default:
+                    throw new IllegalStateException();
+            }
+            return new ViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(VenueInfoListAdapter.ViewHolder holder, int position) {
+            holder.venueInfoKey.setText(mInfoItems.get(position).getKey());
+            holder.venueInfoValue.setText(mInfoItems.get(position).getValue());
+        }
+
+        @Override
+        public int getItemCount() {
+            return mInfoItems.size();
+        }
+
+        public void setInfoItems(List<InfoItem> infoItems) {
+            mInfoItems.clear();
+            if(infoItems != null)
+                mInfoItems.addAll(infoItems);
+            notifyDataSetChanged();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            public TextView venueInfoKey;
+            public TextView venueInfoValue;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                venueInfoKey = (TextView) itemView.findViewById(R.id.text_view_venues_info_key);
+                venueInfoValue = (TextView) itemView.findViewById(R.id.text_view_venues_info_value);
+            }
+        }
+    }
+
+    private enum InfoType {
+        PRICE
     }
 }
