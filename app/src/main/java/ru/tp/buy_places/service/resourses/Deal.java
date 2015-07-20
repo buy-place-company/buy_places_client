@@ -20,12 +20,12 @@ public class Deal implements Resource{
     private final Player mPlayerTo;
     private final String mDateExpired;
     private final String mDateAdded;
-    private final String mStatus;
+    private final DealState mStatus;
     private final long mAmount;
     private final String mType;
     private final Place mVenue;
 
-    public Deal(long id, Player playerFrom, Player playerTo, String dateExpired, String dateAdded, String status, long amount, String type, Place venue) {
+    public Deal(long id, Player playerFrom, Player playerTo, String dateExpired, String dateAdded, DealState status, long amount, String type, Place venue) {
         mPlayerFrom = playerFrom;
         mPlayerTo = playerTo;
         mDateExpired = dateExpired;
@@ -37,7 +37,7 @@ public class Deal implements Resource{
         mId = id;
     }
 
-    public Deal(long rowId, long id, Player playerFrom, Player playerTo, String dateExpired, String dateAdded, String status, long amount, String type, Place venue) {
+    public Deal(long rowId, long id, Player playerFrom, Player playerTo, String dateExpired, String dateAdded, DealState status, long amount, String type, Place venue) {
         this(id, playerFrom, playerTo, dateExpired, dateAdded, status, amount, type, venue);
         mRowId = rowId;
     }
@@ -51,7 +51,7 @@ public class Deal implements Resource{
         final long id = jsonObject.optLong("id");
         final String dateExpired = jsonObject.optString("date_expired");
         final String dateAdded = jsonObject.optString("date_added");
-        final String status = jsonObject.optString("status");
+        final DealState status = DealState.valueOf(jsonObject.optString("status").toUpperCase());
         final long amount = jsonObject.optLong("amount");
         final String type = jsonObject.optString("type");
         final Place venue = Place.fromJSONObject(venueJSONObject);
@@ -120,7 +120,7 @@ public class Deal implements Resource{
 
         String dateExpired = row.getString(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_DATE_EXPIRED));
         String dateAdded = row.getString(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_DATE_ADDED));
-        String status = row.getString(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_STATUS));
+        DealState status = DealState.valueOf(row.getString(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_STATUS)).toUpperCase());
         long amount = row.getLong(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_AMOUNT));
         String type = row.getString(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_TYPE));
         return new Deal(rowId, id, playerFrom, playerTo, dateExpired, dateAdded, status, amount, type, venue);
@@ -138,7 +138,7 @@ public class Deal implements Resource{
         contentValues.put(BuyPlacesContract.Deals.COLUMN_PLAYER_TO, playerToRowId);
         contentValues.put(BuyPlacesContract.Deals.COLUMN_DATE_EXPIRED, mDateExpired);
         contentValues.put(BuyPlacesContract.Deals.COLUMN_DATE_ADDED, mDateAdded);
-        contentValues.put(BuyPlacesContract.Deals.COLUMN_STATUS, mStatus);
+        contentValues.put(BuyPlacesContract.Deals.COLUMN_STATUS, mStatus.toString());
         contentValues.put(BuyPlacesContract.Deals.COLUMN_AMOUNT, mAmount);
         contentValues.put(BuyPlacesContract.Deals.COLUMN_TYPE, mType);
         contentValues.put(BuyPlacesContract.Deals.COLUMN_VENUE, venueRowId);
@@ -166,5 +166,31 @@ public class Deal implements Resource{
 
     public Player getPlayerTo() {
         return mPlayerTo;
+    }
+
+    public DealState getState() {
+        return mStatus;
+    }
+
+    public long getRowId() {
+        return mRowId;
+    }
+
+    public long getId() {
+        return mId;
+    }
+
+    public enum DealType {
+        INCOMING,
+        OUTGOING,
+        ILLEGAL_STATE
+    }
+
+    public enum DealState {
+        COMPLETED,
+        UNCOMPLETED,
+        REJECTED,
+        REVOKED,
+        ILLEGAL_STATE
     }
 }

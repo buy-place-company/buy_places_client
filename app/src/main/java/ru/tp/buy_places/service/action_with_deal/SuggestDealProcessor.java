@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import ru.tp.buy_places.service.BuyItService;
 import ru.tp.buy_places.service.Processor;
 import ru.tp.buy_places.service.network.Request;
 import ru.tp.buy_places.service.network.Response;
@@ -15,18 +14,17 @@ import ru.tp.buy_places.service.resourses.Deal;
 import ru.tp.buy_places.service.resourses.Resource;
 
 /**
- * Created by Ivan on 16.07.2015.
+ * Created by Ivan on 20.07.2015.
  */
-public class ActionWithDealProcessor extends Processor {
-
+public class SuggestDealProcessor extends Processor {
     private static final String KEY_DEAL = "KEY_DEAL";
-    private final BuyItService.DealAction mDealAction;
-    private final long mId;
+    private final String mVenueId;
+    private final long mAmount;
 
-    protected ActionWithDealProcessor(Context context, OnProcessorResultListener listener, BuyItService.DealAction dealAction, long id) {
+    public SuggestDealProcessor(Context context, OnProcessorResultListener listener, String venueId, long amount) {
         super(context, listener);
-        mDealAction = dealAction;
-        mId = id;
+        mVenueId = venueId;
+        mAmount = amount;
     }
 
     @Override
@@ -38,14 +36,14 @@ public class ActionWithDealProcessor extends Processor {
         Map<String, Resource> data = new HashMap<>();
         data.put(KEY_DEAL, deal);
         return new Response(status, message, data);
-
     }
 
     @Override
     protected Request prepareRequest() {
         Map<String, String> params = new HashMap<>();
-        params.put("deal_id", Long.toString(mId));
-        return new Request(mContext, "/deals" + mDealAction.toPath(), Request.RequestMethod.POST, params);
+        params.put("venue_id", mVenueId);
+        params.put("amount", Long.toString(mAmount));
+        return new Request(mContext, "/deals/new", Request.RequestMethod.POST, params);
     }
 
     @Override

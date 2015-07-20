@@ -429,7 +429,7 @@ public final class BuyPlacesContract {
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.buy_places." + TABLE_NAME;
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.buy_places." + TABLE_NAME;
         public static final String WITH_SPECIFIED_ID_SELECTION = TABLE_NAME + "." + COLUMN_ID +"=?";
-        public static final String WITH_SPECIFIED_ROW_ID_SELECTION = _ID + "=?";
+        public static final String WITH_SPECIFIED_ROW_ID_SELECTION = TABLE_NAME + "." + _ID + "=?";
 
 
 

@@ -67,10 +67,4 @@ public class DealsFragment extends Fragment {
         super.onStop();
         mAppBarLayout.removeView(mTabLayout);
     }
-
-
-    enum DealsFragmentType {
-        INCOMING,
-        OUTGOING
-    }
 }

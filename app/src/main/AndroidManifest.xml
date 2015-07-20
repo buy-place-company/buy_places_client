@@ -52,13 +52,12 @@
             android:name=".service.BuyItService"
             android:exported="false"/>
 
-        <service
-            android:name=".common_data_service.SharedDataService"
-            android:exported="false"/>
-
         <activity
             android:name=".activities.PlaceActivity"
             android:label="@string/title_activity_object"/>
+
+        <activity android:name=".activities.DealActivity"/>
+
         <activity
             android:name=".activities.UserActivity"
             android:label="label"/>

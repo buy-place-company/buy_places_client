@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/layout_nobody_place">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Принять"
+        android:id="@+id/button_accept_deal"
+        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Отклонить"
+        android:id="@+id/button_reject_deal"
+        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/button_accept_deal" />
+</RelativeLayout>

@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
 
+import ru.tp.buy_places.service.resourses.Deal;
+
 /**
  * Created by Ivan on 07.04.2015.
  */
@@ -17,9 +19,9 @@ public class DealsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int i) {
         switch (i) {
             case 0:
-                return OutboxDealsFragment.newInstance(DealsFragment.DealsFragmentType.INCOMING);
+                return OutboxDealsFragment.newInstance(Deal.DealType.INCOMING);
             case 1:
-                return OutboxDealsFragment.newInstance(DealsFragment.DealsFragmentType.OUTGOING);
+                return OutboxDealsFragment.newInstance(Deal.DealType.OUTGOING);
             default:
                 throw new IllegalStateException();
         }

@@ -8,6 +8,8 @@ import android.os.ResultReceiver;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import ru.tp.buy_places.service.action_with_deal.ActionWithDealProcessorCreator;
+import ru.tp.buy_places.service.action_with_deal.SuggestDealProcessorCreator;
 import ru.tp.buy_places.service.action_with_place.ActionWithPlaceProcessorCreator;
 import ru.tp.buy_places.service.authentication.AuthenticationProcessor;
 import ru.tp.buy_places.service.authentication.AuthenticationProcessorCreator;
@@ -28,12 +30,14 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
     private static final String EXTRA_POSITION = "EXTRA_POSITION";
     private static final String EXTRA_OBJECTS_REQUEST_MODE = "EXTRA_OBJECTS_REQUEST_MODE";
     private static final String EXTRA_ACTION_WITH_OBJECT = "EXTRA_ACTION_WITH_OBJECT";
+    private static final String EXTRA_DEAL_ACTION = "EXTRA_DEAL_ACTION";
     private static final String EXTRA_OBJECT_ID = "EXTRA_OBJECT_ID";
     private static final String EXTRA_CODE = "EXTRA_CODE";
 
     private static final int REQUEST_INVALID = -1;
     public static final String EXTRA_ID = "EXTRA_ID";
     public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
+    private static final String EXTRA_AMOUNT = "EXTRA_AMOUNT";
     private Intent mOriginalRequestIntent;
     private ResultReceiver mCallback;
 
@@ -45,7 +49,7 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
     private static final String ACTION_GET_OBJECTS = "ru.mail.buy_it.service.ACTION_GET_NEAREST_PLACES";
     private static final String ACTION_POST_OBJECT = "ru.mail.buy_it.service.ACTION_POST_OBJECT";
     private static final String ACTION_AUTHENTICATE = "ru.mail.buy_it.service.ACTION_AUTHENTICATE";
-
+    private static final String ACTION_DEAL = "ru.mail.buy_it.service.ACTION_DEAL";
     private static final String ACTION_GET_PROFILE = "ru.mail.buy_it.service.ACTION_GET_PROFILE";
     private static final String ACTION_GET_USERS = "ru.mail.buy_it.service.ACTION_GET_USERS";
     private static final String ACTION_GET_DEALS = "ru.mail.buy_it.service.ACTION_GET_DEALS";
@@ -137,6 +141,42 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         context.startService(intent);
     }
 
+    public static void startAcceptDealService(Context context, ResultReceiver serviceCallback, long requestId, long id) {
+        Intent intent = new Intent(ACTION_DEAL, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        intent.putExtra(EXTRA_ID, id);
+        intent.putExtra(EXTRA_DEAL_ACTION, DealAction.ACCEPT);
+        context.startService(intent);
+    }
+
+    public static void startSuggestDealService(Context context, ResultReceiver serviceCallback, long requestId, String venueId, long amount) {
+        Intent intent = new Intent(ACTION_SUGGEST_DEAL, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        intent.putExtra(EXTRA_ID, venueId);
+        intent.putExtra(EXTRA_AMOUNT, amount);
+        context.startService(intent);
+    }
+
+    public static void startRejectDealService(Context context, ResultReceiver serviceCallback, long requestId, long id) {
+        Intent intent = new Intent(ACTION_DEAL, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        intent.putExtra(EXTRA_ID, id);
+        intent.putExtra(EXTRA_DEAL_ACTION, DealAction.REJECT);
+        context.startService(intent);
+    }
+
+    public static void startRevokeDealService(Context context, ResultReceiver serviceCallback, long requestId, long id) {
+        Intent intent = new Intent(ACTION_DEAL, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        intent.putExtra(EXTRA_ID, id);
+        intent.putExtra(EXTRA_DEAL_ACTION, DealAction.REVOKE);
+        context.startService(intent);
+    }
+
     public static void startGetDealsService(Context context, ResultReceiver serviceCallback, long requestId) {
         Intent intent = new Intent(ACTION_GET_DEALS, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
@@ -165,6 +205,18 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
                     }
                 }, code).createProcessor();
                 authenticationProcessor.process();
+                break;
+            case ACTION_DEAL:
+                final long dealId = intent.getLongExtra(EXTRA_ID, 0);
+                final DealAction dealAction = (DealAction) intent.getSerializableExtra(EXTRA_DEAL_ACTION);
+                Processor dealProcessor = new ActionWithDealProcessorCreator(this, this, dealAction, dealId).createProcessor();
+                dealProcessor.process();
+                break;
+            case ACTION_SUGGEST_DEAL:
+                final String venueId = intent.getStringExtra(EXTRA_ID);
+                final long amount = intent.getLongExtra(EXTRA_AMOUNT, 0);
+                Processor suggestDealProcessor = new SuggestDealProcessorCreator(this, this, venueId, amount).createProcessor();
+                suggestDealProcessor.process();
                 break;
             case ACTION_GET_OBJECTS:
                 final LatLng position = intent.getParcelableExtra(EXTRA_POSITION);
@@ -208,7 +260,6 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
     }
 
 
-
     public enum ObjectsRequestMode {
         AROUND_THE_PLAYER,
         AROUND_THE_POINT,
@@ -222,10 +273,24 @@ public class BuyItService extends IntentService implements Processor.OnProcessor
         COLLECT_LOOT
     }
 
-    public enum ActionWithDeal {
+    public enum DealAction {
         SUGGEST,
         ACCEPT,
         REJECT,
-        CANCEL
+        REVOKE;
+
+        public String toPath() {
+            switch (this) {
+                case SUGGEST:
+                    return "/new";
+                case ACCEPT:
+                    return "/accept";
+                case REJECT:
+                case REVOKE:
+                    return "/cancel";
+                default:
+                    throw new IllegalStateException();
+            }
+        }
     }
 }

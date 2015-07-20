@@ -121,6 +121,104 @@ public class ServiceHelper {
         return requestId;
     }
 
+    public long acceptDeal(long id) {
+        long requestId = mRequestIdGenerator.incrementAndGet();
+        ResultReceiver serviceCallback = new ResultReceiver(null) {
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                handleAcceptDealResponse(resultCode, resultData);
+            }
+        };
+        BuyItService.startAcceptDealService(mContext, serviceCallback, requestId, id);
+        return requestId;
+    }
+
+    public long rejectDeal(long id) {
+        long requestId = mRequestIdGenerator.incrementAndGet();
+        ResultReceiver serviceCallback = new ResultReceiver(null) {
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                handleRejectDealResponse(resultCode, resultData);
+            }
+        };
+        BuyItService.startRejectDealService(mContext, serviceCallback, requestId, id);
+        return requestId;
+    }
+
+    public long suggestDeal(String venueId, long amount) {
+        long requestId = mRequestIdGenerator.incrementAndGet();
+        ResultReceiver serviceCallback = new ResultReceiver(null) {
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                handleSuggestDealResponse(resultCode, resultData);
+            }
+        };
+        BuyItService.startSuggestDealService(mContext, serviceCallback, requestId, venueId, amount);
+        return requestId;
+    }
+
+    public long revokeDeal(long id) {
+        long requestId = mRequestIdGenerator.incrementAndGet();
+        ResultReceiver serviceCallback = new ResultReceiver(null) {
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                handleSuggestDealResponse(resultCode, resultData);
+            }
+        };
+        BuyItService.startRevokeDealService(mContext, serviceCallback, requestId, id);
+        return requestId;
+    }
+
+    private void handleAcceptDealResponse(int resultCode, Bundle resultData) {
+        Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
+        if (originalRequestIntent != null) {
+            long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
+            mPendingRequests.remove(VENUES);
+            Intent result = new Intent(ACTION_REQUEST_RESULT);
+            result.putExtra(EXTRA_REQUEST_ID, requestId);
+            result.putExtra(EXTRA_RESULT_CODE, resultCode);
+            mContext.sendBroadcast(result);
+        }
+    }
+
+    private void handleRejectDealResponse(int resultCode, Bundle resultData) {
+        Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
+        if (originalRequestIntent != null) {
+            long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
+            mPendingRequests.remove(VENUES);
+            Intent result = new Intent(ACTION_REQUEST_RESULT);
+            result.putExtra(EXTRA_REQUEST_ID, requestId);
+            result.putExtra(EXTRA_RESULT_CODE, resultCode);
+            mContext.sendBroadcast(result);
+        }
+    }
+
+    private void handleSuggestDealResponse(int resultCode, Bundle resultData) {
+        Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
+        if (originalRequestIntent != null) {
+            long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
+            mPendingRequests.remove(VENUES);
+            Intent result = new Intent(ACTION_REQUEST_RESULT);
+            result.putExtra(EXTRA_REQUEST_ID, requestId);
+            result.putExtra(EXTRA_RESULT_CODE, resultCode);
+            mContext.sendBroadcast(result);
+        }
+    }
+
+    private void handleRevokeDealResponse(int resultCode, Bundle resultData) {
+        Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
+        if (originalRequestIntent != null) {
+            long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
+            mPendingRequests.remove(VENUES);
+            Intent result = new Intent(ACTION_REQUEST_RESULT);
+            result.putExtra(EXTRA_REQUEST_ID, requestId);
+            result.putExtra(EXTRA_RESULT_CODE, resultCode);
+            mContext.sendBroadcast(result);
+        }
+    }
+
+
+
     public long sellPlace(String id) {
         long requestId = mRequestIdGenerator.incrementAndGet();
         mPendingRequests.put(VENUES, requestId);
@@ -200,18 +298,6 @@ public class ServiceHelper {
             result.putExtra(EXTRA_RESULT_CODE, resultCode);
             mContext.sendBroadcast(result);
         }
-    }
-
-    public long acceptDeal(long id) {
-        return 0;
-    }
-
-    public long rejectDeal(long id) {
-        return 0;
-    }
-
-    public long suggestDeal(String id) {
-        return 0;
     }
 
     private void handleUpgradePlaceResponse(int resultCode, Bundle resultData) {

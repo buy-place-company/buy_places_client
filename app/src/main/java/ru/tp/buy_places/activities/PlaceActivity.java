@@ -252,7 +252,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                 dialogBuilder.setTitle(DIALOG);
                 dialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        ServiceHelper.get(PlaceActivity.this).suggestDeal(mPlace.getId());
+                        ServiceHelper.get(PlaceActivity.this).suggestDeal(mPlace.getId(), 1000l);
                         Toast.makeText(PlaceActivity.this, "Запрос на заключение сделки отправлен", Toast.LENGTH_LONG).show();
                     }
                 });

@@ -1,12 +1,12 @@
 package ru.tp.buy_places.fragments.deals;
 
 
+import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,16 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.activities.DealActivity;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
+import ru.tp.buy_places.service.resourses.Deal;
 import ru.tp.buy_places.service.resourses.Deals;
 import ru.tp.buy_places.utils.AccountManagerHelper;
 
-public class OutboxDealsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class OutboxDealsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,DealsAdapter.OnItemClickListener {
     private static final String AGR_TYPE = "ARG_TYPE";
     private RecyclerView mRecycleView;
     private DealsAdapter mDealsAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private DealsFragment.DealsFragmentType mType;
+    private Deal.DealType mType;
 
     public OutboxDealsFragment() {
         // Required empty public constructor
@@ -32,11 +34,11 @@ public class OutboxDealsFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mType = (DealsFragment.DealsFragmentType) getArguments().getSerializable(AGR_TYPE);
-        mDealsAdapter = new DealsAdapter(getActivity(), mType);
+        mType = (Deal.DealType) getArguments().getSerializable(AGR_TYPE);
+        mDealsAdapter = new DealsAdapter(getActivity(), mType, this);
     }
 
-    public static Fragment newInstance(DealsFragment.DealsFragmentType type) {
+    public static Fragment newInstance(Deal.DealType type) {
         Fragment fragment = new OutboxDealsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(AGR_TYPE, type);
@@ -66,7 +68,7 @@ public class OutboxDealsFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        DealsFragment.DealsFragmentType type = (DealsFragment.DealsFragmentType) args.getSerializable(AGR_TYPE);
+        Deal.DealType type = (Deal.DealType) args.getSerializable(AGR_TYPE);
         long playerId = AccountManagerHelper.getPlayerId(getActivity());
         switch (type) {
             case INCOMING:
@@ -87,5 +89,11 @@ public class OutboxDealsFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        long dealRowId = mDealsAdapter.getItemId(position);
+        DealActivity.start(getActivity(), dealRowId);
     }
 }

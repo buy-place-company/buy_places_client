@@ -17,22 +17,19 @@ import ru.tp.buy_places.service.resourses.Deal;
  * Created by Ivan on 10.06.2015.
  */
 public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> {
-    private final DealsFragment.DealsFragmentType mType;
+    private final Deal.DealType mType;
     OnItemClickListener mItemClickListener;
     Context mContext;
     private List<Deal> mData = new ArrayList<>();
 
     public interface OnItemClickListener {
-        public void onItemClick(View view , int position);
+        void onItemClick(View view , int position);
     }
 
-    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
-        this.mItemClickListener = mItemClickListener;
-    }
-
-    public DealsAdapter(Context context, DealsFragment.DealsFragmentType type){
+    public DealsAdapter(Context context, Deal.DealType type, OnItemClickListener onItemClickListener){
         mContext = context;
         mType = type;
+        mItemClickListener = onItemClickListener;
     }
 
     public void setData(List<Deal> data){
@@ -56,7 +53,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
         @Override
         public void onClick(View view) {
             if(mItemClickListener != null){
-                mItemClickListener.onItemClick(view, getPosition());
+                mItemClickListener.onItemClick(view, getAdapterPosition());
             }
 
         }
@@ -84,12 +81,12 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
     }
 
     @Override
-    public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+    public int getItemCount() {
+        return mData.size();
     }
 
     @Override
-    public int getItemCount() {
-        return mData.size();
+    public long getItemId(int position) {
+        return mData.get(position).getRowId();
     }
 }
