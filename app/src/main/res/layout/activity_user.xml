@@ -60,10 +60,9 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:id="@+id/text_view_user_name"
                 android:text="Юзернейм"
-                android:layout_below="@+id/tv_level"
-                android:layout_toEndOf="@+id/image_view_user"
-                android:layout_marginStart="40dp"
-                android:layout_marginBottom="5dp" />
+                android:layout_marginStart="39dp"
+                android:layout_alignBottom="@+id/tv_level"
+                android:layout_toEndOf="@+id/image_view_user" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -83,6 +82,54 @@
                 android:layout_alignTop="@+id/tv_score"
                 android:layout_toEndOf="@+id/tv_score"
                 android:layout_marginLeft="5dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/image_view_user"
+                android:layout_alignParentEnd="true">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/primary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+                        android:text="0"
+                        android:drawableLeft="@drawable/ic_home_white_24dp"
+                        android:id="@+id/tv_object_count"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@+id/tv_devider" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+                        android:text="/"
+                        android:id="@+id/tv_devider"
+                        android:gravity="center"
+                        android:layout_alignTop="@+id/tv_object_count"
+                        android:layout_centerHorizontal="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+                        android:text="5"
+                        android:id="@+id/tv_maxobject"
+                        android:layout_alignTop="@+id/tv_devider"
+                        android:layout_toEndOf="@+id/tv_devider" />
+                </RelativeLayout>
+                <FrameLayout
+                    android:id="@+id/content_venues"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
 
         </RelativeLayout>
         </RelativeLayout>
