@@ -41,6 +41,9 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
     private TextView userName;
     private TextView userVenueCount;
     private TextView userVenueMax;
+    private TextView userCash;
+    private TextView userLevel;
+
     private RecyclerView mInfoList;
     Fragment fragment;
 //    private VenueListAdapter mVenueListAdapter;
@@ -58,7 +61,9 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
         setContentView(R.layout.activity_user);
         userName = (TextView)findViewById(R.id.text_view_user_name);
         userVenueCount = (TextView)findViewById(R.id.tv_object_count);
-        userVenueCount = (TextView)findViewById(R.id.tv_maxobject);
+        userVenueMax = (TextView)findViewById(R.id.tv_maxobject);
+        userCash = (TextView)findViewById(R.id.tv_score);
+        userLevel = (TextView)findViewById(R.id.tv_level);
         Intent intent = getIntent();
         final long userId = intent.getLongExtra("EXTRA_USER_ID", -1);
         Bundle args = new Bundle();
@@ -113,7 +118,9 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
             if(mPlayer.getUsername() != null){
                 userName.setText(mPlayer.getUsername());
                 userVenueCount.setText(Integer.toString(mPlayer.getPlaces()));
-                userVenueCount.setText(Integer.toString(mPlayer.getMaxPlaces()));
+                userVenueMax.setText(Integer.toString(mPlayer.getMaxPlaces()));
+                userLevel.setText(Integer.toString(mPlayer.getLevel()));
+                userCash.setText(Long.toString(mPlayer.getCash()));
             }
         }
 
