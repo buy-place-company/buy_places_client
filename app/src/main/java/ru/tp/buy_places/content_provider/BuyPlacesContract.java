@@ -170,7 +170,8 @@ public final class BuyPlacesContract {
                 Players.COLUMN_FULL_SCORE + " AS " + Players.COLUMN_ALIAS_SCORE,
                 Players.COLUMN_FULL_CASH + " AS " + Players.COLUMN_ALIAS_CASH,
                 Players.COLUMN_FULL_PLACES + " AS " + Players.COLUMN_ALIAS_PLACES,
-                Players.COLUMN_FULL_MAX_PLACES + " AS " + Players.COLUMN_ALIAS_MAX_PLACES
+                Players.COLUMN_FULL_MAX_PLACES + " AS " + Players.COLUMN_ALIAS_MAX_PLACES,
+                Players.COLUMN_FULL_POSITION + " AS " + Players.COLUMN_ALIAS_POSITION
         };
 
 
@@ -202,6 +203,7 @@ public final class BuyPlacesContract {
         public static final String COLUMN_CASH = "cash";
         public static final String COLUMN_PLACES = "places";
         public static final String COLUMN_MAX_PLACES = "max_places";
+        public static final String COLUMN_POSITION = "position";
 
         public static final String COLUMN_FULL_ROW_ID = TABLE_NAME + "." + _ID;
         public static final String COLUMN_FULL_ID = TABLE_NAME + "." + COLUMN_ID;
@@ -212,6 +214,7 @@ public final class BuyPlacesContract {
         public static final String COLUMN_FULL_CASH = TABLE_NAME + "." + COLUMN_CASH;
         public static final String COLUMN_FULL_PLACES = TABLE_NAME + "." + COLUMN_PLACES;
         public static final String COLUMN_FULL_MAX_PLACES = TABLE_NAME + "." + COLUMN_MAX_PLACES;
+        public static final String COLUMN_FULL_POSITION = TABLE_NAME + "." + COLUMN_POSITION;
 
         public static final String COLUMN_ALIAS_ROW_ID = "players_row_id";
         public static final String COLUMN_ALIAS_ID = "players_id";
@@ -222,6 +225,7 @@ public final class BuyPlacesContract {
         public static final String COLUMN_ALIAS_CASH = "players_cash";
         public static final String COLUMN_ALIAS_PLACES = "players_places";
         public static final String COLUMN_ALIAS_MAX_PLACES = "players_max_places";
+        public static final String COLUMN_ALIAS_POSITION = "position";
 
         public static final String [] ALL_COLUMNS_PROJECTION = {
                 _ID,
@@ -232,7 +236,8 @@ public final class BuyPlacesContract {
                 COLUMN_SCORE,
                 COLUMN_CASH,
                 COLUMN_PLACES,
-                COLUMN_MAX_PLACES
+                COLUMN_MAX_PLACES,
+                COLUMN_POSITION
         };
 
         static final String SQL_CREATE = "CREATE TABLE " + TABLE_NAME + " (" +
@@ -244,12 +249,14 @@ public final class BuyPlacesContract {
                 COLUMN_SCORE + " INTEGER" + "," +
                 COLUMN_CASH + " INTEGER" + "," +
                 COLUMN_PLACES + " INTEGER" + "," +
-                COLUMN_MAX_PLACES + " INTEGER" + ");";
+                COLUMN_MAX_PLACES + " INTEGER" + "," +
+                COLUMN_POSITION + " INTEGER" + ");";
 
         static final String SQL_DROP = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
         public static final String WITH_SPECIFIED_ID_SELECTION = COLUMN_ID + "=?";
         public static final String WITH_SPECIFIED_ROW_ID_SELECTION = _ID + "=?";
+        public static final String WITH_LOW_POSITION_LIMIT_SELECTION = COLUMN_POSITION + ">?";
 
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, TABLE_NAME);
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.buy_places." + TABLE_NAME;

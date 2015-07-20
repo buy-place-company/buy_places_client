@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-import android.util.Log;
 
 import static ru.tp.buy_places.content_provider.BuyPlacesContract.AUTHORITY;
 import static ru.tp.buy_places.content_provider.BuyPlacesContract.Deals;
@@ -176,7 +175,7 @@ public class BuyPlacesContentProvider extends ContentProvider {
 
     private static final class DatabaseHelper extends SQLiteOpenHelper {
         private static final String DATABASE_NAME = "buy_places.db";
-        private static final int DATABASE_VERSION = 1;
+        private static final int DATABASE_VERSION = 2;
 
 
         public DatabaseHelper(Context context) {
@@ -199,19 +198,5 @@ public class BuyPlacesContentProvider extends ContentProvider {
             db.execSQL(Players.SQL_DROP);
             onCreate(db);
         }
-    }
-
-
-
-    public static void printPlacesTable(Context context){
-        Cursor cursor = context.getContentResolver().query(Places.CONTENT_URI, Places.ALL_COLUMNS_PROJECTION, null, null, null);
-        while (cursor.moveToNext()) {
-            long rowId = cursor.getLong(cursor.getColumnIndex(Places._ID));
-            String id = cursor.getString(cursor.getColumnIndex(Places.COLUMN_ID));
-            int isAroundThePoint = cursor.getInt(cursor.getColumnIndex(Places.COLUMN_IS_AROUND_THE_POINT));
-            int isAroundThePlayer = cursor.getInt(cursor.getColumnIndex(Places.COLUMN_IS_AROUND_THE_PLAYER));
-            Log.d("Places row", rowId + "\t" + id + "\t" + isAroundThePoint + "\t" + isAroundThePlayer + "\n");
-        }
-        cursor.close();
     }
 }

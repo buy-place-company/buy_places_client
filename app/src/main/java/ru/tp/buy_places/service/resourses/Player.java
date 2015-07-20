@@ -23,6 +23,8 @@ public class Player implements Resource {
     private final int mPlaces;
     private final int mMaxPlaces;
     private long mRowId;
+    private long mPosition;
+    private boolean mPositionIsSet;
 
     public long getId() {
         return mId;
@@ -95,7 +97,13 @@ public class Player implements Resource {
         long score = cursor.getLong(cursor.getColumnIndex(BuyPlacesContract.Players.COLUMN_SCORE));
         int places = cursor.getInt(cursor.getColumnIndex(BuyPlacesContract.Players.COLUMN_PLACES));
         int maxPlaces = cursor.getInt(cursor.getColumnIndex(BuyPlacesContract.Players.COLUMN_MAX_PLACES));
-        return new Player(rowId, id, username, level, avatar, cash, score, places, maxPlaces);
+        Player player = new Player(rowId, id, username, level, avatar, cash, score, places, maxPlaces);
+
+        if (!cursor.isNull(cursor.getColumnIndex(BuyPlacesContract.Players.COLUMN_POSITION))) {
+            long position = cursor.getLong(cursor.getColumnIndex(BuyPlacesContract.Players.COLUMN_POSITION));
+            player.setPosition(position);
+        }
+        return player;
     }
 
     public long writeToDatabase(Context context) {
@@ -108,6 +116,10 @@ public class Player implements Resource {
         values.put(BuyPlacesContract.Players.COLUMN_SCORE, mScore);
         values.put(BuyPlacesContract.Players.COLUMN_PLACES, mPlaces);
         values.put(BuyPlacesContract.Players.COLUMN_MAX_PLACES, mMaxPlaces);
+
+        if (mPositionIsSet) {
+            values.put(BuyPlacesContract.Players.COLUMN_POSITION, mPosition);
+        }
 
         long id;
 
@@ -125,5 +137,10 @@ public class Player implements Resource {
 
     public long getCash() {
         return mCash;
+    }
+
+    public void setPosition(long position) {
+        mPosition = position;
+        mPositionIsSet = true;
     }
 }

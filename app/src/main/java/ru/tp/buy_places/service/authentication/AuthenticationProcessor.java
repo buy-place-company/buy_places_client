@@ -10,7 +10,6 @@ import java.util.Map;
 import ru.tp.buy_places.service.Processor;
 import ru.tp.buy_places.service.network.Request;
 import ru.tp.buy_places.service.network.Response;
-import ru.tp.buy_places.service.network.UnknownErrorResponse;
 import ru.tp.buy_places.service.resourses.AuthenticationResult;
 import ru.tp.buy_places.service.resourses.Resource;
 
@@ -27,16 +26,11 @@ public class AuthenticationProcessor extends Processor {
 
     @Override
     protected Response parseResponseJSONObject(JSONObject responseJSONObject) {
-        if (responseJSONObject == null) {
-            return new UnknownErrorResponse();
-        }
         int status = responseJSONObject.optInt("code");
         String message = responseJSONObject.optString("message", null);
         Long id = responseJSONObject.optLong("id");
         String username = responseJSONObject.optString("name");
         AuthenticationResult result = new AuthenticationResult(id, username);
-//        JSONObject jsonObject = responseJSONObject.optJSONObject("user");
-//        Player result = Player.fromJSONObject(jsonObject);
         Map<String, Resource> data = new HashMap<>();
         data.put(KET_AUTHENTICATION_RESULT, result);
         return new Response(status, message, data);
@@ -56,13 +50,5 @@ public class AuthenticationProcessor extends Processor {
 
     @Override
     protected void updateContentProviderAfterExecutingRequest(Response response) {
-        //AuthenticationResult result = (AuthenticationResult) response.getData();
-        //long id = result.getId();
-        //String username = result.getUsername();
-
-//        Player player = (Player) response.getData();
-//        player.writeToDatabase(mContext);
-//        long id = player.getId();
-//        String username = player.getUsername();
     }
 }

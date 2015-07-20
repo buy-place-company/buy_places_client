@@ -190,7 +190,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 mClusterManager.onCameraChange(cameraPosition);
-                ServiceHelper.get(getActivity()).getPlacesAroundThePoint(cameraPosition.target);
+                ServiceHelper.get(getActivity()).getVenuesAroundThePoint(cameraPosition.target);
             }
         });
         mGoogleMap.getUiSettings().setMapToolbarEnabled(false);

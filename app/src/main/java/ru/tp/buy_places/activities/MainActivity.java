@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements
         args.putLong(KEY_PLAYER_ID, playerId);
         getLoaderManager().initLoader(PLAYER_LOADER_ID, args, this);
 
-        ServiceHelper.get(this).getMyPlaces();
+        ServiceHelper.get(this).getMyVenues();
     }
 
     @Override
@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLocationChanged(Location location) {
-        ServiceHelper.get(this).getPlacesAroundThePlayer(new LatLng(location.getLatitude(), location.getLongitude()));
+        ServiceHelper.get(this).getVenuesAroundThePlayer(new LatLng(location.getLatitude(), location.getLongitude()));
         notifyLocationChanged(location);
     }
 

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.authentication.BuyItAccount;
+import ru.tp.buy_places.service.ServiceHelper;
 
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -57,6 +58,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 try {
                     Bundle result = future.getResult();
                     result.toString();
+                    ServiceHelper.get(SplashScreenActivity.this).getProfile();
                     MainActivity.start(SplashScreenActivity.this);
                 } catch (Exception e) {
                     SplashScreenActivity.this.finish();

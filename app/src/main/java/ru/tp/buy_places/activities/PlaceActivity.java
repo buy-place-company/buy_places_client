@@ -223,7 +223,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                 dialogBuilder.setTitle(DIALOG);
                 dialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        ServiceHelper.get(PlaceActivity.this).buyPlace(mPlace.getId());
+                        ServiceHelper.get(PlaceActivity.this).buyVenue(mPlace.getId());
                         Toast.makeText(PlaceActivity.this, "Запрос на покупку отправлен", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -283,7 +283,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                 upgradeDialogBuilder.setTitle(DIALOG);
                 upgradeDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        ServiceHelper.get(PlaceActivity.this).upgradePlace(mPlace.getId());
+                        ServiceHelper.get(PlaceActivity.this).upgradeVenue(mPlace.getId());
                         Toast.makeText(PlaceActivity.this,
                                 "Здание повысилось до " + Integer.toString(mPlace.getLevel() + 1) + " уровня",
                                 Toast.LENGTH_LONG).show();
@@ -308,7 +308,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                 sellDialogBuilder.setTitle(DIALOG);
                 sellDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        ServiceHelper.get(PlaceActivity.this).sellPlace(mPlace.getId());
+                        ServiceHelper.get(PlaceActivity.this).sellVenue(mPlace.getId());
                         Toast.makeText(PlaceActivity.this, "Здание продано",
                                 Toast.LENGTH_LONG).show();
                         //PlaceActivity.this.finish();

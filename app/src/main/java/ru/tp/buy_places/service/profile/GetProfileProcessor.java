@@ -10,7 +10,6 @@ import java.util.Map;
 import ru.tp.buy_places.service.Processor;
 import ru.tp.buy_places.service.network.Request;
 import ru.tp.buy_places.service.network.Response;
-import ru.tp.buy_places.service.network.UnknownErrorResponse;
 import ru.tp.buy_places.service.resourses.Player;
 import ru.tp.buy_places.service.resourses.Resource;
 
@@ -27,9 +26,6 @@ public class GetProfileProcessor extends Processor {
 
     @Override
     protected Response parseResponseJSONObject(JSONObject responseJSONObject) {
-        if (responseJSONObject == null) {
-            return new UnknownErrorResponse();
-        }
         int status = responseJSONObject.optInt("status");
         String message = responseJSONObject.optString("message", null);
         JSONObject dataJSONArray = responseJSONObject.optJSONObject("user");

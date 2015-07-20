@@ -24,6 +24,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
     public static final String EXTRA_TOKEN_TYPE = "EXTRA_TOKEN_TYPE";
     private Button mLoginViaVKButton;
     private BroadcastReceiver mAuthenticationCompletedReceiver = new AuthenticationCompletedReceiver();
+    private long mAuthenticationRequestId;
 
 
     @Override
@@ -33,7 +34,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mAuthenticationCompletedReceiver, new IntentFilter(ServiceHelper.ACTION_REQUEST_RESULT));
-        mLoginViaVKButton = (Button)findViewById(R.id.button_login_via_vk);
+        mLoginViaVKButton = (Button) findViewById(R.id.button_login_via_vk);
         mLoginViaVKButton.setOnClickListener(this);
     }
 
@@ -59,7 +60,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
                 if (resultCode == RESULT_OK) {
                     String code = data.getStringExtra("EXTRA_CODE");
                     if (code != null) {
-                        ServiceHelper.get(this).authenticate(code);
+                        mAuthenticationRequestId = ServiceHelper.get(this).authenticate(code);
                     }
                 }
         }
@@ -69,24 +70,26 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            long id = intent.getLongExtra(BuyItService.EXTRA_ID, 0);
-            String username = intent.getStringExtra(BuyItService.EXTRA_USERNAME);
+            final long requestId = intent.getLongExtra(BuyItService.EXTRA_REQUEST_ID, 0);
+            if (mAuthenticationRequestId == requestId) {
+                long id = intent.getLongExtra(BuyItService.EXTRA_ID, 0);
+                String username = intent.getStringExtra(BuyItService.EXTRA_USERNAME);
 
-            AccountManager accountManager = AccountManager.get(context);
-            Account account = new BuyItAccount(username);
+                AccountManager accountManager = AccountManager.get(context);
+                Account account = new BuyItAccount(username);
 
-            Bundle result = new Bundle();
-            if (accountManager.addAccountExplicitly(account, null, null)) {
-                accountManager.setUserData(account, BuyItAccount.KEY_ID, Long.toString(id));
-                result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-                result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-                ServiceHelper.get(LoginActivity.this).getProfile();
-            } else {
-                result.putString(AccountManager.KEY_ERROR_MESSAGE, "Failed to add user");
+                Bundle result = new Bundle();
+                if (accountManager.addAccountExplicitly(account, null, null)) {
+                    accountManager.setUserData(account, BuyItAccount.KEY_ID, Long.toString(id));
+                    result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+                    result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+                } else {
+                    result.putString(AccountManager.KEY_ERROR_MESSAGE, "Failed to add user");
+                }
+                LoginActivity.this.setAccountAuthenticatorResult(result);
+                LoginActivity.this.setResult(RESULT_OK);
+                LoginActivity.this.finish();
             }
-            LoginActivity.this.setAccountAuthenticatorResult(result);
-            LoginActivity.this.setResult(RESULT_OK);
-            LoginActivity.this.finish();
         }
     }
 }

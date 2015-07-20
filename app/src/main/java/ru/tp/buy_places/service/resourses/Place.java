@@ -112,6 +112,10 @@ public class Place implements Resource {
             int ownersPlaces = row.getInt(row.getColumnIndex(BuyPlacesContract.Players.COLUMN_ALIAS_PLACES));
             int ownersMaxPlaces = row.getInt(row.getColumnIndex(BuyPlacesContract.Players.COLUMN_ALIAS_MAX_PLACES));
             owner = new Player(ownersRowId, ownersId, ownersUsername, ownersLevel, ownersAvatar, ownersCash, ownersScore, ownersPlaces, ownersMaxPlaces);
+            if (!row.isNull(row.getColumnIndex(BuyPlacesContract.Players.COLUMN_ALIAS_POSITION))) {
+                long position = row.getLong(row.getColumnIndex(BuyPlacesContract.Players.COLUMN_POSITION));
+                owner.setPosition(position);
+            }
         } else {
             owner = null;
         }
