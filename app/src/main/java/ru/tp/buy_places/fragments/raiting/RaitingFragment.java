@@ -61,8 +61,6 @@ public class RaitingFragment extends Fragment implements LoaderManager.LoaderCal
         getLoaderManager().initLoader(0,null, this);
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

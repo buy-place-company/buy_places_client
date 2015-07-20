@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="78dp"
+    android:background="@color/light_primary">
+
+    <TextView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="1"
+        android:id="@+id/tv_userplace"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="16dp"
+        android:gravity="center" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/iv_userphoto"
+        android:src="@mipmap/ava"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="46dp"
+        android:layout_alignTop="@+id/tv_userplace"
+        android:layout_toEndOf="@+id/tv_userplace" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/tv_username"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/iv_userphoto" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/score_message"
+        android:id="@+id/tv_price"
+        android:layout_below="@+id/tv_username"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/iv_userphoto"
+
+        android:gravity="center_vertical"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/dollar_message"
+        android:id="@+id/textView2"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@+id/tv_username"
+        android:layout_toEndOf="@+id/tv_price" />
+
+    </RelativeLayout>

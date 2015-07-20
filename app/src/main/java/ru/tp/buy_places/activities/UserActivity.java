@@ -9,24 +9,23 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
+
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.resourses.Player;
 
 public class UserActivity extends AppCompatActivity implements  LoaderManager.LoaderCallbacks<Cursor> {
-    private MapView mMapView;
+
     private Player mPlayer;
     private TextView userName;
-
     private static final int USER_LOADER_ID = 0;
     private static final String EXTRA_USER_ID = "EXTRA_USER_ID";
 
@@ -41,6 +40,9 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
         args.putLong(EXTRA_USER_ID, userId);
         getSupportLoaderManager().initLoader(USER_LOADER_ID, args, this);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+           if (toolbar != null)
+              setSupportActionBar(toolbar);
     }
 
 

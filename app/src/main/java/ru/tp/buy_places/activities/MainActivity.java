@@ -143,6 +143,9 @@ public class MainActivity extends AppCompatActivity implements
         Fragment fragment = getFragmentManager().findFragmentByTag(page.name());
         if (fragment == null) {
             switch (page) {
+                case USER:
+                    Intent intent = new Intent(this, UserActivity.class);
+                    startActivity(intent);
                 case MAP:
                     fragment = new MapFragment();
                     break;
@@ -172,6 +175,9 @@ public class MainActivity extends AppCompatActivity implements
         menuItem.setChecked(true);
 
         switch (menuItem.getItemId()) {
+            case R.id.tv_userphoto:
+                showPage(Page.USER);
+                break;
             case R.id.navigation_map:
                 showPage(Page.MAP);
                 break;
@@ -261,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public enum Page {
         MAP,
+        USER,
         MY_OBJECTS,
         DEALS,
         RATING,

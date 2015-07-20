@@ -10,15 +10,25 @@
         android:orientation="vertical">
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
+            android:background="@color/primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            />
-
+            android:minHeight="?attr/actionBarSize"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context="ru.tp.buy_places.fragments.objects.ObjectFragment"
-            android:background="@drawable/nabrosok">
+            android:background="@drawable/nabrosok"
+            android:alpha="0.5">
+            </RelativeLayout>
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="ru.tp.buy_places.fragments.objects.ObjectFragment"
+            >
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="170dp"
@@ -27,7 +37,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="38dp"
                 android:id="@+id/image_view_user"
-                android:src="@mipmap/ava" />
+                android:src="@mipmap/ava"
+                android:alpha="1" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -74,7 +85,7 @@
                 android:layout_marginLeft="5dp" />
 
         </RelativeLayout>
-
+        </RelativeLayout>
     </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>
