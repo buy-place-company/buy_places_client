@@ -27,7 +27,10 @@
 
     <style name="ActionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:background">?attr/colorPrimary</item>
+    </style>
 
+    <style name="TransparentActionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@android:color/transparent</item>
     </style>
     
     <style name="TransparentActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -46,5 +49,10 @@
     <style name="TabLayoutStyle.TextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textColor">?android:textColorSecondaryInverse</item>
         <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Giant.Colored" parent="@style/TextAppearance.AppCompat.Inverse">
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
     </style>
 </resources>

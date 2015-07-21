@@ -22,12 +22,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.SimpleSectionedRecyclerViewAdapter;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.ServiceHelper;
 import ru.tp.buy_places.service.resourses.Place;
@@ -147,13 +146,6 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_object, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -161,7 +153,8 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == android.R.id.home) {
+            onBackPressed();
             return true;
         }
 
@@ -181,23 +174,55 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
         Log.d(LOG_TAG, "onLoadFinished(); data.getCount(): " + data.getCount());
         if (data.moveToFirst()) {
             mPlace = Place.fromCursor(data);
-            //mVenueView.getNameTextView().setText(mPlace.getName());
-            //if (mPlace.getOwner() != null)
-            //    mVenueView.getOwnerTextView().setText(mPlace.getOwner().getUsername());
-            //mVenueView.getLevelTextView().setText(Integer.toString(mPlace.getLevel()));
-            ///mVenueView.getPriceTextView().setText(Long.toString(mPlace.getPrice()));
-            //mVenueView.getCheckinTextView().setText(Long.toString(mPlace.getCheckinsCount()));
             mCollapsingToolbarLayout.setTitle(mPlace.getName());
+            int commonHeaderPositionBasePosition = 0;
+            int statisticsHeaderPositionBasePosition = commonHeaderPositionBasePosition;
             List<InfoItem> infoItems = new ArrayList<>();
-            if (mPlace.getPrice() != null)
+            if (mPlace.getPrice() != null) {
                 infoItems.add(new InfoItem(getString(R.string.statistics_price), InfoType.PRICE, Long.toString(mPlace.getPrice())));
-            if (mPlace.getExpense() != null)
-                infoItems.add(new InfoItem(getString(R.string.statistics_outcome), InfoType.PRICE, Long.toString(mPlace.getExpense())));
-            if (mPlace.getIncome() != null)
+                statisticsHeaderPositionBasePosition++;
+            }
+            if (mPlace.getCheckinsCount() > 0) {
+                infoItems.add(new InfoItem(getString(R.string.statistics_checkins), InfoType.CHECKINS, Long.toString(mPlace.getCheckinsCount())));
+                statisticsHeaderPositionBasePosition++;
+            }
+            if (mPlace.getOwner() != null) {
+                infoItems.add(new InfoItem(getString(R.string.statistics_owner), InfoType.PLAYER, mPlace.getOwner().getUsername()));
+                statisticsHeaderPositionBasePosition++;
+            }
+            if (mPlace.getLevel() >= 0) {
+                infoItems.add(new InfoItem(getString(R.string.statistics_level), InfoType.LEVEL, String.valueOf(mPlace.getLevel())));
+                statisticsHeaderPositionBasePosition++;
+            }
+            if (mPlace.getIncome() != null) {
                 infoItems.add(new InfoItem(getString(R.string.statistics_income), InfoType.PRICE, Long.toString(mPlace.getIncome())));
-            if (mPlace.getIncome() != null && mPlace.getExpense() != null)
+            }
+            if (mPlace.getExpense() != null) {
+                infoItems.add(new InfoItem(getString(R.string.statistics_outcome), InfoType.PRICE, Long.toString(mPlace.getExpense())));
+            }
+            if (mPlace.getIncome() != null && mPlace.getExpense() != null) {
                 infoItems.add(new InfoItem(getString(R.string.statistics_profit), InfoType.PRICE, Long.toString(mPlace.getIncome() - mPlace.getExpense())));
+            }
             mVenueInfoListAdapter.setInfoItems(infoItems);
+
+
+            //This is the code to provide a sectioned list
+            List<SimpleSectionedRecyclerViewAdapter.Section> sections = new ArrayList<>();
+
+            //Sections
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(commonHeaderPositionBasePosition, getString(R.string.venue_info_common)));
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(statisticsHeaderPositionBasePosition, getString(R.string.venue_info_stats)));
+            //Add your adapter to the sectionAdapter
+            SimpleSectionedRecyclerViewAdapter.Section[] dummy = new SimpleSectionedRecyclerViewAdapter.Section[sections.size()];
+            SimpleSectionedRecyclerViewAdapter mSectionedAdapter = new
+                    SimpleSectionedRecyclerViewAdapter(this,R.layout.section,R.id.section_text,mVenueInfoListAdapter);
+            mSectionedAdapter.setSections(sections.toArray(dummy));
+
+            //Apply this adapter to the RecyclerView
+            mInfoList.setAdapter(mSectionedAdapter);
+
+
+
             LayoutInflater inflater = LayoutInflater.from(this);
             mVenueType = mPlace.isInOwnership() ? VenueType.MINE : mPlace.getOwner() == null ? VenueType.NOBODYS : VenueType.ANOTHERS;
             mVenueView.getButtonsContainerLayout().removeAllViews();
@@ -221,7 +246,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
 
     private void setNobodysVenueButtonsOnClickListeners(View nobodysVenueButtons) {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        Button buyVenueButton = (Button) nobodysVenueButtons.findViewById(R.id.button_buy_place);
+        FloatingActionButton buyVenueButton = (FloatingActionButton) nobodysVenueButtons.findViewById(R.id.button_buy_place);
         buyVenueButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -250,7 +275,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
 
     private void setAnothersVenueButtonsOnClickListeners(View anothersVenueButtons) {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        Button repurchaseVenueButton = (Button) anothersVenueButtons.findViewById(R.id.button_rebuy_place);
+        FloatingActionButton repurchaseVenueButton = (FloatingActionButton) anothersVenueButtons.findViewById(R.id.button_rebuy_place);
         repurchaseVenueButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -365,9 +390,9 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
         }
     }
 
-    private class InfoItem {
+    public class InfoItem {
         private String mKey;
-        private InfoType mType;
+        public InfoType mType;
         private String mValue;
 
         public InfoItem(String key, InfoType type, String value) {
@@ -396,14 +421,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
 
         @Override
         public VenueInfoListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v;
-            switch (InfoType.values()[viewType]) {
-                case PRICE:
-                    v = LayoutInflater.from(mContext).inflate(R.layout.item_venues_price_info, parent, false);
-                    break;
-                default:
-                    throw new IllegalStateException();
-            }
+            View v = LayoutInflater.from(mContext).inflate(R.layout.item_venues_price_info, parent, false);
             return new ViewHolder(v);
         }
 
@@ -411,6 +429,20 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
         public void onBindViewHolder(VenueInfoListAdapter.ViewHolder holder, int position) {
             holder.venueInfoKey.setText(mInfoItems.get(position).getKey());
             holder.venueInfoValue.setText(mInfoItems.get(position).getValue());
+            switch (mInfoItems.get(position).mType) {
+                case PRICE:
+                    holder.venueInfoValue.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cash_usd_grey600_18dp, 0, 0, 0);
+                    break;
+                case CHECKINS:
+                    holder.venueInfoValue.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_foursquare_grey600_18dp, 0, 0, 0);
+                    break;
+                case PLAYER:
+                    holder.venueInfoValue.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_grey600_18dp, 0, 0, 0);
+                    break;
+                case LEVEL:
+                    holder.venueInfoValue.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_crown_grey600_18dp, 0, 0, 0);
+                    break;
+            }
         }
 
         @Override
@@ -437,7 +469,10 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
         }
     }
 
-    private enum InfoType {
-        PRICE
+    public enum InfoType {
+        PRICE,
+        CHECKINS,
+        PLAYER,
+        LEVEL
     }
 }

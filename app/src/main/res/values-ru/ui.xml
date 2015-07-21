@@ -10,6 +10,9 @@
     <string name="statistics_outcome">Расходы</string>
     <string name="statistics_income">Доходы</string>
     <string name="statistics_profit">Прибыль</string>
+    <string name="statistics_owner">Владелец</string>
+    <string name="statistics_checkins">Чекины</string>
+    <string name="statistics_level">Уровень</string>
 
     <string name="dialog_positive_button_title">Да</string>
     <string name="dialog_negative_button_title">Нет</string>
@@ -32,5 +35,9 @@
     <string name="price_label_message">Цена:</string>
     <string name="price_message">1000</string>
     <string name="divider_message">km</string>
+
+
+    <string name="venue_info_common">Общее</string>
+    <string name="venue_info_stats">Статистика</string>
 
 </resources>

@@ -10,6 +10,9 @@
     <string name="statistics_outcome">Outcome</string>
     <string name="statistics_income">Income</string>
     <string name="statistics_profit">Profit</string>
+    <string name="statistics_owner">Owner</string>
+    <string name="statistics_checkins">Checkins</string>
+    <string name="statistics_level">Level</string>
 
     <string name="dialog_positive_button_title">Yes</string>
     <string name="dialog_negative_button_title">No</string>
@@ -24,6 +27,8 @@
 
     <string name="menu_settings">Settings</string>
 
+    <string name="venue_info_common">Common</string>
+    <string name="venue_info_stats">Statistics</string>
 
 
 

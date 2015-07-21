@@ -18,7 +18,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/ActionBarPopupTheme"
-                app:theme="@style/ActionBarTheme" />
+                android:theme="@style/ActionBarTheme" />
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout

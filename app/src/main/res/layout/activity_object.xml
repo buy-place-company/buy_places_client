@@ -17,8 +17,10 @@
             android:layout_height="240dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginStart="48dp"
-            app:expandedTitleMarginEnd="64dp">
+            app:expandedTitleMarginStart="16dp"
+            app:expandedTitleMarginEnd="16dp"
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Giant.Colored"
+            android:theme="@style/TransparentActionBarTheme">
             <FrameLayout
                 android:id="@+id/map_container"
                 android:layout_width="match_parent"

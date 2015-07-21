@@ -20,7 +20,7 @@
         app:fabSize="mini"
         android:id="@+id/button_sell_place"
         android:src="@drawable/ic_currency_usd_white_18dp"
-        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
         android:layout_toStartOf="@+id/button_upgrade_place" />
 
 </RelativeLayout>
