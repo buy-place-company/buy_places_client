@@ -8,5 +8,5 @@
         android:layout_height="48dp"
         android:id="@+id/imageView"
         android:layout_gravity="left|top"
-        android:src="@drawable/iconmarker" />
+        android:src="@drawable/marker1" />
 </FrameLayout>

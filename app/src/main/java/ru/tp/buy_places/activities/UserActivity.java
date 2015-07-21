@@ -121,6 +121,7 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
                 userVenueMax.setText(Integer.toString(mPlayer.getMaxPlaces()));
                 userLevel.setText(Integer.toString(mPlayer.getLevel()));
                 userCash.setText(Long.toString(mPlayer.getCash()));
+
             }
         }
 

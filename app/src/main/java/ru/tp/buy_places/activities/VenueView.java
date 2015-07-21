@@ -16,6 +16,25 @@ public class VenueView {
     private TextView mOwnerTextView;
     private TextView mLevelTextView;
     private TextView mNameTextView;
+    private TextView mPriceTextView;
+    private TextView mCheckinTextView;
+
+    public TextView getCheckinTextView() {
+        return mCheckinTextView;
+    }
+
+    public void setCheckinTextView(TextView mCheckinTextView) {
+        this.mCheckinTextView = mCheckinTextView;
+    }
+
+    public TextView getPriceTextView() {
+        return mPriceTextView;
+    }
+
+    public void setPriceTextView(TextView mPriceTextView) {
+        this.mPriceTextView = mPriceTextView;
+    }
+
     private FrameLayout mButtonsContainerLayout;
 
     public VenueView(Context context) {

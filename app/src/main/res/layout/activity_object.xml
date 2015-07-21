@@ -31,7 +31,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="80dp"
-            android:background="?attr/colorPrimary">
+            android:background="@drawable/shadow_rectangle"
+           >
 
             <ImageView
                 android:id="@+id/image_view_venues_icon"
@@ -66,23 +67,24 @@
 
             <TextView
                 android:id="@+id/text_view_venues_price"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
                 android:drawableLeft="@drawable/ic_cash_usd_white_18dp"
                 tools:ignore="RtlHardcoded"
                 android:layout_below="@+id/text_view_venues_name"
-                android:layout_toEndOf="@+id/image_view_venues_icon" />
+                android:layout_toEndOf="@+id/image_view_venues_icon"
+                android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+                android:layout_marginRight="10dp" />
 
             <TextView
                 android:id="@+id/text_view_venues_checkins_count"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_foursquare_white_18dp"
-                android:layout_marginEnd="16dp"
                 tools:ignore="RtlHardcoded"
-                android:layout_below="@+id/text_view_venues_price"
-                android:layout_toEndOf="@+id/image_view_venues_icon" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+                android:layout_below="@+id/text_view_venues_name"
+                android:layout_toEndOf="@+id/text_view_venues_price" />
         </RelativeLayout>
     </android.support.design.widget.AppBarLayout>
 
