@@ -46,6 +46,7 @@ public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHo
         public TextView mTitle;
         public TextView mLevel;
         public ImageView mIcon;
+        public TextView mCategory;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -53,6 +54,7 @@ public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHo
             mTitle = (TextView) itemView.findViewById(R.id.text_view_rating);
             mLevel = (TextView) itemView.findViewById(R.id.tv_level);
             mIcon = (ImageView) itemView.findViewById(R.id.image_view_rating);
+            mCategory = (TextView) itemView.findViewById(R.id.tv_category);
         }
 
         @Override
@@ -76,6 +78,7 @@ public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHo
             holder.mTitle.setText(mData.get(position).getName()); // Setting the Text with the array of our Titles
             holder.mIcon.setImageResource(R.mipmap.ic_object);
             holder.mLevel.setText(Integer.toString(mData.get(position).getLevel()));
+            holder.mCategory.setText(mData.get(position).getCategory());
         }
     }
 

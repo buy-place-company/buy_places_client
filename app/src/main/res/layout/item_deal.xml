@@ -15,17 +15,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_object" />
-
-    <TextView
-        android:id="@+id/text_view_venues_level"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/circle_background"
-        android:padding="4dp"
-        android:text="10"
-        android:layout_alignTop="@+id/image_view_venues_icon"
-        android:layout_alignStart="@+id/image_view_venues_icon" />
+        android:src="@mipmap/ic_deals" />
 
     <TextView
         android:layout_marginTop="16dp"
@@ -40,10 +30,12 @@
 
     <TextView
         android:id="@+id/text_view_deal_opponent"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         tools:ignore="RtlHardcoded"
         android:layout_below="@+id/text_view_venues_name"
         android:layout_toEndOf="@+id/image_view_venues_icon" />
+
+
 </RelativeLayout>
