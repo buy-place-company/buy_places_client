@@ -40,6 +40,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,6 +112,8 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
         mVenueView.setOwnerTextView((TextView) findViewById(R.id.text_view_owner));
         mVenueView.setLevelTextView((TextView) findViewById(R.id.text_view_venues_level));
         mVenueView.setButtonsContainerLayout((FrameLayout) findViewById(R.id.button_container));
+        mVenueView.setPriceTextView((TextView) findViewById(R.id.text_view_venues_price));
+        mVenueView.setCheckinTextView((TextView) findViewById(R.id.text_view_venues_checkins_count));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null)
@@ -181,6 +185,8 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
             if (mPlace.getOwner() != null)
                 mVenueView.getOwnerTextView().setText(mPlace.getOwner().getUsername());
             mVenueView.getLevelTextView().setText(Integer.toString(mPlace.getLevel()));
+            mVenueView.getPriceTextView().setText(Long.toString(mPlace.getPrice()));
+            mVenueView.getCheckinTextView().setText(Long.toString(mPlace.getCheckinsCount()));
 
             List<InfoItem> infoItems = new ArrayList<>();
             if (mPlace.getPrice() != null)
