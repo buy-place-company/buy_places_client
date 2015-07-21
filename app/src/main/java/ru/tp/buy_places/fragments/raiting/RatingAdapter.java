@@ -81,7 +81,7 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
         if(mData != null) {
 
             holder.mTitle.setText(mData.get(position).getUsername());
-            holder.mScore.setText(Long.toString(mData.get(position).getScore()));
+            holder.mScore.setText(Long.toString(mData.get(position).getCash()));
             //Picasso.with(activity).load(mData.get(position).getAvatar()).error(R.drawable.ic_launcher).into(holder.mIcon);
             holder.mRating.setText(Long.toString(mData.get(position).getPosition()));
         }

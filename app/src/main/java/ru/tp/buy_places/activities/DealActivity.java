@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import ru.tp.buy_places.R;
@@ -34,6 +35,11 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
     private Toolbar mToolbar;
     private FrameLayout mButtonsContainer;
     private Deal mDeal;
+    private TextView mUser;
+    private TextView mVenue;
+    private TextView mAmount;
+    private TextView mDate;
+    private TextView mType;
 
     public static void start(Context context, long dealRowId) {
         Intent intent = new Intent(context, DealActivity.class);
@@ -54,6 +60,13 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_DEAL_ROW_ID, dealRowId);
         getLoaderManager().initLoader(DEAL_LOADER_ID, arguments, this);
+
+        mUser = (TextView) findViewById(R.id.tv_user);
+        mVenue = (TextView) findViewById(R.id.tv_venue);
+        mAmount = (TextView) findViewById(R.id.tv_amount);
+        mType = (TextView) findViewById(R.id.tv_type);
+        mDate = (TextView) findViewById(R.id.tv_date);
+
     }
 
     @Override
@@ -73,20 +86,32 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
             mButtonsContainer.removeAllViews();
             switch (dealType) {
                 case INCOMING:
+                    mUser.setText(mDeal.getPlayerFrom().getUsername());
+                    mVenue.setText(mDeal.getVenue().getName());
+                    mAmount.setText(Long.toString(mDeal.getAmount()));
                     switch (dealState) {
                         case COMPLETED:
+                            mDate.setText(mDeal.getDateExpired());
+                         //   mType.setText(R.string.complited);
                             break;
                         case UNCOMPLETED:
                             final View incomingDealButtons = inflater.inflate(R.layout.buttons_incoming_deal, mButtonsContainer);
                             setIncomingButtonsOnClickListeners(incomingDealButtons);
+                            mDate.setText(mDeal.getDateAdded());
+                          //  mType.setText(R.string.uncomplited);
                             break;
                         case REJECTED:
+                          //  mType.setText(R.string.rejected);
                             break;
                         case REVOKED:
+                           // mType.setText(R.string.revoked);
                             break;
                     }
                     break;
                 case OUTGOING:
+                    mUser.setText(mDeal.getPlayerTo().getUsername());
+                    mVenue.setText(mDeal.getVenue().getName());
+                    mAmount.setText(Long.toString(mDeal.getAmount()));
                     switch (dealState) {
                         case COMPLETED:
                             break;
