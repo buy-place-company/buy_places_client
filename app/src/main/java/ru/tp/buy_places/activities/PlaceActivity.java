@@ -40,8 +40,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +55,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
     private static final String LOG_TAG = PlaceActivity.class.getSimpleName();
     private RecyclerView mInfoList;
     private VenueInfoListAdapter mVenueInfoListAdapter;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     public static void start(Fragment fragment, long venuesRowId, LatLng venuesLocation, VenueType type) {
         Intent intent = new Intent(fragment.getActivity(), PlaceActivity.class);
@@ -81,7 +80,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
     private VenueView mVenueView;
     private MapView mMapView;
     private GoogleMap mGoogleMap;
-    private FrameLayout mAppBarLayout;
+    private FrameLayout mMapContainer;
     private VenueType mVenueType;
 
     @Override
@@ -97,7 +96,8 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
         mInfoList.setLayoutManager(new LinearLayoutManager(this));
         mVenueInfoListAdapter = new VenueInfoListAdapter(this);
         mInfoList.setAdapter(mVenueInfoListAdapter);
-        mAppBarLayout = (CollapsingToolbarLayout) findViewById(R.id.app_bar_layout);
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.app_bar_layout);
+        mMapContainer = (FrameLayout) findViewById(R.id.map_container);
         GoogleMapOptions googleMapOptions = new GoogleMapOptions()
                 .liteMode(true)
                 .mapToolbarEnabled(false)
@@ -106,14 +106,14 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                         .zoom(zoomLevel)
                         .build());
         mMapView = new MapView(this, googleMapOptions);
-        mAppBarLayout.addView(mMapView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        mMapContainer.addView(mMapView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mVenueView = new VenueView(this);
-        mVenueView.setNameTextView((TextView) findViewById(R.id.text_view_venues_name));
-        mVenueView.setOwnerTextView((TextView) findViewById(R.id.text_view_owner));
-        mVenueView.setLevelTextView((TextView) findViewById(R.id.text_view_venues_level));
+        //mVenueView.setNameTextView((TextView) findViewById(R.id.text_view_venues_name));
+        //mVenueView.setOwnerTextView((TextView) findViewById(R.id.text_view_owner));
+        //mVenueView.setLevelTextView((TextView) findViewById(R.id.text_view_venues_level));
         mVenueView.setButtonsContainerLayout((FrameLayout) findViewById(R.id.button_container));
-        mVenueView.setPriceTextView((TextView) findViewById(R.id.text_view_venues_price));
-        mVenueView.setCheckinTextView((TextView) findViewById(R.id.text_view_venues_checkins_count));
+        //mVenueView.setPriceTextView((TextView) findViewById(R.id.text_view_venues_price));
+        //mVenueView.setCheckinTextView((TextView) findViewById(R.id.text_view_venues_checkins_count));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null)
@@ -181,13 +181,13 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
         Log.d(LOG_TAG, "onLoadFinished(); data.getCount(): " + data.getCount());
         if (data.moveToFirst()) {
             mPlace = Place.fromCursor(data);
-            mVenueView.getNameTextView().setText(mPlace.getName());
-            if (mPlace.getOwner() != null)
-                mVenueView.getOwnerTextView().setText(mPlace.getOwner().getUsername());
-            mVenueView.getLevelTextView().setText(Integer.toString(mPlace.getLevel()));
-            mVenueView.getPriceTextView().setText(Long.toString(mPlace.getPrice()));
-            mVenueView.getCheckinTextView().setText(Long.toString(mPlace.getCheckinsCount()));
-
+            //mVenueView.getNameTextView().setText(mPlace.getName());
+            //if (mPlace.getOwner() != null)
+            //    mVenueView.getOwnerTextView().setText(mPlace.getOwner().getUsername());
+            //mVenueView.getLevelTextView().setText(Integer.toString(mPlace.getLevel()));
+            ///mVenueView.getPriceTextView().setText(Long.toString(mPlace.getPrice()));
+            //mVenueView.getCheckinTextView().setText(Long.toString(mPlace.getCheckinsCount()));
+            mCollapsingToolbarLayout.setTitle(mPlace.getName());
             List<InfoItem> infoItems = new ArrayList<>();
             if (mPlace.getPrice() != null)
                 infoItems.add(new InfoItem(getString(R.string.statistics_price), InfoType.PRICE, Long.toString(mPlace.getPrice())));
@@ -197,7 +197,6 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                 infoItems.add(new InfoItem(getString(R.string.statistics_income), InfoType.PRICE, Long.toString(mPlace.getIncome())));
             if (mPlace.getIncome() != null && mPlace.getExpense() != null)
                 infoItems.add(new InfoItem(getString(R.string.statistics_profit), InfoType.PRICE, Long.toString(mPlace.getIncome() - mPlace.getExpense())));
-
             mVenueInfoListAdapter.setInfoItems(infoItems);
             LayoutInflater inflater = LayoutInflater.from(this);
             mVenueType = mPlace.isInOwnership() ? VenueType.MINE : mPlace.getOwner() == null ? VenueType.NOBODYS : VenueType.ANOTHERS;

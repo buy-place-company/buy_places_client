@@ -86,8 +86,8 @@ public class Place implements Resource {
         Long upgradePrice = placeData.has("upgrade_price")?placeData.optLong("upgrade_price"):null;
         Long loot = placeData.has("loot")?placeData.optLong("loot"):null;
         Long maxLoot = placeData.has("max_loot")?placeData.optLong("max_loot"):null;
-        Long income = placeData.has("consumption")?placeData.optLong("consumption"):null;
-        Long expense = placeData.has("expense")?placeData.optLong("expense"):null;
+        Long income = placeData.has("income")?placeData.optLong("income"):null;
+        Long expense = placeData.has("consumption")?placeData.optLong("consumption"):null;
         return new Place(id, checkinsCount, usersCount, tipCount, name, category, level, owner, buyPrice, sellPrice, upgradePrice, loot, maxLoot, income, expense, latitude, longitude);
     }
 
