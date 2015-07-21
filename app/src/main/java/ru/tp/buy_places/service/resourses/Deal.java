@@ -20,6 +20,31 @@ public class Deal implements Resource{
     private final Player mPlayerTo;
     private final String mDateExpired;
     private final String mDateAdded;
+
+    public DealState getStatus() {
+        return mStatus;
+    }
+
+    public long getAmount() {
+        return mAmount;
+    }
+
+    public String getType() {
+        return mType;
+    }
+
+    public String getDateExpired() {
+        return mDateExpired;
+    }
+
+    public String getDateAdded() {
+        return mDateAdded;
+    }
+
+    public Place getVenue() {
+        return mVenue;
+    }
+
     private final DealState mStatus;
     private final long mAmount;
     private final String mType;
@@ -156,9 +181,6 @@ public class Deal implements Resource{
         return id;
     }
 
-    public Place getVenue() {
-        return mVenue;
-    }
 
     public Player getPlayerFrom() {
         return mPlayerFrom;

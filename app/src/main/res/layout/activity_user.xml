@@ -43,9 +43,9 @@
 
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="10"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:text="7"
                 android:background="@drawable/shadow_circle"
                 android:id="@+id/tv_level"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"

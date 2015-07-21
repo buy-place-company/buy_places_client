@@ -49,6 +49,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
             itemView.setOnClickListener(this);
             mVenuesName = (TextView) itemView.findViewById(R.id.text_view_venues_name);
             mOpponentName = (TextView) itemView.findViewById(R.id.text_view_deal_opponent);
+            mDate = (TextView) itemView.findViewById(R.id.tv_date);
 
         }
 
@@ -70,7 +71,8 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(DealsAdapter.ViewHolder holder, int position) {
         if(mData != null) {
-            holder.mVenuesName.setText(mData.get(position).getVenue().getName()); // Setting the Text with the array of our Titles
+            holder.mVenuesName.setText(mData.get(position).getVenue().getName());
+            holder.mDate.setText(mData.get(position).getDateAdded());// Setting the Text with the array of our Titles
             switch (mType) {
                 case INCOMING:
                     holder.mOpponentName.setText(mData.get(position).getPlayerFrom().getUsername());
