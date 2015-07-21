@@ -69,10 +69,10 @@
         android:drawableLeft="@drawable/ic_foursquare_grey600_18dp"/>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:text="10"
-        android:background="@drawable/circle_background"
+        android:background="@drawable/shadow_circle"
         android:id="@+id/tv_level"
         android:layout_alignTop="@+id/image_view_rating"
         android:layout_alignStart="@+id/image_view_rating"

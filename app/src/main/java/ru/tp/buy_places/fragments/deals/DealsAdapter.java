@@ -42,12 +42,14 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView mVenuesName;
         public TextView mOpponentName;
+        public TextView mDate;
 
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             mVenuesName = (TextView) itemView.findViewById(R.id.text_view_venues_name);
             mOpponentName = (TextView) itemView.findViewById(R.id.text_view_deal_opponent);
+
         }
 
         @Override
