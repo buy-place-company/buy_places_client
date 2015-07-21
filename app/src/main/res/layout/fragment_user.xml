@@ -16,7 +16,7 @@
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:id="@+id/image_view_user"
+        android:id="@+id/image_view_user_wrapper"
         android:src="@mipmap/ic_pupkin"
         android:layout_below="@+id/text_view_user_level"
         android:layout_centerHorizontal="true"
@@ -28,7 +28,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Вася Пупкин"
         android:id="@+id/text_view_user_name"
-        android:layout_below="@+id/image_view_user"
+        android:layout_below="@+id/image_view_user_wrapper"
         android:layout_centerHorizontal="true" />
 
     <ImageView
