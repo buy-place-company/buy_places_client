@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="45dp"
-    android:layout_weight="1">
+    android:layout_height="48dp"
+    android:layout_weight="1"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
     <TextView
         android:id="@+id/text_view_venues_info_key"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="45dp"
-        android:gravity="center"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
     <TextView
         android:id="@+id/text_view_venues_info_value"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:layout_weight="1"
+        android:layout_width="112dp"
+        android:layout_height="match_parent"
         android:drawableLeft="@drawable/ic_cash_usd_grey600_18dp"
-        android:gravity="center"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+        android:gravity="center_vertical"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        tools:ignore="RtlHardcoded" />
 </LinearLayout>
