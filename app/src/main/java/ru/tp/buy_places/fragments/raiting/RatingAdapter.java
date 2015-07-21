@@ -83,11 +83,11 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
     @Override
     public void onBindViewHolder(RatingAdapter.ViewHolder holder, int position) {
         if(mData != null) {
-            count++;
+
             holder.mTitle.setText(mData.get(position).getUsername());
             holder.mScore.setText(Long.toString(mData.get(position).getScore()));
             //Picasso.with(activity).load(mData.get(position).getAvatar()).error(R.drawable.ic_launcher).into(holder.mIcon);
-            holder.mRating.setText(Integer.toString(count));
+            holder.mRating.setText(Integer.toString(position+1));
         }
     }
 
