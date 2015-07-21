@@ -10,4 +10,7 @@
     <color name="divider">#B6B6B6</color>
     <color name="background">#FFFFFF</color>
     <color name="primary_text_inverse">#FFFFFF</color>
+    <color name="shadow">#7c0c0981</color>
+    <color name="level">#ff0c0981</color>
+
 </resources>

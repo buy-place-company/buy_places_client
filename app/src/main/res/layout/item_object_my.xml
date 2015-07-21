@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:background="@color/light_primary"
-        android:alpha="0.7"></RelativeLayout>
+        android:alpha="0.7">
+    </RelativeLayout>
 
     <ImageView
         android:layout_centerVertical="true"
@@ -38,11 +39,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/last_visited_message"
-        android:id="@+id/text_view_price"
+        android:text="@string/checkins_message"
+        android:id="@+id/tv_chekins"
         android:layout_below="@+id/text_view_rating"
         android:layout_toRightOf="@+id/image_view_rating"
-        android:layout_toEndOf="@+id/image_view_rating" />
+        android:drawableLeft="@drawable/ic_foursquare_grey600_18dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/tv_category"
+        android:layout_toRightOf="@+id/tv_chekins"
+        android:layout_alignTop="@+id/tv_chekins"
+        android:layout_marginLeft="5dp"/>
 
     <TextView
         android:layout_width="wrap_content"
