@@ -32,7 +32,7 @@ public class Players implements Resource {
 
     public void writeToDatabase(Context context, long offset) {
         for (int i = 0; i < mPlayers.size(); i++) {
-            Player player = mPlayers.get(0);
+            Player player = mPlayers.get(i);
             player.setPosition(offset + i + 1);
             player.writeToDatabase(context);
         }

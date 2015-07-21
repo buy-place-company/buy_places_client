@@ -143,4 +143,8 @@ public class Player implements Resource {
         mPosition = position;
         mPositionIsSet = true;
     }
+
+    public long getPosition() {
+        return mPosition;
+    }
 }

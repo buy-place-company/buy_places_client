@@ -49,8 +49,10 @@ public class RatingProcessor extends Processor {
     @Override
     protected Request prepareRequest() {
         Map<String, String> params = new HashMap<>();
-        params.put("limit", String.valueOf(mLimit));
-        params.put("offset", String.valueOf(mOffset));
+        if (mLimit > 0)
+            params.put("limit", String.valueOf(mLimit));
+        if (mOffset > 0)
+            params.put("offset", String.valueOf(mOffset));
         final String path = "/user/rating";
         return new Request(mContext, path, Request.RequestMethod.GET, params);
     }

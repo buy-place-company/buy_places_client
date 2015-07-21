@@ -1,14 +1,13 @@
 package ru.tp.buy_places.fragments.raiting;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Bundle;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,6 +21,7 @@ import java.util.List;
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.activities.UserActivity;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
+import ru.tp.buy_places.service.ServiceHelper;
 import ru.tp.buy_places.service.resourses.Player;
 
 /**
@@ -58,7 +58,8 @@ public class RaitingFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(0,null, this);
+        getLoaderManager().initLoader(0, null, this);
+        ServiceHelper.get(getActivity()).getRating(20, 0);
     }
 
     @Override
@@ -76,7 +77,7 @@ public class RaitingFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), BuyPlacesContract.Players.CONTENT_URI, BuyPlacesContract.Players.ALL_COLUMNS_PROJECTION, null, null, null);
+        return new CursorLoader(getActivity(), BuyPlacesContract.Players.CONTENT_URI, BuyPlacesContract.Players.ALL_COLUMNS_PROJECTION, BuyPlacesContract.Players.WITH_SPECIFIED_RATING_POSITION, null, BuyPlacesContract.Players.COLUMN_POSITION);
     }
 
     @Override
