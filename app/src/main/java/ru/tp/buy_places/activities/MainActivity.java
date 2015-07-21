@@ -17,11 +17,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
@@ -38,6 +41,7 @@ import ru.tp.buy_places.fragments.map.MapFragment;
 import ru.tp.buy_places.fragments.objects.PlaceListFragment;
 import ru.tp.buy_places.fragments.raiting.RaitingFragment;
 import ru.tp.buy_places.fragments.settings.SettingFragment;
+import ru.tp.buy_places.gcm.RegistrationIntentService;
 import ru.tp.buy_places.map.LocationApiConnectionListener;
 import ru.tp.buy_places.map.LocationProvider;
 import ru.tp.buy_places.service.ServiceHelper;
@@ -51,8 +55,10 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int PLAYER_LOADER_ID = 0;
     private static final String KEY_PLAYER_ID = "KEY_PLAYER_ID";
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -102,6 +108,13 @@ public class MainActivity extends AppCompatActivity implements
         getLoaderManager().initLoader(PLAYER_LOADER_ID, args, this);
 
         ServiceHelper.get(this).getMyVenues();
+
+
+        if (checkPlayServices()) {
+            // Start IntentService to register this application with GCM.
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
     }
 
     @Override
@@ -275,5 +288,21 @@ public class MainActivity extends AppCompatActivity implements
         DEALS,
         RATING,
         SETTINGS
+    }
+
+
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i(LOG_TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 }

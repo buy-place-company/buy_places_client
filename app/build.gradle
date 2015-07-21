@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 22
@@ -8,7 +9,7 @@ android {
         applicationId "ru.tp.buyplaces"
         minSdkVersion 17
         targetSdkVersion 22
-        versionCode 2
+        versionCode 3
         versionName "1.0"
     }
     buildTypes {
@@ -28,6 +29,7 @@ dependencies {
     compile 'com.android.support:design:22.2.0'
     compile 'com.google.android.gms:play-services-maps:7.5.0'
     compile 'com.google.android.gms:play-services-location:7.5.0'
+    compile 'com.google.android.gms:play-services-gcm:7.5.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.google.maps.android:android-maps-utils:0.3.4'
     compile 'com.google.code.gson:gson:2.3.1'
