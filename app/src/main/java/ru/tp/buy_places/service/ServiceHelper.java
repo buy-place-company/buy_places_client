@@ -35,6 +35,7 @@ public class ServiceHelper {
     private static final String POST_VENUE = "POST_VENUE";
     private static final String POST_AUTHENTICATE = "POST_AUTHENTICATE";
     private static final String RATING = "RATING";
+    private static final String PROFILE = "PROFILE";
 
     private static ServiceHelper instance;
     private final Context mContext;
@@ -173,6 +174,30 @@ public class ServiceHelper {
         return requestId;
     }
 
+    public long getProfile() {
+        long requestId = mRequestIdGenerator.incrementAndGet();
+        mPendingRequests.put(RATING, requestId);
+        ResultReceiver serviceCallback = new ProfileResultReceiver(null, PROFILE);
+        BuyItService.startGetProfileService(mContext, serviceCallback, requestId);
+        return requestId;
+    }
+
+    public long getRating(long limit, long offset) {
+        long requestId = mRequestIdGenerator.incrementAndGet();
+        mPendingRequests.put(RATING, requestId);
+        ResultReceiver serviceCallback = new GetRatingResultReceiver(null, RATING);
+        BuyItService.startGetRatingService(mContext, serviceCallback, requestId, limit, offset);
+        return requestId;
+    }
+
+    public long getDeals() {
+        long requestId = mRequestIdGenerator.incrementAndGet();
+        mPendingRequests.put(DEALS, requestId);
+        ResultReceiver serviceCallback = new DealsResultReceiver(null, DEALS);
+        BuyItService.startGetDealsService(mContext, serviceCallback, requestId);
+        return requestId;
+    }
+
     public long acceptDeal(long id) {
         long requestId = mRequestIdGenerator.incrementAndGet();
         ResultReceiver serviceCallback = new ResultReceiver(null) {
@@ -214,44 +239,10 @@ public class ServiceHelper {
         ResultReceiver serviceCallback = new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
-                handleSuggestDealResponse(resultCode, resultData);
+                handleRevokeDealResponse(resultCode, resultData);
             }
         };
         BuyItService.startRevokeDealService(mContext, serviceCallback, requestId, id);
-        return requestId;
-    }
-
-    public long getProfile() {
-        long requestId = mRequestIdGenerator.incrementAndGet();
-        mPendingRequests.put(PLAYERS, requestId);
-        ResultReceiver serviceCallback = new ResultReceiver(null) {
-            @Override
-            protected void onReceiveResult(int resultCode, Bundle resultData) {
-                handleGetProfileResponse(resultCode, resultData);
-            }
-        };
-        BuyItService.startGetProfileService(mContext, serviceCallback, requestId);
-        return requestId;
-    }
-
-    public long getRating(long limit, long offset) {
-        long requestId = mRequestIdGenerator.incrementAndGet();
-        mPendingRequests.put(DEALS, requestId);
-        ResultReceiver serviceCallback = new GetRatingResultReceiver(null, RATING);
-        BuyItService.startGetRatingService(mContext, serviceCallback, requestId, limit, offset);
-        return requestId;
-    }
-
-    public long getDeals() {
-        long requestId = mRequestIdGenerator.incrementAndGet();
-        mPendingRequests.put(DEALS, requestId);
-        ResultReceiver serviceCallback = new ResultReceiver(null) {
-            @Override
-            protected void onReceiveResult(int resultCode, Bundle resultData) {
-                handleGetDealsResponse(resultCode, resultData);
-            }
-        };
-        BuyItService.startGetDealsService(mContext, serviceCallback, requestId);
         return requestId;
     }
 
@@ -296,31 +287,6 @@ public class ServiceHelper {
         if (originalRequestIntent != null) {
             long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
             mPendingRequests.remove(GET_VENUES);
-            Intent result = new Intent(ACTION_REQUEST_RESULT);
-            result.putExtra(EXTRA_REQUEST_ID, requestId);
-            result.putExtra(EXTRA_RESULT_CODE, resultCode);
-            mContext.sendBroadcast(result);
-        }
-    }
-
-
-    private void handleGetDealsResponse(int resultCode, Bundle resultData) {
-        Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
-        if (originalRequestIntent != null) {
-            long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
-            mPendingRequests.remove(GET_VENUES);
-            Intent result = new Intent(ACTION_REQUEST_RESULT);
-            result.putExtra(EXTRA_REQUEST_ID, requestId);
-            result.putExtra(EXTRA_RESULT_CODE, resultCode);
-            mContext.sendBroadcast(result);
-        }
-    }
-
-    private void handleGetProfileResponse(int resultCode, Bundle resultData) {
-        Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
-        if (originalRequestIntent != null) {
-            long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
-            mPendingRequests.remove(PLAYERS);
             Intent result = new Intent(ACTION_REQUEST_RESULT);
             result.putExtra(EXTRA_REQUEST_ID, requestId);
             result.putExtra(EXTRA_RESULT_CODE, resultCode);
@@ -430,6 +396,66 @@ public class ServiceHelper {
          * @param handler
          */
         public GetRatingResultReceiver(Handler handler, String resource) {
+            super(handler);
+            mResource = resource;
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
+            if (originalRequestIntent != null) {
+                long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
+                mPendingRequests.remove(mResource);
+                Intent result = new Intent(ACTION_REQUEST_RESULT);
+                result.putExtra(EXTRA_REQUEST_ID, requestId);
+                result.putExtra(EXTRA_RESULT_CODE, resultCode);
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(result);
+            }
+        }
+    }
+
+    private class ProfileResultReceiver extends ResultReceiver {
+
+        private final String mResource;
+
+        /**
+         * Create a new ResultReceive to receive results.  Your
+         * {@link #onReceiveResult} method will be called from the thread running
+         * <var>handler</var> if given, or from an arbitrary thread if null.
+         *
+         * @param handler
+         */
+        public ProfileResultReceiver(Handler handler, String resource) {
+            super(handler);
+            mResource = resource;
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
+            if (originalRequestIntent != null) {
+                long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
+                mPendingRequests.remove(mResource);
+                Intent result = new Intent(ACTION_REQUEST_RESULT);
+                result.putExtra(EXTRA_REQUEST_ID, requestId);
+                result.putExtra(EXTRA_RESULT_CODE, resultCode);
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(result);
+            }
+        }
+    }
+
+    private class DealsResultReceiver extends ResultReceiver {
+
+        private final String mResource;
+
+        /**
+         * Create a new ResultReceive to receive results.  Your
+         * {@link #onReceiveResult} method will be called from the thread running
+         * <var>handler</var> if given, or from an arbitrary thread if null.
+         *
+         * @param handler
+         */
+        public DealsResultReceiver(Handler handler, String resource) {
             super(handler);
             mResource = resource;
         }

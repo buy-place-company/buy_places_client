@@ -16,7 +16,7 @@ import ru.tp.buy_places.service.resourses.Place;
 import ru.tp.buy_places.service.resourses.Player;
 import ru.tp.buy_places.service.resourses.Resource;
 
-import static ru.tp.buy_places.service.BuyItService.ActionWithPlace;
+import static ru.tp.buy_places.service.BuyItService.VenueAction;
 
 /**
  * Created by Ivan on 10.05.2015.
@@ -25,12 +25,12 @@ public class ActionWithPlaceProcessor extends Processor {
     private static final String KEY_VENUE = "KEY_VENUE";
     private static final String KEY_PLAYER = "KEY_PLAYER";
     private final String mId;
-    private final ActionWithPlace mActionWithPlace;
+    private final VenueAction mVenueAction;
 
-    public ActionWithPlaceProcessor(Context context, OnProcessorResultListener listener, String id, ActionWithPlace actionWithPlace) {
+    public ActionWithPlaceProcessor(Context context, OnProcessorResultListener listener, String id, VenueAction venueAction) {
         super(context, listener);
         mId = id;
-        mActionWithPlace = actionWithPlace;
+        mVenueAction = venueAction;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ActionWithPlaceProcessor extends Processor {
     protected Request prepareRequest() {
         Map<String, String> params = new HashMap<>();
         params.put("venue_id", mId);
-        params.put("action", mActionWithPlace.name().toLowerCase());
+        params.put("action", mVenueAction.name().toLowerCase());
         return new Request(mContext, "/venue/action", Request.RequestMethod.POST, params);
     }
 

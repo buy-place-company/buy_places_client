@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -80,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements
 
         mActionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
-
         mHeaderView = LayoutInflater.from(this).inflate(R.layout.header, null);
         mHeaderAvatar = (CircleImageView) mHeaderView.findViewById(R.id.image);
         mHeaderCash = (TextView) mHeaderView.findViewById(R.id.text_view_cash);
@@ -127,9 +127,12 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

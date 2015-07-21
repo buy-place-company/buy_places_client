@@ -8,12 +8,14 @@ import android.os.ResultReceiver;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import ru.tp.buy_places.service.action_with_deal.ActionWithDealProcessorCreator;
-import ru.tp.buy_places.service.action_with_deal.SuggestDealProcessorCreator;
 import ru.tp.buy_places.service.action_with_place.ActionWithPlaceProcessorCreator;
 import ru.tp.buy_places.service.authentication.AuthenticationProcessor;
 import ru.tp.buy_places.service.authentication.AuthenticationProcessorCreator;
+import ru.tp.buy_places.service.deals.AcceptDealProcessorCreator;
 import ru.tp.buy_places.service.deals.DealsProcessorCreator;
+import ru.tp.buy_places.service.deals.RejectDealProcessorCreator;
+import ru.tp.buy_places.service.deals.RevokeDealProcessorCreator;
+import ru.tp.buy_places.service.deals.SuggestDealProcessorCreator;
 import ru.tp.buy_places.service.network.Response;
 import ru.tp.buy_places.service.places.GetMyVenuesProcessorCreator;
 import ru.tp.buy_places.service.places.GetPlayerVenuesProcessorCreator;
@@ -26,47 +28,43 @@ import ru.tp.buy_places.service.resourses.AuthenticationResult;
 
 public class BuyItService extends IntentService {
     public static final String EXTRA_ORIGINAL_INTENT = "EXTRA_ORIGINAL_INTENT";
-
-    private static final String EXTRA_SERVICE_CALLBACK = "EXTRA_SERVICE_CALLBACK";
     public static final String EXTRA_REQUEST_ID = "EXTRA_REQUEST_ID";
 
+    private static final String EXTRA_SERVICE_CALLBACK = "EXTRA_SERVICE_CALLBACK";
     private static final String EXTRA_POSITION = "EXTRA_POSITION";
     private static final String EXTRA_ACTION_WITH_OBJECT = "EXTRA_ACTION_WITH_OBJECT";
-    private static final String EXTRA_DEAL_ACTION = "EXTRA_DEAL_ACTION";
-    private static final String EXTRA_OBJECT_ID = "EXTRA_OBJECT_ID";
+    private static final String EXTRA_VENUE_ID = "EXTRA_VENUE_ID";
     private static final String EXTRA_CODE = "EXTRA_CODE";
-
     private static final int REQUEST_INVALID = -1;
+
     public static final String EXTRA_ID = "EXTRA_ID";
     public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
     private static final String EXTRA_AMOUNT = "EXTRA_AMOUNT";
     private static final String EXTRA_PLAYER_ID = "EXTRA_PLAYER_ID";
-    private static final String ACTION_GET_VENUES_AROUND_THE_PLAYER = "ru.mail.buy_it.service.ACTION_GET_VENUES_AROUND_THE_PLAYER";
-    private static final String ACTION_GET_VENUES_AROUND_THE_POINT = "ru.mail.buy_it.service.ACTION_GET_VENUES_AROUND_THE_POINT";
-    private static final String ACTION_GET_MY_VENUES = "ru.mail.buy_it.service.ACTION_GET_MY_VENUES";
-    private static final String ACTION_GET_PLAYER_VENUES = "ru.mail.buy_it.service.ACTION_GET_PLAYER_VENUES";
-    private static final String ACTION_GET_RATING = "ru.mail.buy_it.service.ACTION_GET_RATING";
+
+
     private static final String EXTRA_RATING_LIMIT = "EXTRA_LIMIT";
     private static final String EXTRA_RATING_OFFSET = "EXTRA_OFFSET";
+
+    private static final String EXTRA_DEAL_ID = "EXTRA_DEAL_ID";
 
     public BuyItService() {
         super("BuyItService");
     }
 
-    private static final String ACTION_POST_OBJECT = "ru.mail.buy_it.service.ACTION_POST_OBJECT";
+    private static final String ACTION_VENUE = "ru.mail.buy_it.service.ACTION_VENUE";
     private static final String ACTION_AUTHENTICATE = "ru.mail.buy_it.service.ACTION_AUTHENTICATE";
-    private static final String ACTION_DEAL = "ru.mail.buy_it.service.ACTION_DEAL";
     private static final String ACTION_GET_PROFILE = "ru.mail.buy_it.service.ACTION_GET_PROFILE";
-    private static final String ACTION_GET_USERS = "ru.mail.buy_it.service.ACTION_GET_USERS";
     private static final String ACTION_GET_DEALS = "ru.mail.buy_it.service.ACTION_GET_DEALS";
-
-    private static final String ACTION_SELL_OBJECT = "ru.mail.buy_it.service.ACTION_SELL_PLACE";
-    private static final String ACTION_UPGRADE_OBJECT = "ru.mail.buy_it.service.ACTION_SELL_PLACE";
-    private static final String ACTION_BUY_OBJECT = "ru.mail.buy_it.service.ACTION_BUY_OBJECT";
-    private static final String ACTION_COLLECT_LOOT = "ru.mail.buy_it.service.ACTION_COLLECT_LOOT";
-
-    private static final String ACTION_SUGGEST_DEAL = "ru.mail.buy_it.service.ACTION_SUGGEST_DEAL";
+    private static final String ACTION_ACCEPT_DEAL = "ru.mail.buy_it.service.ACTION_ACCEPT_DEAL";
     private static final String ACTION_REJECT_DEAL = "ru.mail.buy_it.service.ACTION_REJECT_DEAL";
+    private static final String ACTION_REVOKE_DEAL = "ru.mail.buy_it.service.ACTION_REVOKE_DEAL";
+    private static final String ACTION_SUGGEST_DEAL = "ru.mail.buy_it.service.ACTION_SUGGEST_DEAL";
+    private static final String ACTION_GET_MY_VENUES = "ru.mail.buy_it.service.ACTION_GET_MY_VENUES";
+    private static final String ACTION_GET_PLAYER_VENUES = "ru.mail.buy_it.service.ACTION_GET_PLAYER_VENUES";
+    private static final String ACTION_GET_RATING = "ru.mail.buy_it.service.ACTION_GET_RATING";
+    private static final String ACTION_GET_VENUES_AROUND_THE_PLAYER = "ru.mail.buy_it.service.ACTION_GET_VENUES_AROUND_THE_PLAYER";
+    private static final String ACTION_GET_VENUES_AROUND_THE_POINT = "ru.mail.buy_it.service.ACTION_GET_VENUES_AROUND_THE_POINT";
 
 
 
@@ -102,38 +100,38 @@ public class BuyItService extends IntentService {
     }
 
     public static void startBuyVenueService(Context context, ResultReceiver serviceCallback, long requestId, String id) {
-        Intent intent = new Intent(ACTION_POST_OBJECT, null, context, BuyItService.class);
+        Intent intent = new Intent(ACTION_VENUE, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
-        intent.putExtra(EXTRA_ACTION_WITH_OBJECT, ActionWithPlace.BUY);
-        intent.putExtra(EXTRA_OBJECT_ID, id);
+        intent.putExtra(EXTRA_ACTION_WITH_OBJECT, VenueAction.BUY);
+        intent.putExtra(EXTRA_VENUE_ID, id);
         context.startService(intent);
     }
 
     public static void startSellVenueService(Context context, ResultReceiver serviceCallback, long requestId, String id) {
-        Intent intent = new Intent(ACTION_POST_OBJECT, null, context, BuyItService.class);
+        Intent intent = new Intent(ACTION_VENUE, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
-        intent.putExtra(EXTRA_ACTION_WITH_OBJECT, ActionWithPlace.SELL);
-        intent.putExtra(EXTRA_OBJECT_ID, id);
+        intent.putExtra(EXTRA_ACTION_WITH_OBJECT, VenueAction.SELL);
+        intent.putExtra(EXTRA_VENUE_ID, id);
         context.startService(intent);
     }
 
     public static void startUpgradeVenueService(Context context, ResultReceiver serviceCallback, long requestId, String id) {
-        Intent intent = new Intent(ACTION_POST_OBJECT, null, context, BuyItService.class);
+        Intent intent = new Intent(ACTION_VENUE, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
-        intent.putExtra(EXTRA_ACTION_WITH_OBJECT, ActionWithPlace.UPGRADE);
-        intent.putExtra(EXTRA_OBJECT_ID, id);
+        intent.putExtra(EXTRA_ACTION_WITH_OBJECT, VenueAction.UPGRADE);
+        intent.putExtra(EXTRA_VENUE_ID, id);
         context.startService(intent);
     }
 
     public static void startCollectLootFromPlaceService(Context context, ResultReceiver serviceCallback, long requestId, String id) {
-        Intent intent = new Intent(ACTION_POST_OBJECT, null, context, BuyItService.class);
+        Intent intent = new Intent(ACTION_VENUE, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
-        intent.putExtra(EXTRA_ACTION_WITH_OBJECT, ActionWithPlace.COLLECT_LOOT);
-        intent.putExtra(EXTRA_OBJECT_ID, id);
+        intent.putExtra(EXTRA_ACTION_WITH_OBJECT, VenueAction.COLLECT_LOOT);
+        intent.putExtra(EXTRA_VENUE_ID, id);
         context.startService(intent);
     }
 
@@ -162,11 +160,10 @@ public class BuyItService extends IntentService {
     }
 
     public static void startAcceptDealService(Context context, ResultReceiver serviceCallback, long requestId, long id) {
-        Intent intent = new Intent(ACTION_DEAL, null, context, BuyItService.class);
+        Intent intent = new Intent(ACTION_ACCEPT_DEAL, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
-        intent.putExtra(EXTRA_ID, id);
-        intent.putExtra(EXTRA_DEAL_ACTION, DealAction.ACCEPT);
+        intent.putExtra(EXTRA_DEAL_ID, id);
         context.startService(intent);
     }
 
@@ -174,26 +171,24 @@ public class BuyItService extends IntentService {
         Intent intent = new Intent(ACTION_SUGGEST_DEAL, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
-        intent.putExtra(EXTRA_ID, venueId);
+        intent.putExtra(EXTRA_VENUE_ID, venueId);
         intent.putExtra(EXTRA_AMOUNT, amount);
         context.startService(intent);
     }
 
     public static void startRejectDealService(Context context, ResultReceiver serviceCallback, long requestId, long id) {
-        Intent intent = new Intent(ACTION_DEAL, null, context, BuyItService.class);
+        Intent intent = new Intent(ACTION_REJECT_DEAL, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
-        intent.putExtra(EXTRA_ID, id);
-        intent.putExtra(EXTRA_DEAL_ACTION, DealAction.REJECT);
+        intent.putExtra(EXTRA_DEAL_ID, id);
         context.startService(intent);
     }
 
     public static void startRevokeDealService(Context context, ResultReceiver serviceCallback, long requestId, long id) {
-        Intent intent = new Intent(ACTION_DEAL, null, context, BuyItService.class);
+        Intent intent = new Intent(ACTION_REVOKE_DEAL, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
-        intent.putExtra(EXTRA_ID, id);
-        intent.putExtra(EXTRA_DEAL_ACTION, DealAction.REVOKE);
+        intent.putExtra(EXTRA_DEAL_ID, id);
         context.startService(intent);
     }
 
@@ -237,66 +232,51 @@ public class BuyItService extends IntentService {
                 Processor authenticationProcessor = new AuthenticationProcessorCreator(this, new AuthenticationProcessorResultListener(intent, resultReceiver), code).createProcessor();
                 authenticationProcessor.process();
                 break;
-            case ACTION_POST_OBJECT:
-                final String id = intent.getStringExtra(EXTRA_OBJECT_ID);
-                final ActionWithPlace actionWithPlace = (ActionWithPlace) intent.getSerializableExtra(EXTRA_ACTION_WITH_OBJECT);
-                Processor actionWithPlaceProcessor = new ActionWithPlaceProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver), id, actionWithPlace).createProcessor();
+            case ACTION_VENUE:
+                final String id = intent.getStringExtra(EXTRA_VENUE_ID);
+                final VenueAction venueAction = (VenueAction) intent.getSerializableExtra(EXTRA_ACTION_WITH_OBJECT);
+                Processor actionWithPlaceProcessor = new ActionWithPlaceProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver), id, venueAction).createProcessor();
                 actionWithPlaceProcessor.process();
                 break;
             case ACTION_GET_RATING:
                 final long offset = intent.getLongExtra(EXTRA_RATING_OFFSET, 0);
                 final long limit = intent.getLongExtra(EXTRA_RATING_LIMIT, 0);
-                Processor processor = new RatingProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver), limit, offset).createProcessor();
-                processor.process();
+                Processor ratingProcessor = new RatingProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver), limit, offset).createProcessor();
+                ratingProcessor.process();
                 break;
-            case ACTION_DEAL:
-                final long dealId = intent.getLongExtra(EXTRA_ID, 0);
-                final DealAction dealAction = (DealAction) intent.getSerializableExtra(EXTRA_DEAL_ACTION);
-                Processor dealProcessor = new ActionWithDealProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver), dealAction, dealId).createProcessor();
-                dealProcessor.process();
+            case ACTION_ACCEPT_DEAL:
+                final long dealToAcceptId = intent.getLongExtra(EXTRA_DEAL_ID, 0);
+                Processor acceptDealProcessor = new AcceptDealProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver), dealToAcceptId).createProcessor();
+                acceptDealProcessor.process();
+                break;
+            case ACTION_REVOKE_DEAL:
+                final long dealToRevokeId = intent.getLongExtra(EXTRA_DEAL_ID, 0);
+                Processor revokeDealProcessor = new RevokeDealProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver), dealToRevokeId).createProcessor();
+                revokeDealProcessor.process();
+                break;
+            case ACTION_REJECT_DEAL:
+                final long dealToRejectId = intent.getLongExtra(EXTRA_DEAL_ID, 0);
+                Processor rejectDealProcessor = new RejectDealProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver), dealToRejectId).createProcessor();
+                rejectDealProcessor.process();
                 break;
             case ACTION_SUGGEST_DEAL:
-                final String venueId = intent.getStringExtra(EXTRA_ID);
+                final String venueToDealId = intent.getStringExtra(EXTRA_VENUE_ID);
                 final long amount = intent.getLongExtra(EXTRA_AMOUNT, 0);
-                Processor suggestDealProcessor = new SuggestDealProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver), venueId, amount).createProcessor();
+                Processor suggestDealProcessor = new SuggestDealProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver), venueToDealId, amount).createProcessor();
                 suggestDealProcessor.process();
                 break;
             case ACTION_GET_DEALS:
                 Processor getDealsProcessor = new DealsProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver)).createProcessor();
                 getDealsProcessor.process();
                 break;
-            default:
-                new DefaultProcessorResultListener(intent, resultReceiver);
-                break;
         }
     }
 
-    public enum ActionWithPlace {
+    public enum VenueAction {
         BUY,
         SELL,
         UPGRADE,
         COLLECT_LOOT
-    }
-
-    public enum DealAction {
-        SUGGEST,
-        ACCEPT,
-        REJECT,
-        REVOKE;
-
-        public String toPath() {
-            switch (this) {
-                case SUGGEST:
-                    return "/new";
-                case ACCEPT:
-                    return "/accept";
-                case REJECT:
-                case REVOKE:
-                    return "/cancel";
-                default:
-                    throw new IllegalStateException();
-            }
-        }
     }
 
     private static class DefaultProcessorResultListener implements Processor.OnProcessorResultListener {
@@ -339,12 +319,6 @@ public class BuyItService extends IntentService {
                 result.putString(EXTRA_USERNAME, username);
                 mResultReceiver.send(response.getStatus(), result);
             }
-        }
-
-        protected Bundle getOriginalIntentBundle() {
-            Bundle originalRequest = new Bundle();
-            originalRequest.putParcelable(EXTRA_ORIGINAL_INTENT, mOriginalRequestIntent);
-            return originalRequest;
         }
 
     }

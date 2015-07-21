@@ -77,12 +77,16 @@ public class NearPlacesAdapter extends RecyclerView.Adapter<NearPlacesAdapter.Vi
 
     @Override
     public void onBindViewHolder(NearPlacesAdapter.ViewHolder holder, int position) {
-        if(mData != null) {
-            holder.mTitle.setText(mData.get(position).getName()); // Setting the Text with the array of our Titles
-            holder.mIcon.setImageResource(R.mipmap.ic_object);
-            holder.mLevel.setText(Integer.toString(mData.get(position).getLevel()));
-            holder.mPrice.setText(Long.toString(mData.get(position).getPrice()));
-            holder.mCheckin.setText(Long.toString(mData.get(position).getCheckinsCount()));
+        try {
+            if (mData != null) {
+                holder.mTitle.setText(mData.get(position).getName()); // Setting the Text with the array of our Titles
+                holder.mIcon.setImageResource(R.mipmap.ic_object);
+                holder.mLevel.setText(Integer.toString(mData.get(position).getLevel()));
+                holder.mPrice.setText(Long.toString(mData.get(position).getPrice()));
+                holder.mCheckin.setText(Long.toString(mData.get(position).getCheckinsCount()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

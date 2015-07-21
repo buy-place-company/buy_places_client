@@ -1,4 +1,4 @@
-package ru.tp.buy_places.service.action_with_deal;
+package ru.tp.buy_places.service.deals;
 
 import android.content.Context;
 
