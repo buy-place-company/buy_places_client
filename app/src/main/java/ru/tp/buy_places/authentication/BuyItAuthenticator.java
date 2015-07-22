@@ -8,7 +8,10 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import ru.tp.buy_places.content_provider.BuyPlacesContract;
 
 /**
  * Created by Ivan on 22.05.2015.
@@ -76,5 +79,17 @@ public class BuyItAuthenticator extends AbstractAccountAuthenticator {
     @Override
     public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account, String[] features) throws NetworkErrorException {
         return null;
+    }
+
+    @NonNull
+    @Override
+    public Bundle getAccountRemovalAllowed(AccountAuthenticatorResponse response, Account account) throws NetworkErrorException {
+        Bundle result = super.getAccountRemovalAllowed(response, account);
+        //((CookieManager)CookieManager.getDefault()).getCookieStore().removeAll();
+        mContext.getContentResolver().delete(BuyPlacesContract.Deals.CONTENT_URI, null, null);
+        mContext.getContentResolver().delete(BuyPlacesContract.Places.CONTENT_URI, null, null);
+        mContext.getContentResolver().delete(BuyPlacesContract.Players.CONTENT_URI, null, null);
+        result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, true);
+        return result;
     }
 }

@@ -1,38 +1,26 @@
 package ru.tp.buy_places.activities;
 
 import android.app.Fragment;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-
-import java.util.ArrayList;
-import java.util.List;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.fragments.objects.MyPlacesFragment;
-import ru.tp.buy_places.fragments.objects.PlaceListFragment;
-import ru.tp.buy_places.service.resourses.Place;
+import ru.tp.buy_places.service.ServiceHelper;
 import ru.tp.buy_places.service.resourses.Player;
 
 public class UserActivity extends AppCompatActivity implements  LoaderManager.LoaderCallbacks<Cursor> {
@@ -65,15 +53,16 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
         userCash = (TextView)findViewById(R.id.tv_score);
         userLevel = (TextView)findViewById(R.id.tv_level);
         Intent intent = getIntent();
-        final long userId = intent.getLongExtra("EXTRA_USER_ID", -1);
+        final long userId = intent.getLongExtra(EXTRA_USER_ID, -1);
         Bundle args = new Bundle();
         args.putLong(EXTRA_USER_ID, userId);
         getSupportLoaderManager().initLoader(USER_LOADER_ID, args, this);
-        fragment = new MyPlacesFragment();
+        fragment = MyPlacesFragment.newInstance(userId);
         getFragmentManager().beginTransaction().replace(R.id.content_venues, fragment).commit();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
            if (toolbar != null)
               setSupportActionBar(toolbar);
+        ServiceHelper.get(this).getPlayerVenues(userId);
     }
 
 
@@ -104,10 +93,8 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
         final long userId = args.getLong(EXTRA_USER_ID);
-        final Uri userUri = ContentUris.withAppendedId(BuyPlacesContract.Players.CONTENT_URI, userId);
-        return new CursorLoader(this, userUri, null, null, null, null);
+        return new CursorLoader(this, BuyPlacesContract.Players.CONTENT_URI, null, BuyPlacesContract.Players.WITH_SPECIFIED_ID_SELECTION, new String[]{String.valueOf(userId)}, null);
     }
 
     @Override
@@ -134,7 +121,7 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
 
     public static void start(Context context, Player player) {
         Intent intent = new Intent(context, UserActivity.class);
-        intent.putExtra(EXTRA_USER_ID, player.getRowId());
+        intent.putExtra(EXTRA_USER_ID, player.getId());
         context.startActivity(intent);
     }
 

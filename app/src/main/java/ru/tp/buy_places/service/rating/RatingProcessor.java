@@ -69,6 +69,7 @@ public class RatingProcessor extends Processor {
         resetPositions(mContext);
         user.writeToDatabase(mContext);
         users.writeToDatabase(mContext, mOffset);
+        mContext.getContentResolver().notifyChange(BuyPlacesContract.Players.CONTENT_URI, null);
 
     }
 

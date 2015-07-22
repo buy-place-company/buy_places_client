@@ -11,6 +11,9 @@ import com.google.android.gms.maps.model.LatLng;
 import ru.tp.buy_places.service.action_with_place.ActionWithPlaceProcessorCreator;
 import ru.tp.buy_places.service.authentication.AuthenticationProcessor;
 import ru.tp.buy_places.service.authentication.AuthenticationProcessorCreator;
+import ru.tp.buy_places.service.authentication.BaseLoginProcessorCreator;
+import ru.tp.buy_places.service.authentication.LogoutProcessorCreator;
+import ru.tp.buy_places.service.authentication.RegistrationProcessorCreator;
 import ru.tp.buy_places.service.deals.AcceptDealProcessorCreator;
 import ru.tp.buy_places.service.deals.DealsProcessorCreator;
 import ru.tp.buy_places.service.deals.RejectDealProcessorCreator;
@@ -47,6 +50,11 @@ public class BuyItService extends IntentService {
     private static final String EXTRA_RATING_OFFSET = "EXTRA_OFFSET";
 
     private static final String EXTRA_DEAL_ID = "EXTRA_DEAL_ID";
+    private static final String EXTRA_PASSWORD = "EXTRA_PASSWORD";
+    private static final String ACTION_BASE_LOGIN = "ru.mail.buy_it.service.ACTION_BASE_LOGIN";
+    private static final String EXTRA_EMAIL = "EXTRA_EMAIL";
+    private static final String ACTION_REGISTRATION = "ru.mail.buy_it.service.ACTION_REGISTRATION";
+    private static final String ACTION_LOGOUT = "ru.mail.buy_it.service.ACTION_LOGOUT";
 
     public BuyItService() {
         super("BuyItService");
@@ -192,8 +200,34 @@ public class BuyItService extends IntentService {
         context.startService(intent);
     }
 
+    public static void startBaseLoginService(Context context, ResultReceiver serviceCallback, long requestId, String username, String password) {
+        Intent intent = new Intent(ACTION_BASE_LOGIN, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        intent.putExtra(EXTRA_USERNAME, username);
+        intent.putExtra(EXTRA_PASSWORD, password);
+        context.startService(intent);
+    }
+
+    public static void startRegistrationService(Context context, ResultReceiver serviceCallback, long requestId, String email, String username, String password) {
+        Intent intent = new Intent(ACTION_REGISTRATION, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        intent.putExtra(EXTRA_USERNAME, username);
+        intent.putExtra(EXTRA_PASSWORD, password);
+        intent.putExtra(EXTRA_EMAIL, email);
+        context.startService(intent);
+    }
+
     public static void startGetDealsService(Context context, ResultReceiver serviceCallback, long requestId) {
         Intent intent = new Intent(ACTION_GET_DEALS, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        context.startService(intent);
+    }
+
+    public static void startLogoutService(Context context, ResultReceiver serviceCallback, long requestId) {
+        Intent intent = new Intent(ACTION_LOGOUT, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
         context.startService(intent);
@@ -268,6 +302,23 @@ public class BuyItService extends IntentService {
             case ACTION_GET_DEALS:
                 Processor getDealsProcessor = new DealsProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver)).createProcessor();
                 getDealsProcessor.process();
+                break;
+            case ACTION_BASE_LOGIN:
+                final String baseLoginUsername = intent.getStringExtra(EXTRA_USERNAME);
+                final String baseLoginPassword = intent.getStringExtra(EXTRA_PASSWORD);
+                Processor baseLoginProcessor = new BaseLoginProcessorCreator(this, new AuthenticationProcessorResultListener(intent, resultReceiver), baseLoginUsername, baseLoginPassword).createProcessor();
+                baseLoginProcessor.process();
+                break;
+            case ACTION_REGISTRATION:
+                final String registrationUsername = intent.getStringExtra(EXTRA_USERNAME);
+                final String registrationPassword = intent.getStringExtra(EXTRA_PASSWORD);
+                final String registrationEmail = intent.getStringExtra(EXTRA_EMAIL);
+                Processor registrationProcessor = new RegistrationProcessorCreator(this, new AuthenticationProcessorResultListener(intent, resultReceiver), registrationEmail, registrationUsername, registrationPassword).createProcessor();
+                registrationProcessor.process();
+                break;
+            case ACTION_LOGOUT:
+                Processor logoutProcessor = new LogoutProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver)).createProcessor();
+                logoutProcessor.process();
                 break;
         }
     }

@@ -71,6 +71,12 @@ public class BuyPlacesContentProvider extends ContentProvider {
             case PLACES:
                 deleted = db.delete(Places.TABLE_NAME, selection, selectionArgs);
                 break;
+            case PLAYERS:
+                deleted = db.delete(Players.TABLE_NAME, selection, selectionArgs);
+                break;
+            case DEALS:
+                deleted = db.delete(Deals.TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }

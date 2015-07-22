@@ -1,27 +1,26 @@
 package ru.tp.buy_places.fragments.objects;
 
-import android.database.Cursor;
-import android.os.Bundle;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
+import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import ru.tp.buy_places.R;
-import ru.tp.buy_places.activities.VenueActivity;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.resourses.Places;
+import ru.tp.buy_places.utils.AccountManagerHelper;
 
 
-public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, MyPlacesAdapter.OnItemClickListener {
+public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final String ARG_USER_ID = "ARG_USER_ID";
     private RecyclerView mRecycleView;
     private MyPlacesAdapter myPlacesAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -33,6 +32,14 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
 
     public static Fragment newInstance() {
         Fragment fragment = new MyPlacesFragment();
+        return fragment;
+    }
+
+    public static Fragment newInstance(long userId) {
+        Fragment fragment = new MyPlacesFragment();
+        Bundle args = new Bundle();
+        args.putLong(ARG_USER_ID, userId);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -51,15 +58,18 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecycleView.setLayoutManager(mLayoutManager);
         myPlacesAdapter = new MyPlacesAdapter(getActivity());
-        myPlacesAdapter.setOnItemClickListener(this);
         mRecycleView.setAdapter(myPlacesAdapter);
-        getLoaderManager().initLoader(0, null, this);
+        long userId = getArguments()!=null && getArguments().containsKey(ARG_USER_ID)?getArguments().getLong(ARG_USER_ID):AccountManagerHelper.getPlayerId(getActivity());
+        final Bundle args = new Bundle();
+        args.putLong(ARG_USER_ID, userId);
+        getLoaderManager().initLoader(0, args, this);
         return mRecycleView;
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, BuyPlacesContract.Places.ALL_COLUMNS_PROJECTION, BuyPlacesContract.Places.IS_IN_OWNERSHIP_SELECTION, null, null);
+        long userId = args.getLong(ARG_USER_ID);
+        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, BuyPlacesContract.Places.ALL_COLUMNS_PROJECTION, BuyPlacesContract.Places.WITH_SPECIFIED_OWNER_ID_SELECTION, new String[]{String.valueOf(userId)}, null);
     }
 
     @Override
@@ -71,14 +81,6 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         myPlacesAdapter.setData(null);
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        final long venuesRowId = myPlacesAdapter.getItemId(position);
-        final LatLng venuesLocation = new LatLng(myPlacesAdapter.getItem(position).getLatitude(), myPlacesAdapter.getItem(position).getLongitude());
-        final VenueActivity.VenueType venuesType = VenueActivity.VenueType.fromVenue(mPlaces.getPlaces().get(position));
-        VenueActivity.start(this, venuesRowId, venuesLocation, venuesType);
     }
 
 }
