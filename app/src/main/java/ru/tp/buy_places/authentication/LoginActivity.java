@@ -32,6 +32,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mAuthenticationCompletedReceiver, new IntentFilter(ServiceHelper.ACTION_REQUEST_RESULT));
         mLoginViaVKButton = (Button) findViewById(R.id.button_login_via_vk);
