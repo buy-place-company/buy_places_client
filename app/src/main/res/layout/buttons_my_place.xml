@@ -12,6 +12,8 @@
         android:id="@+id/button_upgrade_place"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        app:borderWidth="0dp"
+        android:layout_margin="@dimen/fab_compat_margin"
         android:src="@drawable/ic_chevron_double_up_white_48dp"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -19,8 +21,10 @@
         android:layout_height="wrap_content"
         app:fabSize="mini"
         android:id="@+id/button_sell_place"
-        android:src="@drawable/ic_currency_usd_white_18dp"
+        android:src="@drawable/ic_currency_usd_white_48dp"
         android:layout_centerVertical="true"
+        app:borderWidth="0dp"
+        android:layout_margin="@dimen/fab_compat_margin"
         android:layout_toStartOf="@+id/button_upgrade_place" />
 
 </RelativeLayout>
