@@ -35,7 +35,7 @@ public class ActionWithPlaceProcessor extends Processor {
 
     @Override
     protected Response parseResponseJSONObject(JSONObject responseJSONObject) {
-        int status = responseJSONObject.optInt("code");
+        int status = responseJSONObject.optInt("status");
         String message = responseJSONObject.optString("message", null);
         JSONObject userJSONObject = responseJSONObject.optJSONObject("user");
         JSONObject venueJSONObject = responseJSONObject.optJSONObject("venue");

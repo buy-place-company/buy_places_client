@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.model.LatLng;
 
 import ru.tp.buy_places.R;
-import ru.tp.buy_places.activities.PlaceActivity;
+import ru.tp.buy_places.activities.VenueActivity;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.resourses.Places;
 
@@ -78,8 +78,8 @@ public class NearPlacesFragment extends Fragment implements LoaderManager.Loader
     public void onItemClick(View view, int position) {
         final long venuesRowId = nearPlacesAdapter.getItemId(position);
         final LatLng venuesLocation = new LatLng(nearPlacesAdapter.getItem(position).getLatitude(), nearPlacesAdapter.getItem(position).getLongitude());
-        final PlaceActivity.VenueType venuesType = mPlaces.getPlaces().get(position).isInOwnership() ? PlaceActivity.VenueType.MINE : mPlaces.getPlaces().get(position).getOwner() == null ? PlaceActivity.VenueType.NOBODYS : PlaceActivity.VenueType.ANOTHERS;
-        PlaceActivity.start(this, venuesRowId, venuesLocation, venuesType);
+        final VenueActivity.VenueType venuesType = mPlaces.getPlaces().get(position).isInOwnership() ? VenueActivity.VenueType.MINE : mPlaces.getPlaces().get(position).getOwner() == null ? VenueActivity.VenueType.NOBODYS : VenueActivity.VenueType.ANOTHERS;
+        VenueActivity.start(this, venuesRowId, venuesLocation, venuesType);
     }
 
 }

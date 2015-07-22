@@ -3,24 +3,28 @@ package ru.tp.buy_places.activities;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,29 +50,44 @@ import ru.tp.buy_places.SimpleSectionedRecyclerViewAdapter;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.ServiceHelper;
 import ru.tp.buy_places.service.resourses.Place;
+import ru.tp.buy_places.service.resourses.Player;
 
-public class PlaceActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, OnMapReadyCallback {
+public class VenueActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, OnMapReadyCallback {
     public static final String EXTRA_VENUES_ROW_ID = "EXTRA_VENUES_ROW_ID";
     public static final String EXTRA_VENUES_LOCATION = "EXTRA_VENUES_LOCATION";
     public static final String EXTRA_VENUES_TYPE = "EXTRA_VENUES_TYPE";
-    private static final String LOG_TAG = PlaceActivity.class.getSimpleName();
+    private static final String LOG_TAG = VenueActivity.class.getSimpleName();
     private RecyclerView mInfoList;
     private VenueInfoListAdapter mVenueInfoListAdapter;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private FrameLayout mButtonsContainerLayout;
+
+
+    private long mSellVenueRequestId = 0;
+    private long mUpgradeVenueRequestId = 0;
+    private long mBuyVenueRequestId = 0;
+    private long mCollectLootRequestId = 0;
+    private CoordinatorLayout mCoordinatorLayout;
+    private BroadcastReceiver mServiceResultReceiver;
+
+
+
+    private FloatingActionButton mUpgradeVenueButton;
+
 
     public static void start(Fragment fragment, long venuesRowId, LatLng venuesLocation, VenueType type) {
-        Intent intent = new Intent(fragment.getActivity(), PlaceActivity.class);
-        intent.putExtra(PlaceActivity.EXTRA_VENUES_ROW_ID, venuesRowId);
-        intent.putExtra(PlaceActivity.EXTRA_VENUES_LOCATION, venuesLocation);
-        intent.putExtra(PlaceActivity.EXTRA_VENUES_TYPE, type);
+        Intent intent = new Intent(fragment.getActivity(), VenueActivity.class);
+        intent.putExtra(VenueActivity.EXTRA_VENUES_ROW_ID, venuesRowId);
+        intent.putExtra(VenueActivity.EXTRA_VENUES_LOCATION, venuesLocation);
+        intent.putExtra(VenueActivity.EXTRA_VENUES_TYPE, type);
         fragment.startActivity(intent);
     }
 
     public static void start(Activity activity, long venuesRowId, LatLng venuesLocation, VenueType type) {
-        Intent intent = new Intent(activity, PlaceActivity.class);
-        intent.putExtra(PlaceActivity.EXTRA_VENUES_ROW_ID, venuesRowId);
-        intent.putExtra(PlaceActivity.EXTRA_VENUES_LOCATION, venuesLocation);
-        intent.putExtra(PlaceActivity.EXTRA_VENUES_TYPE, type);
+        Intent intent = new Intent(activity, VenueActivity.class);
+        intent.putExtra(VenueActivity.EXTRA_VENUES_ROW_ID, venuesRowId);
+        intent.putExtra(VenueActivity.EXTRA_VENUES_LOCATION, venuesLocation);
+        intent.putExtra(VenueActivity.EXTRA_VENUES_TYPE, type);
         activity.startActivity(intent);
     }
 
@@ -76,7 +95,6 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
     private static final int VENUE_LOADER_ID = 0;
     private Place mPlace;
 
-    private VenueView mVenueView;
     private MapView mMapView;
     private GoogleMap mGoogleMap;
     private FrameLayout mMapContainer;
@@ -95,6 +113,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
         mInfoList.setLayoutManager(new LinearLayoutManager(this));
         mVenueInfoListAdapter = new VenueInfoListAdapter(this);
         mInfoList.setAdapter(mVenueInfoListAdapter);
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.app_bar_layout);
         mMapContainer = (FrameLayout) findViewById(R.id.map_container);
         GoogleMapOptions googleMapOptions = new GoogleMapOptions()
@@ -106,14 +125,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                         .build());
         mMapView = new MapView(this, googleMapOptions);
         mMapContainer.addView(mMapView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        mVenueView = new VenueView(this);
-        //mVenueView.setNameTextView((TextView) findViewById(R.id.text_view_venues_name));
-        //mVenueView.setOwnerTextView((TextView) findViewById(R.id.text_view_owner));
-        //mVenueView.setLevelTextView((TextView) findViewById(R.id.text_view_venues_level));
-        mVenueView.setButtonsContainerLayout((FrameLayout) findViewById(R.id.button_container));
-        //mVenueView.setPriceTextView((TextView) findViewById(R.id.text_view_venues_price));
-        //mVenueView.setCheckinTextView((TextView) findViewById(R.id.text_view_venues_checkins_count));
-
+        mButtonsContainerLayout = (FrameLayout) findViewById(R.id.button_container);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null)
             setSupportActionBar(toolbar);
@@ -130,9 +142,12 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
 
         mMapView.onCreate(savedInstanceState);
         mMapView.getMapAsync(this);
-        Log.d(LOG_TAG, "onCreate(); venuesRowId: " + venuesRowId);
-    }
 
+
+        IntentFilter intentFilter = new IntentFilter(ServiceHelper.ACTION_REQUEST_RESULT);
+        mServiceResultReceiver = new VenueBroadcastReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mServiceResultReceiver, intentFilter);
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -171,44 +186,54 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.d(LOG_TAG, "onLoadFinished(); data.getCount(): " + data.getCount());
         if (data.moveToFirst()) {
             mPlace = Place.fromCursor(data);
             mCollapsingToolbarLayout.setTitle(mPlace.getName());
             int commonHeaderPositionBasePosition = 0;
             int statisticsHeaderPositionBasePosition = commonHeaderPositionBasePosition;
-            List<InfoItem> infoItems = new ArrayList<>();
-            if (mPlace.getPrice() != null) {
-                infoItems.add(new InfoItem(getString(R.string.statistics_price), InfoType.PRICE, Long.toString(mPlace.getPrice())));
+            List<VenueInfoListAdapter.InfoItem> infoItems = new ArrayList<>();
+            if (mPlace.getOwner() != null) {
+                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_owner), InfoType.PLAYER, mPlace.getOwner().getUsername(), mPlace.getOwner()));
+                statisticsHeaderPositionBasePosition++;
+            }
+            if (mPlace.getBuyPrice() != null) {
+                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_buy_price), InfoType.PRICE, Long.toString(mPlace.getBuyPrice())));
+                statisticsHeaderPositionBasePosition++;
+            }
+            if (mPlace.getSellPrice() != null) {
+                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_sell_price), InfoType.PRICE, Long.toString(mPlace.getBuyPrice())));
+                statisticsHeaderPositionBasePosition++;
+            }
+            if (mPlace.getSellPrice() != null) {
+                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_upgrade_price), InfoType.PRICE, Long.toString(mPlace.getBuyPrice())));
+                statisticsHeaderPositionBasePosition++;
+            }
+            if (mPlace.getLoot() != null && mPlace.getMaxLoot() != null) {
+                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_loot), InfoType.PRICE, Long.toString(mPlace.getLoot())+" / "+Long.toString(mPlace.getMaxLoot())));
                 statisticsHeaderPositionBasePosition++;
             }
             if (mPlace.getCheckinsCount() > 0) {
-                infoItems.add(new InfoItem(getString(R.string.statistics_checkins), InfoType.CHECKINS, Long.toString(mPlace.getCheckinsCount())));
-                statisticsHeaderPositionBasePosition++;
-            }
-            if (mPlace.getOwner() != null) {
-                infoItems.add(new InfoItem(getString(R.string.statistics_owner), InfoType.PLAYER, mPlace.getOwner().getUsername()));
+                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_checkins), InfoType.CHECKINS, Long.toString(mPlace.getCheckinsCount())));
                 statisticsHeaderPositionBasePosition++;
             }
             if (mPlace.getLevel() >= 0) {
-                infoItems.add(new InfoItem(getString(R.string.statistics_level), InfoType.LEVEL, String.valueOf(mPlace.getLevel())));
+                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_level), InfoType.LEVEL, String.valueOf(mPlace.getLevel())));
                 statisticsHeaderPositionBasePosition++;
             }
             if (mPlace.getIncome() != null) {
-                infoItems.add(new InfoItem(getString(R.string.statistics_income), InfoType.PRICE, Long.toString(mPlace.getIncome())));
+                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_income), InfoType.PRICE, Long.toString(mPlace.getIncome())));
             }
             if (mPlace.getExpense() != null) {
-                infoItems.add(new InfoItem(getString(R.string.statistics_outcome), InfoType.PRICE, Long.toString(mPlace.getExpense())));
+                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_outcome), InfoType.PRICE, Long.toString(mPlace.getExpense())));
             }
             if (mPlace.getIncome() != null && mPlace.getExpense() != null) {
-                infoItems.add(new InfoItem(getString(R.string.statistics_profit), InfoType.PRICE, Long.toString(mPlace.getIncome() - mPlace.getExpense())));
+                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_profit), InfoType.PRICE, Long.toString(mPlace.getIncome() - mPlace.getExpense())));
             }
-            mVenueInfoListAdapter.setInfoItems(infoItems);
 
+            mVenueInfoListAdapter.setInfoItems(infoItems);
 
             //This is the code to provide a sectioned list
             List<SimpleSectionedRecyclerViewAdapter.Section> sections = new ArrayList<>();
-
             //Sections
             sections.add(new SimpleSectionedRecyclerViewAdapter.Section(commonHeaderPositionBasePosition, getString(R.string.venue_info_common)));
             sections.add(new SimpleSectionedRecyclerViewAdapter.Section(statisticsHeaderPositionBasePosition, getString(R.string.venue_info_stats)));
@@ -221,22 +246,20 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
             //Apply this adapter to the RecyclerView
             mInfoList.setAdapter(mSectionedAdapter);
 
-
-
             LayoutInflater inflater = LayoutInflater.from(this);
             mVenueType = mPlace.isInOwnership() ? VenueType.MINE : mPlace.getOwner() == null ? VenueType.NOBODYS : VenueType.ANOTHERS;
-            mVenueView.getButtonsContainerLayout().removeAllViews();
+            mButtonsContainerLayout.removeAllViews();
             switch (mVenueType) {
                 case MINE:
-                    View mineVenueButtons = inflater.inflate(R.layout.buttons_my_place, mVenueView.getButtonsContainerLayout());
+                    View mineVenueButtons = inflater.inflate(R.layout.buttons_my_place, mButtonsContainerLayout);
                     setMineVenueButtonsOnClickListeners(mineVenueButtons);
                     break;
                 case ANOTHERS:
-                    View anothersVenueButtons = inflater.inflate(R.layout.buttons_player_place, mVenueView.getButtonsContainerLayout());
+                    View anothersVenueButtons = inflater.inflate(R.layout.buttons_player_place, mButtonsContainerLayout);
                     setAnothersVenueButtonsOnClickListeners(anothersVenueButtons);
                     break;
                 case NOBODYS:
-                    final View nobodysVenueButtons = inflater.inflate(R.layout.buttons_nobody_place, mVenueView.getButtonsContainerLayout());
+                    final View nobodysVenueButtons = inflater.inflate(R.layout.buttons_nobody_place, mButtonsContainerLayout);
                     setNobodysVenueButtonsOnClickListeners(nobodysVenueButtons);
                     break;
 
@@ -253,8 +276,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                 dialogBuilder.setTitle(DIALOG);
                 dialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        ServiceHelper.get(PlaceActivity.this).buyVenue(mPlace.getId());
-                        Toast.makeText(PlaceActivity.this, "Запрос на покупку отправлен", Toast.LENGTH_LONG).show();
+                        mBuyVenueRequestId = ServiceHelper.get(VenueActivity.this).buyVenue(mPlace.getId());
                     }
                 });
                 dialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
@@ -267,7 +289,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                     }
                 });
 
-                dialogBuilder.setMessage("Вы действительно хотите купить здание за " + mPlace.getPrice() + "?");
+                dialogBuilder.setMessage("Вы действительно хотите купить здание за " + mPlace.getBuyPrice() + "?");
                 dialogBuilder.show();
             }
         });
@@ -282,8 +304,8 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                 dialogBuilder.setTitle(DIALOG);
                 dialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        ServiceHelper.get(PlaceActivity.this).suggestDeal(mPlace.getId(), 1000l);
-                        Toast.makeText(PlaceActivity.this, "Запрос на заключение сделки отправлен", Toast.LENGTH_LONG).show();
+                        ServiceHelper.get(VenueActivity.this).suggestDeal(mPlace.getId(), 1000l);
+                        Toast.makeText(VenueActivity.this, "Запрос на заключение сделки отправлен", Toast.LENGTH_LONG).show();
                     }
                 });
                 dialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
@@ -307,16 +329,14 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
         final AlertDialog.Builder upgradeDialogBuilder = new AlertDialog.Builder(this);
         FloatingActionButton upgradeVenueButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_upgrade_place);
         FloatingActionButton sellVenueButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_sell_place);
+        FloatingActionButton collectLootButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_collect_loot);
         upgradeVenueButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 upgradeDialogBuilder.setTitle(DIALOG);
                 upgradeDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        ServiceHelper.get(PlaceActivity.this).upgradeVenue(mPlace.getId());
-                        Toast.makeText(PlaceActivity.this,
-                                "Здание повысилось до " + Integer.toString(mPlace.getLevel() + 1) + " уровня",
-                                Toast.LENGTH_LONG).show();
+                        mUpgradeVenueRequestId = ServiceHelper.get(VenueActivity.this).upgradeVenue(mPlace.getId());
                     }
                 });
                 upgradeDialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
@@ -338,10 +358,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                 sellDialogBuilder.setTitle(DIALOG);
                 sellDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        ServiceHelper.get(PlaceActivity.this).sellVenue(mPlace.getId());
-                        Toast.makeText(PlaceActivity.this, "Здание продано",
-                                Toast.LENGTH_LONG).show();
-                        //PlaceActivity.this.finish();
+                        mSellVenueRequestId = ServiceHelper.get(VenueActivity.this).sellVenue(mPlace.getId());
                     }
                 });
                 sellDialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
@@ -358,13 +375,19 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                 sellDialogBuilder.show();
             }
         });
+        collectLootButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCollectLootRequestId = ServiceHelper.get(VenueActivity.this).collectLootFromPlace(mPlace.getId());
+            }
+        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
-
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mServiceResultReceiver);
     }
 
     @Override
@@ -390,27 +413,7 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
         }
     }
 
-    public class InfoItem {
-        private String mKey;
-        public InfoType mType;
-        private String mValue;
-
-        public InfoItem(String key, InfoType type, String value) {
-            mKey = key;
-            mType = type;
-            mValue = value;
-        }
-
-        public String getKey() {
-            return mKey;
-        }
-
-        public String getValue() {
-            return mValue;
-        }
-    }
-
-    private class VenueInfoListAdapter extends RecyclerView.Adapter<VenueInfoListAdapter.ViewHolder> {
+    public static class VenueInfoListAdapter extends RecyclerView.Adapter<VenueInfoListAdapter.ViewHolder> {
 
         private final Context mContext;
         List<InfoItem> mInfoItems = new ArrayList<>();
@@ -421,12 +424,12 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
 
         @Override
         public VenueInfoListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(mContext).inflate(R.layout.item_venues_price_info, parent, false);
+            View v = LayoutInflater.from(mContext).inflate(R.layout.item_venues_info, parent, false);
             return new ViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(VenueInfoListAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(VenueInfoListAdapter.ViewHolder holder, final int position) {
             holder.venueInfoKey.setText(mInfoItems.get(position).getKey());
             holder.venueInfoValue.setText(mInfoItems.get(position).getValue());
             switch (mInfoItems.get(position).mType) {
@@ -438,6 +441,12 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                     break;
                 case PLAYER:
                     holder.venueInfoValue.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_grey600_18dp, 0, 0, 0);
+                    holder.itemView.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            UserActivity.start(mContext, (Player)mInfoItems.get(position).getOnClickModel());
+                        }
+                    });
                     break;
                 case LEVEL:
                     holder.venueInfoValue.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_crown_grey600_18dp, 0, 0, 0);
@@ -467,6 +476,36 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
                 venueInfoValue = (TextView) itemView.findViewById(R.id.text_view_venues_info_value);
             }
         }
+
+        public static class InfoItem {
+            private String mKey;
+            public InfoType mType;
+            private String mValue;
+            private Object mOnClickModel;
+
+            public InfoItem(String key, InfoType type, String value, Object onClickModel) {
+                mKey = key;
+                mType = type;
+                mValue = value;
+                mOnClickModel = onClickModel;
+            }
+
+            public InfoItem(String key, InfoType type, String value) {
+                this(key, type, value, null);
+            }
+
+            public String getKey() {
+                return mKey;
+            }
+
+            public String getValue() {
+                return mValue;
+            }
+
+            public Object getOnClickModel() {
+                return mOnClickModel;
+            }
+        }
     }
 
     public enum InfoType {
@@ -474,5 +513,79 @@ public class PlaceActivity extends AppCompatActivity implements LoaderManager.Lo
         CHECKINS,
         PLAYER,
         LEVEL
+    }
+
+    private class VenueBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            long requestId = intent.getLongExtra(ServiceHelper.EXTRA_REQUEST_ID, 0);
+            int status = intent.getIntExtra(ServiceHelper.EXTRA_RESULT_CODE, 0);
+            if (requestId == mCollectLootRequestId) {
+                String collectLootMessage = getCollectLootMessage(VenueActivity.this, status);
+                Snackbar.make(mCoordinatorLayout, collectLootMessage, Snackbar.LENGTH_LONG).setAction("OK", new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                }).show();
+            } else if (requestId == mBuyVenueRequestId){
+                String buyVenueMessage = getBuyVenueMessage(VenueActivity.this, status);
+                Snackbar.make(mCoordinatorLayout, buyVenueMessage, Snackbar.LENGTH_LONG).setAction("OK", new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                }).show();
+            } else if (requestId == mUpgradeVenueRequestId) {
+                String upgradeVenueMessage = getUpgradeVenueMessage(VenueActivity.this, status);
+                Snackbar.make(mCoordinatorLayout, upgradeVenueMessage, Snackbar.LENGTH_LONG).setAction("OK", new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                }).show();
+            } else if (requestId == mSellVenueRequestId) {
+                String sellVenueMessage = getSellVenueMessage(VenueActivity.this, status);
+                Snackbar.make(mCoordinatorLayout, sellVenueMessage, Snackbar.LENGTH_LONG).setAction("OK", new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                }).show();
+            }
+        }
+
+        private String getCollectLootMessage(Context context, int status) {
+            switch (status) {
+                case 200:
+                    return context.getString(R.string.message_collect_loot_success);
+                default:
+                    return context.getString(R.string.message_collect_loot_failure);
+            }
+        }
+
+        private String getBuyVenueMessage(Context context, int status) {
+            switch (status) {
+                case 200:
+                    return context.getString(R.string.message_buy_venue_success);
+                default:
+                    return context.getString(R.string.message_buy_venue_failure);
+            }
+        }
+
+        private String getUpgradeVenueMessage(Context context, int status) {
+            switch (status) {
+                case 200:
+                    return context.getString(R.string.message_upgrade_venue_success);
+                default:
+                    return context.getString(R.string.message_upgrade_venue_failure);
+            }
+        }
+
+        private String getSellVenueMessage(Context context, int status) {
+            switch (status) {
+                case 200:
+                    return context.getString(R.string.message_sell_venue_success);
+                default:
+                    return context.getString(R.string.message_sell_venue_failure);
+            }
+        }
     }
 }

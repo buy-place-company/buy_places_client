@@ -126,7 +126,7 @@ public class BuyItService extends IntentService {
         context.startService(intent);
     }
 
-    public static void startCollectLootFromPlaceService(Context context, ResultReceiver serviceCallback, long requestId, String id) {
+    public static void startCollectLootService(Context context, ResultReceiver serviceCallback, long requestId, String id) {
         Intent intent = new Intent(ACTION_VENUE, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
         intent.putExtra(EXTRA_REQUEST_ID, requestId);

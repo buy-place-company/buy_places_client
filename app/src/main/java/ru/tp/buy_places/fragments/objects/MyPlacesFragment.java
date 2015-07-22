@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.model.LatLng;
 
 import ru.tp.buy_places.R;
-import ru.tp.buy_places.activities.PlaceActivity;
+import ru.tp.buy_places.activities.VenueActivity;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.resourses.Places;
 
@@ -77,8 +77,8 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
     public void onItemClick(View view, int position) {
         final long venuesRowId = myPlacesAdapter.getItemId(position);
         final LatLng venuesLocation = new LatLng(myPlacesAdapter.getItem(position).getLatitude(), myPlacesAdapter.getItem(position).getLongitude());
-        final PlaceActivity.VenueType venuesType = PlaceActivity.VenueType.fromVenue(mPlaces.getPlaces().get(position));
-        PlaceActivity.start(this, venuesRowId, venuesLocation, venuesType);
+        final VenueActivity.VenueType venuesType = VenueActivity.VenueType.fromVenue(mPlaces.getPlaces().get(position));
+        VenueActivity.start(this, venuesRowId, venuesLocation, venuesType);
     }
 
 }

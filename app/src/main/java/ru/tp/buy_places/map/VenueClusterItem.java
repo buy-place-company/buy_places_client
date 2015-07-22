@@ -32,7 +32,7 @@ public class VenueClusterItem implements ClusterItem {
 
 
     public long getPrice() {
-        return mPlace.getPrice();
+        return mPlace.getBuyPrice();
     }
 
 

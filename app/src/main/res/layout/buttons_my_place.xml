@@ -9,18 +9,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:fabSize="normal"
-        android:id="@+id/button_upgrade_place"
-        android:layout_alignParentTop="true"
+        android:id="@+id/button_collect_loot"
+        app:borderWidth="0dp"
+        android:src="@drawable/ic_cash_multiple_white_48dp"
+        android:layout_margin="@dimen/fab_compat_margin"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_chevron_double_up_white_48dp"/>
+        app:layout_anchor="@id/recycler_view_info"
+        app:layout_anchorGravity="bottom|end"
+        android:layout_gravity="bottom|end" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="mini"
+        android:id="@+id/button_upgrade_place"
+        app:borderWidth="0dp"
+        android:src="@drawable/ic_chevron_double_up_white_36dp"
+        android:layout_margin="@dimen/fab_compat_margin"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/button_collect_loot" />
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:fabSize="mini"
         android:id="@+id/button_sell_place"
-        android:src="@drawable/ic_currency_usd_white_18dp"
+        android:src="@drawable/ic_currency_usd_white_36dp"
+        app:borderWidth="0dp"
+        android:layout_margin="@dimen/fab_compat_margin"
         android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/button_upgrade_place" />
+        android:layout_toStartOf="@+id/button_upgrade_place"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="mini"
+        android:id="@+id/button_suggest_deal"
+        android:src="@drawable/ic_thumbs_up_down_white_36dp"
+        app:borderWidth="0dp"
+        android:layout_margin="@dimen/fab_compat_margin"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/button_sell_place"/>
 
 </RelativeLayout>

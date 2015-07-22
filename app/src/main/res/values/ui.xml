@@ -6,13 +6,18 @@
     <string name="navigation_rating">Rating</string>
     <string name="navigation_settings">Settings</string>
 
-    <string name="statistics_price">Price</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="statistics_buy_price">Price</string>
+    <string name="statistics_sell_price">Sell price</string>
+    <string name="statistics_upgrade_price">Upgrade price</string>
     <string name="statistics_outcome">Outcome</string>
     <string name="statistics_income">Income</string>
     <string name="statistics_profit">Profit</string>
     <string name="statistics_owner">Owner</string>
     <string name="statistics_checkins">Checkins</string>
     <string name="statistics_level">Level</string>
+    <string name="statistics_loot">Loot</string>
 
     <string name="dialog_positive_button_title">Yes</string>
     <string name="dialog_negative_button_title">No</string>
@@ -30,7 +35,14 @@
     <string name="venue_info_common">Common</string>
     <string name="venue_info_stats">Statistics</string>
 
-
+    <string name="message_collect_loot_success">Вы успешно собрали накопеления</string>
+    <string name="message_collect_loot_failure">Сбор накоплений не удался</string>
+    <string name="message_buy_venue_success">Вы успешно купили здание</string>
+    <string name="message_buy_venue_failure">Покупка здания не удалась</string>
+    <string name="message_upgrade_venue_success">Вы успешно улучшили здание</string>
+    <string name="message_upgrade_venue_failure">Улучшение здания не удалось</string>
+    <string name="message_sell_venue_success">Вы успешно продали здание</string>
+    <string name="message_sell_venue_failure">Продажа здания не удалось</string>
 
 
     <string name="last_visited_message">Вы были там</string>
