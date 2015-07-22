@@ -43,11 +43,15 @@ public class CustomInfoWindowAdapter implements  GoogleMap.InfoWindowAdapter, Ve
                 TextView priceTextView = (TextView) view.findViewById(R.id.text_view_venues_price);
                 TextView levelTextView = (TextView) view.findViewById(R.id.text_view_venues_level);
                 TextView checkinsCountTextView = (TextView) view.findViewById(R.id.text_view_venues_checkins_count);
-                nameTextView.setText(clusterItem.getName());
+                if (clusterItem.getName() != null)
+                    nameTextView.setText(clusterItem.getName());
                 iconImageView.setImageResource(R.mipmap.ic_object);
-                priceTextView.setText(Long.toString(clusterItem.getPrice()));
-                levelTextView.setText(Integer.toString(clusterItem.getLevel()));
-                checkinsCountTextView.setText(Long.toString(clusterItem.getCheckinsCount()));
+                if (clusterItem.getBuyPrice() >= 0)
+                    priceTextView.setText(Long.toString(clusterItem.getBuyPrice()));
+                if (clusterItem.getLevel() >= 0)
+                    levelTextView.setText(Integer.toString(clusterItem.getLevel()));
+                if (clusterItem.getCheckinsCount() >= 0)
+                    checkinsCountTextView.setText(Long.toString(clusterItem.getCheckinsCount()));
                 return view;
             } else {
                 return null;

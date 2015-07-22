@@ -6,9 +6,13 @@
     <string name="navigation_rating">Рейтинг</string>
     <string name="navigation_settings">Настройки</string>
 
+    <string name="login_page_name">Логин</string>
+    <string name="registration_page_name">Регистрация</string>
+
     <string name="username">Имя пользователя</string>
     <string name="password">Пароль</string>
-
+    <string name="email">Email</string>
+    <string name="password_confirm">Подтверждение пароля</string>
     <string name="statistics_buy_price">Цена</string>
     <string name="statistics_sell_price">Цена продажи</string>
     <string name="statistics_upgrade_price">Цена улучшения</string>
