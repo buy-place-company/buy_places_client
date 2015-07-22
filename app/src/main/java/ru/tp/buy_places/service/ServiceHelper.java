@@ -22,8 +22,8 @@ public class ServiceHelper {
     private static final String GET_VENUES = "GET_VENUES";
     private static final String PLAYERS = "PLAYERS";
     private static final String VENUES_AROUND_THE_POINT = "VENUES_AROUND_THE_POINT";
-    private static final String EXTRA_REQUEST_ID = "EXTRA_REQUEST_ID";
-    private static final String EXTRA_RESULT_CODE = "EXTRA_RESULT_CODE";
+    public static final String EXTRA_REQUEST_ID = "EXTRA_REQUEST_ID";
+    public static final String EXTRA_RESULT_CODE = "EXTRA_RESULT_CODE";
     public static final String ACTION_REQUEST_RESULT = "ACTION_REQUEST_RESULT";
 
     private static final String DEALS = "DEALS";
@@ -169,7 +169,7 @@ public class ServiceHelper {
             requestId = mRequestIdGenerator.incrementAndGet();
             mPendingRequests.put(POST_VENUE, requestId);
             ResultReceiver serviceCallback = new VenueResultReceiver(null, POST_VENUE);
-            BuyItService.startUpgradeVenueService(mContext, serviceCallback, requestId, id);
+            BuyItService.startCollectLootService(mContext, serviceCallback, requestId, id);
         }
         return requestId;
     }

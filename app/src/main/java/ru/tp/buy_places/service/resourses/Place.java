@@ -190,8 +190,24 @@ public class Place implements Resource {
         return mOwner;
     }
 
-    public Long getPrice() {
+    public Long getBuyPrice() {
         return mBuyPrice;
+    }
+
+    public Long getSellPrice() {
+        return mSellPrice;
+    }
+
+    public Long getUpgradePrice() {
+        return mUpgradePrice;
+    }
+
+    public Long getLoot() {
+        return mLoot;
+    }
+
+    public Long getMaxLoot() {
+        return mMaxLoot;
     }
 
     public double getLatitude() {

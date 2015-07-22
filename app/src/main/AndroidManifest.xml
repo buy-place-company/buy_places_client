@@ -60,7 +60,7 @@
             android:exported="false"/>
 
         <activity
-            android:name=".activities.PlaceActivity"
+            android:name=".activities.VenueActivity"
             android:label="@string/title_activity_object"/>
 
         <activity android:name=".activities.DealActivity"/>

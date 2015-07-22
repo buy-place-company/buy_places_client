@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import ru.tp.buy_places.R;
-import ru.tp.buy_places.activities.PlaceActivity;
+import ru.tp.buy_places.activities.VenueActivity;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.map.CustomInfoWindowAdapter;
 import ru.tp.buy_places.map.LocationApiConnectionListener;
@@ -202,8 +202,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
             @Override
             public void onClusterItemInfoWindowClick(VenueClusterItem venueClusterItem) {
                 if (venueClusterItem != null) {
-                    PlaceActivity.VenueType venueType = PlaceActivity.VenueType.fromVenue(venueClusterItem.getPlace());
-                    PlaceActivity.start(MapFragment.this, venueClusterItem.getRowId(), venueClusterItem.getPosition(), venueType);
+                    VenueActivity.VenueType venueType = VenueActivity.VenueType.fromVenue(venueClusterItem.getPlace());
+                    VenueActivity.start(MapFragment.this, venueClusterItem.getRowId(), venueClusterItem.getPosition(), venueType);
                 }
             }
         });
@@ -216,8 +216,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final VenueClusterItem venueClusterItem = ((VenueClusterItem)adapter.getItem(which));
-                        PlaceActivity.VenueType venueType = PlaceActivity.VenueType.fromVenue(venueClusterItem.getPlace());
-                        PlaceActivity.start(MapFragment.this, venueClusterItem.getRowId(), venueClusterItem.getPosition(), venueType);
+                        VenueActivity.VenueType venueType = VenueActivity.VenueType.fromVenue(venueClusterItem.getPlace());
+                        VenueActivity.start(MapFragment.this, venueClusterItem.getRowId(), venueClusterItem.getPosition(), venueType);
                     }
                 }).show();
                 return true;

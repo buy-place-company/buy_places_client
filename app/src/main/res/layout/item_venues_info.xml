@@ -15,7 +15,7 @@
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
     <TextView
         android:id="@+id/text_view_venues_info_value"
-        android:layout_width="112dp"
+        android:layout_width="160dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>

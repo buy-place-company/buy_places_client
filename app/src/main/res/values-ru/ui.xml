@@ -6,13 +6,28 @@
     <string name="navigation_rating">Рейтинг</string>
     <string name="navigation_settings">Настройки</string>
 
-    <string name="statistics_price">Цена</string>
+    <string name="statistics_buy_price">Цена</string>
+    <string name="statistics_sell_price">Цена продажи</string>
+    <string name="statistics_upgrade_price">Цена улучшения</string>
     <string name="statistics_outcome">Расходы</string>
     <string name="statistics_income">Доходы</string>
     <string name="statistics_profit">Прибыль</string>
     <string name="statistics_owner">Владелец</string>
     <string name="statistics_checkins">Чекины</string>
     <string name="statistics_level">Уровень</string>
+    <string name="statistics_loot">Накопления</string>
+
+    <string name="venue_info_common">Общее</string>
+    <string name="venue_info_stats">Статистика</string>
+
+    <string name="message_collect_loot_success">Вы успешно собрали накопеления</string>
+    <string name="message_collect_loot_failure">Сбор накоплений не удался</string>
+    <string name="message_buy_venue_success">Вы успешно купили здание</string>
+    <string name="message_buy_venue_failure">Покупка здания не удалась</string>
+    <string name="message_upgrade_venue_success">Вы успешно улучшили здание</string>
+    <string name="message_upgrade_venue_failure">Улучшение здания не удалось</string>
+    <string name="message_sell_venue_success">Вы успешно продали здание</string>
+    <string name="message_sell_venue_failure">Продажа здания не удалось</string>
 
     <string name="dialog_positive_button_title">Да</string>
     <string name="dialog_negative_button_title">Нет</string>
