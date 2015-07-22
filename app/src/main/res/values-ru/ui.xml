@@ -36,6 +36,8 @@
     <string name="price_message">1000</string>
     <string name="divider_message">,</string>
 
+    <string name="complited">Сделка завершена</string>
+    <string name="wantbuy">хочет купить</string>
 
 
 </resources>

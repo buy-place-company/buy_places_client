@@ -18,6 +18,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.ServiceHelper;
@@ -32,6 +34,7 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final String EXTRA_DEAL_ROW_ID = "EXTRA_DEAL_ROW_ID";
     private static final String ARG_DEAL_ROW_ID = "ARG_DEAL_ROW_ID";
     private static final int DEAL_LOADER_ID = 0;
+
     private Toolbar mToolbar;
     private FrameLayout mButtonsContainer;
     private Deal mDeal;
@@ -66,6 +69,23 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
         mAmount = (TextView) findViewById(R.id.tv_amount);
         mType = (TextView) findViewById(R.id.tv_type);
         mDate = (TextView) findViewById(R.id.tv_date);
+        mUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DealActivity.this, UserActivity.class);
+                intent.putExtra("EXTRA_USER_ID", mDeal.getPlayerFrom().getRowId());
+                startActivity(intent);
+            }
+        });
+        mVenue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final long venuesRowId = mDeal.getVenue().getRowId();
+                final LatLng venuesLocation = new LatLng(mDeal.getVenue().getLatitude(), mDeal.getVenue().getLongitude());
+                final PlaceActivity.VenueType venuesType = PlaceActivity.VenueType.fromVenue(mDeal.getVenue());
+                PlaceActivity.start(DealActivity.this, venuesRowId, venuesLocation, venuesType);
+            }
+        });
 
     }
 
@@ -80,7 +100,7 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
         if (data.moveToFirst()) {
             mDeal = Deal.fromCursor(data);
             long playerId = AccountManagerHelper.getPlayerId(this);
-            final Deal.DealType dealType = playerId == mDeal.getPlayerFrom().getId()? Deal.DealType.OUTGOING:playerId==mDeal.getPlayerTo().getId()? Deal.DealType.INCOMING: Deal.DealType.ILLEGAL_STATE;
+            Deal.DealType dealType = playerId == mDeal.getPlayerFrom().getId()? Deal.DealType.OUTGOING:playerId==mDeal.getPlayerTo().getId()? Deal.DealType.INCOMING: Deal.DealType.ILLEGAL_STATE;
             final Deal.DealState dealState = mDeal.getState();
             LayoutInflater inflater = LayoutInflater.from(this);
             mButtonsContainer.removeAllViews();
@@ -89,10 +109,11 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
                     mUser.setText(mDeal.getPlayerFrom().getUsername());
                     mVenue.setText(mDeal.getVenue().getName());
                     mAmount.setText(Long.toString(mDeal.getAmount()));
+                    mType.setText(R.string.wantbuy);
                     switch (dealState) {
                         case COMPLETED:
                             mDate.setText(mDeal.getDateExpired());
-                         //   mType.setText(R.string.complited);
+                        //    mType.setText(R.string.complited);
                             break;
                         case UNCOMPLETED:
                             final View incomingDealButtons = inflater.inflate(R.layout.buttons_incoming_deal, mButtonsContainer);
@@ -112,6 +133,7 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
                     mUser.setText(mDeal.getPlayerTo().getUsername());
                     mVenue.setText(mDeal.getVenue().getName());
                     mAmount.setText(Long.toString(mDeal.getAmount()));
+                   // mType.setText(R.string.wantrebuy);
                     switch (dealState) {
                         case COMPLETED:
                             break;

@@ -36,6 +36,7 @@ import java.util.Set;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
+import ru.tp.buy_places.fonts.FontManager;
 import ru.tp.buy_places.fragments.deals.DealsFragment;
 import ru.tp.buy_places.fragments.map.MapFragment;
 import ru.tp.buy_places.fragments.objects.PlaceListFragment;
@@ -115,6 +116,9 @@ public class MainActivity extends AppCompatActivity implements
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
+
+        // Set up the font parser with the fonts.xml resource.
+       // FontManager.getInstance().initialize(this, R.xml.fonts);
     }
 
     @Override

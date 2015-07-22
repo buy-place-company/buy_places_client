@@ -12,4 +12,6 @@
     <string name="vk_redirect_uri" translatable="false">http://kgfq1.fvds.ru:8000</string>
     <string name="vk_permissions" translatable="false"></string>
     <string name="vk_protocol_version" translatable="false">5.34</string>
+
+
 </resources>

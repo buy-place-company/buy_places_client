@@ -5,12 +5,15 @@
     android:layout_height="72dp"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:background="?android:attr/selectableItemBackground">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="72dp"
-    android:background="@color/light_primary"
-    android:alpha="0.7"></RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:background="@color/light_primary"
+        android:alpha="0.7">
+    </RelativeLayout>
+
     <TextView
+
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
