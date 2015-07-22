@@ -1,6 +1,7 @@
 package ru.tp.buy_places.authentication;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,6 +20,12 @@ public class VKOAuthActivity extends Activity {
     private String APP_ID;
     private String PERMISSIONS;
     private String PROTOCOL_VERSION;
+
+
+    public static void startForResult(Fragment fragment, int requestCode) {
+        Intent intent = new Intent(fragment.getActivity(), VKOAuthActivity.class);
+        fragment.startActivityForResult(intent, requestCode);
+    }
 
     private WebViewClient mWebViewClient = new WebViewClient() {
         @Override

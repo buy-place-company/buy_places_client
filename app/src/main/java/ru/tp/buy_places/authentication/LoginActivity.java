@@ -3,15 +3,18 @@ package ru.tp.buy_places.authentication;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.Button;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.service.BuyItService;
@@ -20,11 +23,13 @@ import ru.tp.buy_places.service.ServiceHelper;
 /**
  * Created by Ivan on 20.05.2015.
  */
-public class LoginActivity extends AccountAuthenticatorActivity implements View.OnClickListener {
+public class LoginActivity extends AccountAuthenticatorActivity implements LoginFragment.OnLoginListener, RegistrationFragment.OnRegistrationListener {
     public static final String EXTRA_TOKEN_TYPE = "EXTRA_TOKEN_TYPE";
-    private Button mLoginViaVKButton;
     private BroadcastReceiver mAuthenticationCompletedReceiver = new AuthenticationCompletedReceiver();
     private long mAuthenticationRequestId;
+    private LoginPagerAdapter mPagerAdapter;
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
 
 
     @Override
@@ -32,11 +37,13 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mTabLayout = (TabLayout)findViewById(R.id.tab_layout);
+        mViewPager = (ViewPager) findViewById(R.id.view_pager);
         setSupportActionBar(toolbar);
-
+        mPagerAdapter = new LoginPagerAdapter(this, getFragmentManager());
+        mViewPager.setAdapter(mPagerAdapter);
+        mTabLayout.setupWithViewPager(mViewPager);
         LocalBroadcastManager.getInstance(this).registerReceiver(mAuthenticationCompletedReceiver, new IntentFilter(ServiceHelper.ACTION_REQUEST_RESULT));
-        mLoginViaVKButton = (Button) findViewById(R.id.button_login_via_vk);
-        mLoginViaVKButton.setOnClickListener(this);
     }
 
     @Override
@@ -46,26 +53,20 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_login_via_vk:
-                Intent intent = new Intent(this, VKOAuthActivity.class);
-                startActivityForResult(intent, 0);
-        }
+    public void onLoginViaVkButtonClickListener(String code) {
+        mAuthenticationRequestId = ServiceHelper.get(this).authenticate(code);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case 0:
-                if (resultCode == RESULT_OK) {
-                    String code = data.getStringExtra("EXTRA_CODE");
-                    if (code != null) {
-                        mAuthenticationRequestId = ServiceHelper.get(this).authenticate(code);
-                    }
-                }
-        }
+    public void onLoginClickListener(String username, String password) {
+
     }
+
+    @Override
+    public void onRegisterButtonClick() {
+
+    }
+
 
     private class AuthenticationCompletedReceiver extends BroadcastReceiver {
 
@@ -93,4 +94,46 @@ public class LoginActivity extends AccountAuthenticatorActivity implements View.
             }
         }
     }
+
+
+    private class LoginPagerAdapter extends FragmentPagerAdapter {
+
+        private final Context mContext;
+
+        public LoginPagerAdapter(Context context, FragmentManager fm) {
+            super(fm);
+            mContext = context;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return LoginFragment.newInstance();
+                case 1:
+                    return RegistrationFragment.newInstance();
+                default:
+                    return LoginFragment.newInstance();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return mContext.getString(R.string.login_page_name);
+                case 1:
+                    return mContext.getString(R.string.registration_page_name);
+                default:
+                    return mContext.getString(R.string.login_page_name);
+            }
+        }
+    }
+
+
 }

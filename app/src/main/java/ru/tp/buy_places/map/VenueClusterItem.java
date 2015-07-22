@@ -31,10 +31,11 @@ public class VenueClusterItem implements ClusterItem {
     }
 
 
-    public long getPrice() {
+    public Long getBuyPrice() {
         return mPlace.getBuyPrice();
     }
 
+    public Long getSellPrice() { return mPlace.getSellPrice();}
 
     public long getRowId() {
         return mPlace.getRowId();

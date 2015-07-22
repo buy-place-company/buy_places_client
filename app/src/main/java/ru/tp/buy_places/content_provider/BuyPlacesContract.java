@@ -190,6 +190,7 @@ public final class BuyPlacesContract {
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, TABLE_NAME);
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.buy_places." + TABLE_NAME;
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.buy_places." + TABLE_NAME;
+        public static final String IMPORTANT_SELECTION = COLUMN_FULL_IS_AROUND_THE_POINT +"=1 OR " + COLUMN_FULL_IS_AROUND_THE_PLAYER + "=1 OR " + COLUMN_FULL_IS_IN_OWNERSHIP + "=1";
     }
 
     public static final class Players implements BaseColumns {

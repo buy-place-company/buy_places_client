@@ -70,7 +70,7 @@ public class ClusterPopupListAdapter extends BaseAdapter {
         if (clusterItem != null) {
             viewHolder.nameTextView.setText(clusterItem.getName());
             viewHolder.imageTextView.setImageResource(R.mipmap.ic_object);
-            viewHolder.priceTextView.setText(Long.toString(clusterItem.getPrice()));
+            viewHolder.priceTextView.setText(Long.toString(clusterItem.getBuyPrice()));
             viewHolder.checkInsTextView.setText(Long.toString(clusterItem.getCheckinsCount()));
             viewHolder.levelTextView.setText(Integer.toString(clusterItem.getLevel()));
         }

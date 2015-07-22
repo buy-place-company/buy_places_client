@@ -243,7 +243,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case ALL_PLACES_LOADER_ID:
-                return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, null, null, null);
+                return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, BuyPlacesContract.Places.IMPORTANT_SELECTION, null, null);
             case PLAYER_LOADER_ID:
                 final long playerId = args.getLong(EXTRA_PLAYER_ID);
                 return new CursorLoader(getActivity(), BuyPlacesContract.Players.CONTENT_URI, null, BuyPlacesContract.Players.WITH_SPECIFIED_ID_SELECTION, new String[]{Long.toString(playerId)}, null);
