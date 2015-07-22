@@ -9,27 +9,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.activities.VenueActivity;
 import ru.tp.buy_places.service.resourses.Place;
 
 /**
  * Created by home on 21.05.2015.
  */
 public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHolder> {
-    OnItemClickListener mItemClickListener;
     Activity activity;
     private List<Place> mData = new ArrayList<>();
 
-    public interface OnItemClickListener {
-        public void onItemClick(View view , int position);
-    }
-
-    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
-        this.mItemClickListener = mItemClickListener;
-    }
 
     MyPlacesAdapter(Context context){
         activity = (Activity)context;
@@ -42,7 +37,7 @@ public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mTitle;
         public TextView mLevel;
         public ImageView mIcon;
@@ -50,20 +45,12 @@ public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHo
 
         public ViewHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
             mTitle = (TextView) itemView.findViewById(R.id.text_view_rating);
             mLevel = (TextView) itemView.findViewById(R.id.tv_level);
             mIcon = (ImageView) itemView.findViewById(R.id.image_view_rating);
             mCategory = (TextView) itemView.findViewById(R.id.tv_category);
         }
 
-        @Override
-        public void onClick(View view) {
-            if(mItemClickListener != null){
-                mItemClickListener.onItemClick(view, getPosition());
-            }
-
-        }
     }
 
     @Override
@@ -73,12 +60,21 @@ public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHo
      }
 
     @Override
-    public void onBindViewHolder(MyPlacesAdapter.ViewHolder holder, int position) {
-        if(mData != null && mData.get(position).isInOwnership()) {
+    public void onBindViewHolder(MyPlacesAdapter.ViewHolder holder, final int position) {
+        if(mData != null) {
             holder.mTitle.setText(mData.get(position).getName()); // Setting the Text with the array of our Titles
             holder.mIcon.setImageResource(R.mipmap.ic_object);
             holder.mLevel.setText(Integer.toString(mData.get(position).getLevel()));
             holder.mCategory.setText(mData.get(position).getCategory());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final long venuesRowId = mData.get(position).getRowId();
+                    final LatLng venuesLocation = new LatLng(mData.get(position).getLatitude(), mData.get(position).getLongitude());
+                    final VenueActivity.VenueType venuesType = VenueActivity.VenueType.fromVenue(mData.get(position));
+                    VenueActivity.start(activity, venuesRowId, venuesLocation, venuesType);
+                }
+            });
         }
     }
 

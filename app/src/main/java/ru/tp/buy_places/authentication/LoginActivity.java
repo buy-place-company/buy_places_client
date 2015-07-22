@@ -63,8 +63,8 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Login
     }
 
     @Override
-    public void onRegisterButtonClick() {
-
+    public void onRegisterButtonClick(String email, String username, String password) {
+        mAuthenticationRequestId = ServiceHelper.get(this).register(email, username, password);
     }
 
 

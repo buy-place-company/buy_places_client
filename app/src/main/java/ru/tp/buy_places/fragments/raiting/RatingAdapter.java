@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.tp.buy_places.R;
+import ru.tp.buy_places.activities.UserActivity;
 import ru.tp.buy_places.service.resourses.Player;
 
 /**
@@ -20,18 +21,8 @@ import ru.tp.buy_places.service.resourses.Player;
  */
 public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder> {
     private LayoutInflater inflater;
-    OnItemClickListener mItemClickListener;
     Activity activity;
     private List<Player> mData = new ArrayList<>();
-    private static int count = 0;
-
-    public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
-    }
-
-    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
-        this.mItemClickListener = mItemClickListener;
-    }
 
     RatingAdapter(Context context){
         inflater = LayoutInflater.from(context);
@@ -45,7 +36,7 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mTitle;
         public TextView mScore;
         public ImageView mIcon;
@@ -53,19 +44,10 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
 
         public ViewHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
             mTitle = (TextView) itemView.findViewById(R.id.text_view_rating);
             mScore = (TextView) itemView.findViewById(R.id.tv_price);
             mRating = (TextView) itemView.findViewById(R.id.tv_rating_number);
             mIcon = (ImageView) itemView.findViewById(R.id.image_view_rating);
-
-        }
-
-        @Override
-        public void onClick(View view) {
-            if(mItemClickListener != null){
-                mItemClickListener.onItemClick(view, getPosition());
-            }
 
         }
     }
@@ -77,13 +59,19 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
      }
 
     @Override
-    public void onBindViewHolder(RatingAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(RatingAdapter.ViewHolder holder, final int position) {
         if(mData != null) {
 
             holder.mTitle.setText(mData.get(position).getUsername());
             holder.mScore.setText(Long.toString(mData.get(position).getCash()));
             //Picasso.with(activity).load(mData.get(position).getAvatar()).error(R.drawable.ic_launcher).into(holder.mIcon);
             holder.mRating.setText(Long.toString(mData.get(position).getPosition()));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UserActivity.start(activity, mData.get(position));
+                }
+            });
         }
     }
 

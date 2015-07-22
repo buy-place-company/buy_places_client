@@ -116,10 +116,50 @@ public class ServiceHelper {
         } else {
             requestId = mRequestIdGenerator.incrementAndGet();
             mPendingRequests.put(POST_AUTHENTICATE, requestId);
-            ResultReceiver serviceCallback = new AuthenticationResultReceiver(null);
+            ResultReceiver serviceCallback = new AuthenticationResultReceiver(null, POST_AUTHENTICATE);
             BuyItService.startAuthenticateService(mContext, serviceCallback, requestId, code);
         }
         return requestId;
+    }
+
+    public long baseLogin(String username, String password) {
+        long requestId;
+        if (mPendingRequests.containsKey(POST_AUTHENTICATE)) {
+            requestId = mPendingRequests.get(POST_AUTHENTICATE);
+        } else {
+            requestId = mRequestIdGenerator.incrementAndGet();
+            mPendingRequests.put(POST_AUTHENTICATE, requestId);
+            ResultReceiver serviceCallback = new AuthenticationResultReceiver(null, POST_AUTHENTICATE);
+            BuyItService.startBaseLoginService(mContext, serviceCallback, requestId, username, password);
+        }
+        return requestId;
+    }
+
+    public long register(String email, String username, String password) {
+        long requestId;
+        if (mPendingRequests.containsKey(POST_AUTHENTICATE)) {
+            requestId = mPendingRequests.get(POST_AUTHENTICATE);
+        } else {
+            requestId = mRequestIdGenerator.incrementAndGet();
+            mPendingRequests.put(POST_AUTHENTICATE, requestId);
+            ResultReceiver serviceCallback = new AuthenticationResultReceiver(null, POST_AUTHENTICATE);
+            BuyItService.startRegistrationService(mContext, serviceCallback, requestId, email, username, password);
+        }
+        return requestId;
+    }
+
+    public long logout() {
+        long requestId;
+        if (mPendingRequests.containsKey(POST_AUTHENTICATE)) {
+            requestId = mPendingRequests.get(POST_AUTHENTICATE);
+        } else {
+            requestId = mRequestIdGenerator.incrementAndGet();
+            mPendingRequests.put(POST_AUTHENTICATE, requestId);
+            ResultReceiver serviceCallback = new LogoutResultReceiver(null, POST_AUTHENTICATE);
+            BuyItService.startLogoutService(mContext, serviceCallback, requestId);
+        }
+        return requestId;
+
     }
 
     public long buyVenue(String id) {
@@ -326,6 +366,8 @@ public class ServiceHelper {
 
     private class AuthenticationResultReceiver extends ResultReceiver {
 
+        private final String mResource;
+
         /**
          * Create a new ResultReceive to receive results.  Your
          * {@link #onReceiveResult} method will be called from the thread running
@@ -333,8 +375,9 @@ public class ServiceHelper {
          *
          * @param handler
          */
-        public AuthenticationResultReceiver(Handler handler) {
+        public AuthenticationResultReceiver(Handler handler, String resource) {
             super(handler);
+            mResource = resource;
         }
 
         @Override
@@ -344,12 +387,42 @@ public class ServiceHelper {
             String username = resultData.getString(BuyItService.EXTRA_USERNAME);
             if (originalRequestIntent != null) {
                 long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
-                mPendingRequests.remove(GET_VENUES);
+                mPendingRequests.remove(mResource);
                 Intent result = new Intent(ACTION_REQUEST_RESULT);
                 result.putExtra(EXTRA_REQUEST_ID, requestId);
                 result.putExtra(EXTRA_RESULT_CODE, resultCode);
                 result.putExtra(BuyItService.EXTRA_ID, id);
                 result.putExtra(BuyItService.EXTRA_USERNAME, username);
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(result);
+            }
+        }
+    }
+
+    private class LogoutResultReceiver extends ResultReceiver {
+
+        private final String mResource;
+
+        /**
+         * Create a new ResultReceive to receive results.  Your
+         * {@link #onReceiveResult} method will be called from the thread running
+         * <var>handler</var> if given, or from an arbitrary thread if null.
+         *
+         * @param handler
+         */
+        public LogoutResultReceiver(Handler handler, String resourse) {
+            super(handler);
+            mResource = resourse;
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            Intent originalRequestIntent = resultData.getParcelable(BuyItService.EXTRA_ORIGINAL_INTENT);
+            if (originalRequestIntent != null) {
+                long requestId = originalRequestIntent.getLongExtra(EXTRA_REQUEST_ID, 0);
+                mPendingRequests.remove(mResource);
+                Intent result = new Intent(ACTION_REQUEST_RESULT);
+                result.putExtra(EXTRA_REQUEST_ID, requestId);
+                result.putExtra(EXTRA_RESULT_CODE, resultCode);
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(result);
             }
         }

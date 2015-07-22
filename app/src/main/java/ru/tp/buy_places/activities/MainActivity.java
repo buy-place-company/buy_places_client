@@ -2,14 +2,17 @@ package ru.tp.buy_places.activities;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -53,7 +56,8 @@ public class MainActivity extends AppCompatActivity implements
         LocationApiConnectionListener.OnLocationChangedListener,
         LocationProvider,
         NavigationView.OnNavigationItemSelectedListener,
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>,
+        SettingFragment.OnLogoutClickListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int PLAYER_LOADER_ID = 0;
@@ -71,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements
     private CircleImageView mHeaderAvatar;
     private TextView mHeaderUsername;
     private TextView mHeaderCash;
+    private long mLogoutRequestId;
+    private LogoutReceiver mLogoutReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +121,16 @@ public class MainActivity extends AppCompatActivity implements
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
+
+        IntentFilter intentFilter = new IntentFilter(ServiceHelper.ACTION_REQUEST_RESULT);
+        mLogoutReceiver = new LogoutReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mLogoutReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mLogoutReceiver);
     }
 
     @Override
@@ -281,6 +297,11 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void onLogoutClick() {
+        mLogoutRequestId = ServiceHelper.get(this).logout();
+    }
+
     public enum Page {
         MAP,
         USER,
@@ -304,5 +325,18 @@ public class MainActivity extends AppCompatActivity implements
             return false;
         }
         return true;
+    }
+
+
+    private class LogoutReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            long requestId = intent.getLongExtra(ServiceHelper.EXTRA_REQUEST_ID, 0);
+            int status = intent.getIntExtra(ServiceHelper.EXTRA_RESULT_CODE, 0);
+            if (requestId == mLogoutRequestId && status == 200) {
+                AccountManagerHelper.removeAccount(MainActivity.this);
+            }
+        }
     }
 }

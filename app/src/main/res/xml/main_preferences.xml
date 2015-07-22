@@ -38,4 +38,9 @@
         android:switchTextOn="On"
         android:defaultValue="true">
     </SwitchPreference>
+
+    <Preference
+        android:title="Выйти"
+        android:key="logout_button"/>
+
 </PreferenceScreen>

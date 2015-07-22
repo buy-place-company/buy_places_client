@@ -3,7 +3,6 @@ package ru.tp.buy_places.fragments.raiting;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
-import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.tp.buy_places.R;
-import ru.tp.buy_places.activities.UserActivity;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.ServiceHelper;
 import ru.tp.buy_places.service.resourses.Player;
@@ -32,14 +30,12 @@ import ru.tp.buy_places.service.resourses.Player;
  * Use the {@link RaitingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RaitingFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, RatingAdapter.OnItemClickListener {
+public class RaitingFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     List<Player> mPlayers;
     private RecyclerView mRecycleView;
     private RatingAdapter ratingAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private static final String TEXT_FIELD = "text";
-    private static final String IMAGE_FIELD = "image";
 
     private OnFragmentInteractionListener mListener;
 
@@ -70,7 +66,6 @@ public class RaitingFragment extends Fragment implements LoaderManager.LoaderCal
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecycleView.setLayoutManager(mLayoutManager);
         ratingAdapter = new RatingAdapter(getActivity());
-        ratingAdapter.setOnItemClickListener(this);
         mRecycleView.setAdapter(ratingAdapter);
         return mRecycleView;
     }
@@ -94,14 +89,6 @@ public class RaitingFragment extends Fragment implements LoaderManager.LoaderCal
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        Intent intent = new Intent(getActivity(), UserActivity.class);
-        intent.putExtra("EXTRA_USER_ID", mPlayers.get(position).getRowId());
-        startActivity(intent);
-    }
-
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

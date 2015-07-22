@@ -34,6 +34,11 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
