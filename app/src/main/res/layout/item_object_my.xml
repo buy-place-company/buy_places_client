@@ -2,13 +2,13 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
+    android:layout_height="88dp"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:background="?android:attr/selectableItemBackground"
     >
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="88dp"
         android:background="@color/light_primary"
         android:alpha="0.7">
     </RelativeLayout>
@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/background_dark"
-        android:id="@+id/text_view_rating"
+        android:id="@+id/text_view_name"
         android:text="МГТУ им Баумана"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:singleLine="true"
@@ -41,18 +41,19 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/checkins_message"
         android:id="@+id/tv_chekins"
-        android:layout_below="@+id/text_view_rating"
-        android:layout_toRightOf="@+id/image_view_rating"
-        android:drawableLeft="@drawable/ic_foursquare_grey600_18dp"/>
+        android:drawableLeft="@drawable/ic_foursquare_grey600_18dp"
+        android:layout_below="@+id/tv_category"
+        android:layout_toRightOf="@+id/image_view_rating" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/tv_category"
-        android:layout_toRightOf="@+id/tv_chekins"
-        android:layout_alignTop="@+id/tv_chekins"
-        android:layout_marginLeft="5dp"/>
+        android:layout_below="@+id/text_view_name"
+        android:layout_toRightOf="@+id/image_view_rating"
+
+        />
 
     <TextView
         android:layout_width="25dp"

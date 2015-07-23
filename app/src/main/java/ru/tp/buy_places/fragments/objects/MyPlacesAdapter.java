@@ -42,13 +42,16 @@ public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHo
         public TextView mLevel;
         public ImageView mIcon;
         public TextView mCategory;
+        public TextView mCheckins;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mTitle = (TextView) itemView.findViewById(R.id.text_view_rating);
+
+            mTitle = (TextView) itemView.findViewById(R.id.text_view_name);
             mLevel = (TextView) itemView.findViewById(R.id.tv_level);
             mIcon = (ImageView) itemView.findViewById(R.id.image_view_rating);
             mCategory = (TextView) itemView.findViewById(R.id.tv_category);
+            mCheckins = (TextView) itemView.findViewById(R.id.tv_chekins);
         }
 
     }
@@ -66,6 +69,7 @@ public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHo
             holder.mIcon.setImageResource(R.mipmap.ic_object);
             holder.mLevel.setText(Integer.toString(mData.get(position).getLevel()));
             holder.mCategory.setText(mData.get(position).getCategory());
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -75,6 +79,8 @@ public class MyPlacesAdapter extends RecyclerView.Adapter<MyPlacesAdapter.ViewHo
                     VenueActivity.start(activity, venuesRowId, venuesLocation, venuesType);
                 }
             });
+            holder.mCheckins.setText(Long.toString(mData.get(position).getCheckinsCount()));
+
         }
     }
 

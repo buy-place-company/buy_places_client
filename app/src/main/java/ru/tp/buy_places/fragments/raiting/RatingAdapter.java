@@ -44,7 +44,7 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mTitle = (TextView) itemView.findViewById(R.id.text_view_rating);
+            mTitle = (TextView) itemView.findViewById(R.id.text_view_name);
             mScore = (TextView) itemView.findViewById(R.id.tv_price);
             mRating = (TextView) itemView.findViewById(R.id.tv_rating_number);
             mIcon = (ImageView) itemView.findViewById(R.id.image_view_rating);

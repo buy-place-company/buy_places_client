@@ -52,6 +52,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Login
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mAuthenticationCompletedReceiver);
     }
 
+
     @Override
     public void onLoginViaVkButtonClickListener(String code) {
         mAuthenticationRequestId = ServiceHelper.get(this).authenticate(code);

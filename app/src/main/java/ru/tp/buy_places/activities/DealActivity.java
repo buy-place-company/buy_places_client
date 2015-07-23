@@ -82,8 +82,8 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
             public void onClick(View view) {
                 final long venuesRowId = mDeal.getVenue().getRowId();
                 final LatLng venuesLocation = new LatLng(mDeal.getVenue().getLatitude(), mDeal.getVenue().getLongitude());
-                final PlaceActivity.VenueType venuesType = PlaceActivity.VenueType.fromVenue(mDeal.getVenue());
-                PlaceActivity.start(DealActivity.this, venuesRowId, venuesLocation, venuesType);
+                final VenueActivity.VenueType venuesType = VenueActivity.VenueType.fromVenue(mDeal.getVenue());
+                VenueActivity.start(DealActivity.this, venuesRowId, venuesLocation, venuesType);
             }
         });
 

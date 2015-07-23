@@ -53,7 +53,7 @@ public class NearPlacesAdapter extends RecyclerView.Adapter<NearPlacesAdapter.Vi
             super(itemView);
             itemView.setOnClickListener(this);
             mLevel = (TextView) itemView.findViewById(R.id.tv_level);
-            mTitle = (TextView) itemView.findViewById(R.id.text_view_rating);
+            mTitle = (TextView) itemView.findViewById(R.id.text_view_name);
             mPrice = (TextView) itemView.findViewById(R.id.tv_price);
             mCheckin = (TextView) itemView.findViewById(R.id.tv_chekins);
             mIcon = (ImageView) itemView.findViewById(R.id.image_view_rating);
