@@ -59,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>,
         SettingFragment.OnLogoutClickListener {
 
+    private Location mLastLocation = null;
+
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int PLAYER_LOADER_ID = 0;
     private static final String KEY_PLAYER_ID = "KEY_PLAYER_ID";
@@ -235,8 +237,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLocationChanged(Location location) {
-        ServiceHelper.get(this).getVenuesAroundThePlayer(new LatLng(location.getLatitude(), location.getLongitude()));
+        if (mLastLocation == null || location.distanceTo(mLastLocation) > 1000) {
+            ServiceHelper.get(this).getVenuesAroundThePlayer(new LatLng(location.getLatitude(), location.getLongitude()));
+        }
         notifyLocationChanged(location);
+        mLastLocation = location;
     }
 
     @Override

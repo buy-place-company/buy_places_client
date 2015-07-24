@@ -122,7 +122,7 @@ public class BuyPlacesContentProvider extends ContentProvider {
                 cursor = db.query(Places.WITH_OWNERS_TABLE_NAME, Places.WITH_OWNERS_COLUMNS_PROJECTION, Places.WITH_SPECIFIED_ROW_ID_SELECTION, new String[]{Long.toString(placesRowId)}, null, null, null, null);
                 break;
             case PLACES:
-                cursor = db.query(Places.WITH_OWNERS_TABLE_NAME, Places.WITH_OWNERS_COLUMNS_PROJECTION, selection, selectionArgs, null, null, null);
+                cursor = db.query(Places.WITH_OWNERS_TABLE_NAME, Places.WITH_OWNERS_COLUMNS_PROJECTION, selection, selectionArgs, null, null, sortOrder);
                 break;
             case PLAYERS_ID:
                 final long playersRowId = ContentUris.parseId(uri);

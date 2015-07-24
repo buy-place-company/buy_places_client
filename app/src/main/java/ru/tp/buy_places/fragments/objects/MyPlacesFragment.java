@@ -69,7 +69,7 @@ public class MyPlacesFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         long userId = args.getLong(ARG_USER_ID);
-        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, BuyPlacesContract.Places.ALL_COLUMNS_PROJECTION, BuyPlacesContract.Places.WITH_SPECIFIED_OWNER_ID_SELECTION, new String[]{String.valueOf(userId)}, null);
+        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, BuyPlacesContract.Places.ALL_COLUMNS_PROJECTION, BuyPlacesContract.Places.WITH_SPECIFIED_OWNER_ID_SELECTION, new String[]{String.valueOf(userId)}, BuyPlacesContract.Places.COLUMN_ALIAS_CHECKINS_COUNT + " DESC");
     }
 
     @Override

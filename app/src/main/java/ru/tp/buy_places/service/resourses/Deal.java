@@ -156,8 +156,8 @@ public class Deal implements Resource{
 
     public long writeToDatabase(Context context) {
         Long venueRowId = mVenue.writeToDatabase(context);
-        Long playerToRowId = mPlayerTo.writeToDatabase(context);
-        Long playerFromRowId = mPlayerFrom.writeToDatabase(context);
+        Long playerToRowId = mPlayerTo != null ? mPlayerTo.writeToDatabase(context) : null;
+        Long playerFromRowId = mPlayerFrom != null ? mPlayerFrom.writeToDatabase(context): null;
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(BuyPlacesContract.Deals.COLUMN_ID, mId);

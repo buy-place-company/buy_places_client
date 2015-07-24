@@ -51,5 +51,6 @@ public class DealsProcessor extends Processor {
         DealsFromServer dealsFromServer = (DealsFromServer) response.getData().get(KEY_DEALS_FROM_SERVER);
         dealsFromServer.writeToDatabase(mContext);
         mContext.getContentResolver().notifyChange(BuyPlacesContract.Deals.CONTENT_URI, null);
+        mContext.getContentResolver().notifyChange(BuyPlacesContract.Players.CONTENT_URI, null);
     }
 }

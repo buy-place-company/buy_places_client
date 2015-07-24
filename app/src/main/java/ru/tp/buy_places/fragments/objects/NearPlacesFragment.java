@@ -60,7 +60,7 @@ public class NearPlacesFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, BuyPlacesContract.Places.ALL_COLUMNS_PROJECTION, BuyPlacesContract.Places.AROUND_THE_PLAYER_SELECTION, null, null);
+        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, BuyPlacesContract.Places.ALL_COLUMNS_PROJECTION, BuyPlacesContract.Places.AROUND_THE_PLAYER_SELECTION, null, BuyPlacesContract.Places.COLUMN_ALIAS_CHECKINS_COUNT + " DESC");
     }
 
     @Override
