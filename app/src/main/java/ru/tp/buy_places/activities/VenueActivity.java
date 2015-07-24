@@ -25,12 +25,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -302,10 +305,19 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
             @Override
             public void onClick(View view) {
                 dialogBuilder.setTitle(DIALOG);
+                dialogBuilder.setMessage("Выкупить за:");
+                final EditText input = new EditText(VenueActivity.this);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                input.setLayoutParams(lp);
+                dialogBuilder.setView(input);
                 dialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        ServiceHelper.get(VenueActivity.this).suggestDeal(mPlace.getId(), 1000l);
-                        Toast.makeText(VenueActivity.this, "Запрос на заключение сделки отправлен", Toast.LENGTH_LONG).show();
+                        // if(!TextUtils.isEmpty(input.getText())) {
+                            ServiceHelper.get(VenueActivity.this).suggestDeal(mPlace.getId(), Integer.valueOf(input.getText().toString()));
+                            Toast.makeText(VenueActivity.this, "Запрос на заключение сделки отправлен", Toast.LENGTH_LONG).show();
+                        //} else Toast.makeText(VenueActivity.this, "Вы не ввели сумму", Toast.LENGTH_LONG).show();
                     }
                 });
                 dialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
@@ -318,7 +330,6 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
                     }
                 });
 
-                dialogBuilder.setMessage("Вы действительно хотите выкупить это здание?");
                 dialogBuilder.show();
             }
         });
@@ -330,6 +341,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
         FloatingActionButton upgradeVenueButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_upgrade_place);
         FloatingActionButton sellVenueButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_sell_place);
         FloatingActionButton collectLootButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_collect_loot);
+        FloatingActionButton suggestDealButton = (FloatingActionButton)mineVenueButtons.findViewById(R.id.button_suggest_deal);
         upgradeVenueButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -348,7 +360,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
                     public void onCancel(DialogInterface dialog) {
                     }
                 });
-                upgradeDialogBuilder.setMessage("Вы можете улучшить здание за 500р");
+                upgradeDialogBuilder.setMessage("Вы можете улучшить здание");
                 upgradeDialogBuilder.show();
             }
         });
@@ -379,6 +391,36 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
             @Override
             public void onClick(View v) {
                 mCollectLootRequestId = ServiceHelper.get(VenueActivity.this).collectLootFromPlace(mPlace.getId());
+            }
+        });
+        suggestDealButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sellDialogBuilder.setTitle(DIALOG);
+                sellDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        mSellVenueRequestId = ServiceHelper.get(VenueActivity.this).sellVenue(mPlace.getId());
+                    }
+                });
+                sellDialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                    }
+                });
+                sellDialogBuilder.setCancelable(true);
+                sellDialogBuilder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    public void onCancel(DialogInterface dialog) {
+                    }
+                });
+
+                sellDialogBuilder.setMessage("Выставить на продажу за:");
+                final EditText input = new EditText(VenueActivity.this);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                input.setLayoutParams(lp);
+                sellDialogBuilder.setView(input);
+
+                sellDialogBuilder.show();
             }
         });
     }
