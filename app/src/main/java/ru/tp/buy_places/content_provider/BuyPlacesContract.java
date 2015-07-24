@@ -301,7 +301,7 @@ public final class BuyPlacesContract {
         public static final String PLAYER_TO_ALIAS = "player_to";
 
         public static final String WITH_RELATED_ENTITIES_TABLE_NAME = TABLE_NAME + " JOIN " + Players.TABLE_NAME + " AS " + PLAYER_FROM_ALIAS + " ON " + COLUMN_PLAYER_FROM + "=" + PLAYER_FROM_ALIAS + "." + Players._ID +
-                " JOIN " + Players.TABLE_NAME + " AS " + PLAYER_TO_ALIAS + " ON " + COLUMN_PLAYER_TO + "=" + PLAYER_TO_ALIAS + "." + Players._ID +
+                " LEFT JOIN " + Players.TABLE_NAME + " AS " + PLAYER_TO_ALIAS + " ON " + COLUMN_PLAYER_TO + "=" + PLAYER_TO_ALIAS + "." + Players._ID +
                 " JOIN " + Places.TABLE_NAME + " AS " + VENUE_ALIAS + " ON " + COLUMN_VENUE+"="+ VENUE_ALIAS + "." + Places._ID +
                 " JOIN " + Players.TABLE_NAME + " AS " + VENUE_OWNER_ALIAS + " ON " + VENUE_ALIAS + "." + Places.COLUMN_OWNER + "=" + VENUE_OWNER_ALIAS + "." + Players._ID;
 

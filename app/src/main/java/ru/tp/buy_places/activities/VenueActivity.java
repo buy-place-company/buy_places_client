@@ -1,6 +1,7 @@
 package ru.tp.buy_places.activities;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
@@ -18,6 +19,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -25,7 +27,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,6 +71,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
     private long mUpgradeVenueRequestId = 0;
     private long mBuyVenueRequestId = 0;
     private long mCollectLootRequestId = 0;
+    private long mSuggestDealRequestId = 0;
     private CoordinatorLayout mCoordinatorLayout;
     private BroadcastReceiver mServiceResultReceiver;
 
@@ -338,6 +340,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
     private void setMineVenueButtonsOnClickListeners(View mineVenueButtons) {
         final AlertDialog.Builder sellDialogBuilder = new AlertDialog.Builder(this);
         final AlertDialog.Builder upgradeDialogBuilder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder suggestDealDialogBuilder = new AlertDialog.Builder(this);
         FloatingActionButton upgradeVenueButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_upgrade_place);
         FloatingActionButton sellVenueButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_sell_place);
         FloatingActionButton collectLootButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_collect_loot);
@@ -396,31 +399,27 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
         suggestDealButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                sellDialogBuilder.setTitle(DIALOG);
-                sellDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
+                suggestDealDialogBuilder.setTitle(DIALOG);
+                suggestDealDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        mSellVenueRequestId = ServiceHelper.get(VenueActivity.this).sellVenue(mPlace.getId());
+                        long amount = Long.parseLong(((TextInputLayout)((Dialog) dialog).findViewById(R.id.text_input_layout_amount)).getEditText().getText().toString());
+                        mSuggestDealRequestId = ServiceHelper.get(VenueActivity.this).suggestDeal(mPlace.getId(), amount);
                     }
                 });
-                sellDialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
+                suggestDealDialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                     }
                 });
-                sellDialogBuilder.setCancelable(true);
-                sellDialogBuilder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                suggestDealDialogBuilder.setCancelable(true);
+                suggestDealDialogBuilder.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     public void onCancel(DialogInterface dialog) {
                     }
                 });
 
-                sellDialogBuilder.setMessage("Выставить на продажу за:");
-                final EditText input = new EditText(VenueActivity.this);
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT);
-                input.setLayoutParams(lp);
-                sellDialogBuilder.setView(input);
-
-                sellDialogBuilder.show();
+                suggestDealDialogBuilder.setMessage("Выставить на продажу за:");
+                TextInputLayout textInputLayout = (TextInputLayout)LayoutInflater.from(VenueActivity.this).inflate(R.layout.suggest_deal_dialog_view, null);
+                suggestDealDialogBuilder.setView(textInputLayout);
+                suggestDealDialogBuilder.show();
             }
         });
     }
