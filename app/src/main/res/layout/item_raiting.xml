@@ -24,13 +24,13 @@
         android:layout_margin="16dp"
         android:gravity="center" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/tv_rating_number"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:id="@+id/image_view_rating"
-        android:src="@drawable/ic_launcher"
+        android:src="@drawable/ava"
         android:layout_margin="16dp"/>
 
     <TextView

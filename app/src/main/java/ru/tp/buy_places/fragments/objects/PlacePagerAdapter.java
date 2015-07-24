@@ -29,7 +29,7 @@ public class PlacePagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class PlacePagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return "Поблизости";
             case 2:
-                return "Избранные";
+                return "Доступные";
             default:
                 return "Мои";
         }

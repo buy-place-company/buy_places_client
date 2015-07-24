@@ -37,7 +37,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="38dp"
                 android:id="@+id/image_view_user"
-                android:src="@mipmap/ava"
+                android:src="@drawable/ava"
                 android:alpha="1"
                 android:background="@drawable/shadow_circle"/>
 

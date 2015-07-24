@@ -386,7 +386,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
                     }
                 });
 
-                sellDialogBuilder.setMessage("Ваше здание будет продано за 50% от стоимости");
+                sellDialogBuilder.setMessage("Ваше здание будет продано");
                 sellDialogBuilder.show();
             }
         });
