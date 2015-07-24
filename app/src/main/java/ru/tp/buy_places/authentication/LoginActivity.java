@@ -60,7 +60,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Login
 
     @Override
     public void onLoginClickListener(String username, String password) {
-
+        mAuthenticationRequestId = ServiceHelper.get(this).baseLogin(username, password);
     }
 
     @Override

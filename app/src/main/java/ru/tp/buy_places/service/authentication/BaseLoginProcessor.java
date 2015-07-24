@@ -22,10 +22,10 @@ public class BaseLoginProcessor extends LoginProcessor {
 
     @Override
     protected Request prepareRequest() {
-        String path = "";
+        String path = "/auth/email";
         Map<String, String> params = new HashMap<>();
-        params.put("", mUsername);
-        params.put("", mPassword);
+        params.put("email", mUsername);
+        params.put("password", mPassword);
         return new Request(mContext, path, Request.RequestMethod.POST, params);
     }
 }
