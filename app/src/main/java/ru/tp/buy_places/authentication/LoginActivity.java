@@ -38,6 +38,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Login
         setContentView(R.layout.activity_login);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mTabLayout = (TabLayout)findViewById(R.id.tab_layout);
+        mTabLayout.setBackgroundColor(getResources().getColor(R.color.primary));
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         setSupportActionBar(toolbar);
         mPagerAdapter = new LoginPagerAdapter(this, getFragmentManager());

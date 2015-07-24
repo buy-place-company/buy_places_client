@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import ru.tp.buy_places.R;
@@ -31,6 +32,7 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
     private TextView userVenueMax;
     private TextView userCash;
     private TextView userLevel;
+    private ImageView avatar;
 
     private RecyclerView mInfoList;
     Fragment fragment;
@@ -47,6 +49,7 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+        avatar = (ImageView) findViewById(R.id.image_view_user);
         userName = (TextView)findViewById(R.id.text_view_user_name);
         userVenueCount = (TextView)findViewById(R.id.tv_object_count);
         userVenueMax = (TextView)findViewById(R.id.tv_maxobject);
@@ -108,6 +111,7 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
                 userVenueMax.setText(Integer.toString(mPlayer.getMaxPlaces()));
                 userLevel.setText(Integer.toString(mPlayer.getLevel()));
                 userCash.setText(Long.toString(mPlayer.getCash()));
+                //avatar.setBackgroundResource(R.drawable.circle_background);
 
             }
         }
