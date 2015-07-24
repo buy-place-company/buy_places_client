@@ -119,13 +119,10 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
                             final View incomingDealButtons = inflater.inflate(R.layout.buttons_incoming_deal, mButtonsContainer);
                             setIncomingButtonsOnClickListeners(incomingDealButtons);
                             mDate.setText(mDeal.getDateAdded());
-                          //  mType.setText(R.string.uncomplited);
                             break;
                         case REJECTED:
-                          //  mType.setText(R.string.rejected);
                             break;
                         case REVOKED:
-                           // mType.setText(R.string.revoked);
                             break;
                     }
                     break;
@@ -133,7 +130,6 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
                     mUser.setText(mDeal.getPlayerTo().getUsername());
                     mVenue.setText(mDeal.getVenue().getName());
                     mAmount.setText(Long.toString(mDeal.getAmount()));
-                   // mType.setText(R.string.wantrebuy);
                     switch (dealState) {
                         case COMPLETED:
                             break;

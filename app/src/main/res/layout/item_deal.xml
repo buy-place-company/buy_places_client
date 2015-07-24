@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     >
     <RelativeLayout
         android:layout_width="match_parent"
@@ -26,16 +27,14 @@
         android:layout_marginBottom="16dp" />
 
     <TextView
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/background_dark"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/image_view_venues_icon"
         android:id="@+id/text_view_venues_name"
-        android:text="МГТУ им. Н. Э. Баумана"/>
+        android:text="МГТУ им. Н. Э. Баумана"
+        android:layout_alignTop="@+id/image_view_venues_icon"
+        android:layout_toEndOf="@+id/image_view_venues_icon" />
 
 
     <TextView
@@ -55,6 +54,14 @@
         android:layout_below="@+id/text_view_deal_opponent"
         android:layout_alignStart="@+id/text_view_deal_opponent"
         android:layout_marginBottom="20dp" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/iv_check"
+        android:layout_marginStart="36dp"
+        android:layout_margin="16dp"
+        android:layout_alignParentRight="true" />
 
 
 </RelativeLayout>
