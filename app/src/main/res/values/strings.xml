@@ -11,5 +11,7 @@
     <string name="checkins_message" translatable="false">4000</string>
     <string name="score_message" translatable="false">42345</string>
     <string name="dollar_message" translatable="false">$</string>
+    <string name="wantbuy">wans to buy</string>
+    <string name="complited">Completed</string>
 
 </resources>

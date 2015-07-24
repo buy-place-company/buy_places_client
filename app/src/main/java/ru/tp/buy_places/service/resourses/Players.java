@@ -21,6 +21,8 @@ public class Players implements Resource {
     }
 
     public static Players fromJsonArray(JSONArray usersJsonArray){
+        if (usersJsonArray == null)
+            return null;
         List<Player> players = new ArrayList<>();
         for (int i = 0; i < usersJsonArray.length(); i++) {
             JSONObject userJsonObject = usersJsonArray.optJSONObject(i);

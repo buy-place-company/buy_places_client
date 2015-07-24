@@ -112,10 +112,6 @@ public class MainActivity extends AppCompatActivity implements
         Bundle args = new Bundle();
         args.putLong(KEY_PLAYER_ID, playerId);
         getLoaderManager().initLoader(PLAYER_LOADER_ID, args, this);
-
-        ServiceHelper.get(this).getMyVenues();
-
-
         if (checkPlayServices()) {
             // Start IntentService to register this application with GCM.
             Intent intent = new Intent(this, RegistrationIntentService.class);

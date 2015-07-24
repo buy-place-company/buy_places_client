@@ -443,7 +443,7 @@ public final class BuyPlacesContract {
 
 
 
-        public static final String WITH_SPECIFIED_PLAYER_TO_ID = PLAYER_TO_ALIAS + "." + Players.COLUMN_ID + "=?";
-        public static final String WITH_SPECIFIED_PLAYER_FROM_ID = PLAYER_FROM_ALIAS + "." + Players.COLUMN_ID + "=?";
+        public static final String WITH_SPECIFIED_PLAYER_TO_ID_AND_STATUS = PLAYER_TO_ALIAS + "." + Players.COLUMN_ID + "=? AND " + TABLE_NAME + "." + COLUMN_STATUS + "=?";
+        public static final String WITH_SPECIFIED_PLAYER_FROM_ID_AND_STATUS = PLAYER_FROM_ALIAS + "." + Players.COLUMN_ID + "=? AND " + TABLE_NAME + "." + COLUMN_STATUS + "=?";
     }
 }

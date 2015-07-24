@@ -25,7 +25,7 @@ public abstract class GetVenuesProcessor extends Processor {
 
     @Override
     protected Response parseResponseJSONObject(JSONObject responseJSONObject) {
-        int status = responseJSONObject.optInt("code");
+        int status = responseJSONObject.optInt("status");
         String message = responseJSONObject.optString("message", null);
         JSONArray dataJSONArray = responseJSONObject.optJSONArray("venues");
         Places places = Places.fromJSONArray(dataJSONArray);

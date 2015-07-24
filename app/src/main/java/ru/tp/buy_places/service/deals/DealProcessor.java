@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.Processor;
 import ru.tp.buy_places.service.network.Response;
 import ru.tp.buy_places.service.resourses.Deal;
@@ -37,5 +38,7 @@ abstract public class DealProcessor extends Processor {
     protected void updateContentProviderAfterExecutingRequest(Response response) {
         Deal deal = (Deal) response.getData().get(KEY_DEAL);
         deal.writeToDatabase(mContext);
+        mContext.getContentResolver().notifyChange(BuyPlacesContract.Deals.CONTENT_URI, null);
+        mContext.getContentResolver().notifyChange(BuyPlacesContract.Players.CONTENT_URI, null);
     }
 }

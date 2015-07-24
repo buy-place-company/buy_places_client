@@ -68,6 +68,8 @@ public class Deal implements Resource{
     }
 
     public static Deal fromJSONObject(JSONObject jsonObject) {
+        if (jsonObject == null)
+            return null;
         final JSONObject playerFromJSONObject = jsonObject.optJSONObject("user_from");
         final JSONObject playerToJsonObject = jsonObject.optJSONObject("user_to");
         final JSONObject venueJSONObject = jsonObject.optJSONObject("venue");

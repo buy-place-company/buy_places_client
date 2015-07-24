@@ -6,7 +6,6 @@ import org.json.JSONObject;
 
 import ru.tp.buy_places.service.network.Request;
 import ru.tp.buy_places.service.network.Response;
-import ru.tp.buy_places.service.network.UnknownErrorResponse;
 
 /**
  * Created by Ivan on 22.04.2015.
@@ -24,13 +23,9 @@ public abstract class Processor {
         Request request = prepareRequest();
         updateContentProviderBeforeExecutingRequest(request);
         JSONObject responseJSONObject = request.execute();
-        Response response;
-        if (responseJSONObject != null) {
-            response = parseResponseJSONObject(responseJSONObject);
+        Response response = parseResponseJSONObject(responseJSONObject);
+        if (response.getStatus() == 200) {
             updateContentProviderAfterExecutingRequest(response);
-        }
-        else {
-            response = new UnknownErrorResponse();
         }
         mListener.send(response);
     }

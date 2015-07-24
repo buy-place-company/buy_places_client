@@ -58,7 +58,9 @@ public class Request {
         Iterator<Map.Entry<String, String>> iterator = params.entrySet().iterator();
         StringBuilder paramsQuery = new StringBuilder();
         JSONObject responseJSONObject;
+        JSONObject unknownErrorJSONObject = null;
         try {
+            unknownErrorJSONObject = new JSONObject("{status: 0}");
             while (iterator.hasNext()) {
                 Map.Entry entry = iterator.next();
                 paramsQuery.append(entry.getKey()).append("=").append(URLEncoder.encode((String) entry.getValue(), "UTF-8"));
@@ -79,7 +81,7 @@ public class Request {
             httpURLConnection.disconnect();
 
         } catch (JSONException | IOException e) {
-            responseJSONObject = null;
+            responseJSONObject = unknownErrorJSONObject;
             e.printStackTrace();
         }
         return responseJSONObject;
@@ -89,7 +91,9 @@ public class Request {
         Iterator<Map.Entry<String, String>> iterator = formData.entrySet().iterator();
         StringBuilder paramsQuery = new StringBuilder();
         JSONObject response;
+        JSONObject unknownErrorJSONObject = null;
         try {
+            unknownErrorJSONObject = new JSONObject("{status: 0}");
             while (iterator.hasNext()) {
                 Map.Entry entry = iterator.next();
                 paramsQuery.append(entry.getKey()).append("=").append(URLEncoder.encode((String) entry.getValue(), "UTF-8"));
@@ -117,7 +121,7 @@ public class Request {
             response = new JSONObject(responseString);
             httpURLConnection.disconnect();
         } catch (JSONException | IOException e) {
-            response = null;
+            response = unknownErrorJSONObject;
             e.printStackTrace();
         }
         return response;

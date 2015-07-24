@@ -76,6 +76,8 @@ public class Player implements Resource {
 
 
     public static Player fromJSONObject(JSONObject playerJSONObject) {
+        if (playerJSONObject == null)
+            return null;
         String username = playerJSONObject.optString("username");
         int venuesCount = playerJSONObject.optInt("objects_count");
         String avatar = playerJSONObject.optString("avatar");

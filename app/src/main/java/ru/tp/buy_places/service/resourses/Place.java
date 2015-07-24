@@ -69,6 +69,8 @@ public class Place implements Resource {
     }
 
     public static Place fromJSONObject(JSONObject placeData) {
+        if (placeData == null)
+            return null;
         String id = placeData.optString("id");
         final JSONObject stats = placeData.optJSONObject("stats");
         long checkinsCount = stats.optLong("checkinsCount");

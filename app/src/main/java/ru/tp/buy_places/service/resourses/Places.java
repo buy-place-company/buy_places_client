@@ -28,6 +28,8 @@ public class Places implements Resource, Iterable<Place> {
     }
 
     public static Places fromJSONArray(JSONArray placesJSONArray) {
+        if (placesJSONArray == null)
+            return null;
         Places places = new Places();
         if (placesJSONArray != null) {
             for (int i = 0; i < placesJSONArray.length(); i++) {

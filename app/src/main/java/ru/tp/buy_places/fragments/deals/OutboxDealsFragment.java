@@ -72,9 +72,9 @@ public class OutboxDealsFragment extends Fragment implements LoaderManager.Loade
         long playerId = AccountManagerHelper.getPlayerId(getActivity());
         switch (type) {
             case INCOMING:
-                return new CursorLoader(getActivity(), BuyPlacesContract.Deals.CONTENT_URI, BuyPlacesContract.Deals.WITH_RELATED_ENTITIES_PROJECTION, BuyPlacesContract.Deals.WITH_SPECIFIED_PLAYER_TO_ID, new String[]{Long.toString(playerId)}, null);
+                return new CursorLoader(getActivity(), BuyPlacesContract.Deals.CONTENT_URI, BuyPlacesContract.Deals.WITH_RELATED_ENTITIES_PROJECTION, BuyPlacesContract.Deals.WITH_SPECIFIED_PLAYER_TO_ID_AND_STATUS, new String[]{Long.toString(playerId), Deal.DealState.UNCOMPLETED.name()}, null);
             case OUTGOING:
-                return new CursorLoader(getActivity(), BuyPlacesContract.Deals.CONTENT_URI, BuyPlacesContract.Deals.WITH_RELATED_ENTITIES_PROJECTION, BuyPlacesContract.Deals.WITH_SPECIFIED_PLAYER_FROM_ID, new String[]{Long.toString(playerId)}, null);
+                return new CursorLoader(getActivity(), BuyPlacesContract.Deals.CONTENT_URI, BuyPlacesContract.Deals.WITH_RELATED_ENTITIES_PROJECTION, BuyPlacesContract.Deals.WITH_SPECIFIED_PLAYER_FROM_ID_AND_STATUS, new String[]{Long.toString(playerId), Deal.DealState.UNCOMPLETED.name()}, null);
             default:
                 throw new IllegalStateException();
         }

@@ -72,5 +72,6 @@ public class ActionWithPlaceProcessor extends Processor {
         place.writeToDatabase(mContext);
 
         mContext.getContentResolver().notifyChange(BuyPlacesContract.Places.CONTENT_URI, null);
+        mContext.getContentResolver().notifyChange(BuyPlacesContract.Players.CONTENT_URI, null);
     }
 }

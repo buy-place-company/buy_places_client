@@ -31,6 +31,8 @@ public class DealsFromServer implements Resource {
     }
 
     public static DealsFromServer fromJsonObject(JSONObject jsonObject) {
+        if (jsonObject == null)
+            return null;
         List<Deal> outgoingDeals = new ArrayList<>();
         List<Deal> incomingDeals = new ArrayList<>();
         JSONArray outgoingDealsJsonArray = jsonObject.optJSONArray("outgoing");
