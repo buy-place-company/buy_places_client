@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import java.net.CookieManager;
+
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 
 /**
@@ -85,7 +87,9 @@ public class BuyItAuthenticator extends AbstractAccountAuthenticator {
     @Override
     public Bundle getAccountRemovalAllowed(AccountAuthenticatorResponse response, Account account) throws NetworkErrorException {
         Bundle result = super.getAccountRemovalAllowed(response, account);
-        //((CookieManager)CookieManager.getDefault()).getCookieStore().removeAll();
+        ((CookieManager)CookieManager.getDefault()).getCookieStore().removeAll();
+        android.webkit.CookieManager cookieManager = android.webkit.CookieManager.getInstance();
+        cookieManager.removeAllCookie();
         mContext.getContentResolver().delete(BuyPlacesContract.Deals.CONTENT_URI, null, null);
         mContext.getContentResolver().delete(BuyPlacesContract.Places.CONTENT_URI, null, null);
         mContext.getContentResolver().delete(BuyPlacesContract.Players.CONTENT_URI, null, null);

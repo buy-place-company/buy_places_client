@@ -69,6 +69,8 @@ public class VKOAuthActivity extends Activity {
         REDIRECT_URI = getString(R.string.vk_redirect_uri);
         PERMISSIONS = getString(R.string.vk_permissions);
         PROTOCOL_VERSION = getString(R.string.vk_protocol_version);
+        mWebView.getSettings().setSavePassword(false);
+        mWebView.getSettings().setSaveFormData(false);
 
     }
 
