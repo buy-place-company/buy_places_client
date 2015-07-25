@@ -6,7 +6,6 @@ import com.google.android.gms.iid.InstanceIDListenerService;
  * Created by Ivan on 21.07.2015.
  */
 public class BuyItInstanceIDListenerService extends InstanceIDListenerService {
-    private static final String TAG = "MyInstanceIDLS";
 
     /**
      * Called if InstanceID token is updated. This may occur if the security of
@@ -16,9 +15,7 @@ public class BuyItInstanceIDListenerService extends InstanceIDListenerService {
     // [START refresh_token]
     @Override
     public void onTokenRefresh() {
-        // Fetch updated Instance ID token and notify our app's server of any changes (if applicable).
-        //Intent intent = new Intent(this, RegistrationIntentService.class);
-        //startService(intent);
+        RegistrationIntentService.startGCMRegistrationService(this);
     }
     // [END refresh_token]
 }

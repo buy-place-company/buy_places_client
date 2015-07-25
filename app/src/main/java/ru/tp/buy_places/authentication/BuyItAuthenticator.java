@@ -11,9 +11,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import org.json.JSONObject;
+
 import java.net.CookieManager;
+import java.util.HashMap;
 
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
+import ru.tp.buy_places.service.network.Request;
+import ru.tp.buy_places.service.network.Response;
 
 /**
  * Created by Ivan on 22.05.2015.
@@ -87,14 +92,24 @@ public class BuyItAuthenticator extends AbstractAccountAuthenticator {
     @Override
     public Bundle getAccountRemovalAllowed(AccountAuthenticatorResponse response, Account account) throws NetworkErrorException {
         Bundle result = super.getAccountRemovalAllowed(response, account);
-        ((CookieManager)CookieManager.getDefault()).getCookieStore().removeAll();
-        android.webkit.CookieManager cookieManager = android.webkit.CookieManager.getInstance();
-        if (cookieManager.hasCookies())
-            cookieManager.removeAllCookie();
-        mContext.getContentResolver().delete(BuyPlacesContract.Deals.CONTENT_URI, null, null);
-        mContext.getContentResolver().delete(BuyPlacesContract.Places.CONTENT_URI, null, null);
-        mContext.getContentResolver().delete(BuyPlacesContract.Players.CONTENT_URI, null, null);
-        result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, true);
+        Request request = new Request(mContext, "/auth/logout", Request.RequestMethod.POST, new HashMap<String, String>());
+        JSONObject responseJSONObject = request.execute();
+        int status = responseJSONObject.optInt("status");
+        String message = responseJSONObject.optString("message", null);
+        Response logoutResonse = new Response(status, message, null);
+        if (logoutResonse.getStatus() == 200) {
+            ((CookieManager) CookieManager.getDefault()).getCookieStore().removeAll();
+            android.webkit.CookieManager cookieManager = android.webkit.CookieManager.getInstance();
+            if (cookieManager.hasCookies())
+                cookieManager.removeAllCookie();
+            mContext.getContentResolver().delete(BuyPlacesContract.Deals.CONTENT_URI, null, null);
+            mContext.getContentResolver().delete(BuyPlacesContract.Places.CONTENT_URI, null, null);
+            mContext.getContentResolver().delete(BuyPlacesContract.Players.CONTENT_URI, null, null);
+            result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, true);
+        }
+        else {
+            result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, false);
+        }
         return result;
     }
 }

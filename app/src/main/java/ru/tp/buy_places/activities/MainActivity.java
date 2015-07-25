@@ -2,18 +2,14 @@ package ru.tp.buy_places.activities;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -21,14 +17,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
@@ -45,7 +38,6 @@ import ru.tp.buy_places.fragments.map.MapFragment;
 import ru.tp.buy_places.fragments.objects.PlaceListFragment;
 import ru.tp.buy_places.fragments.raiting.RaitingFragment;
 import ru.tp.buy_places.fragments.settings.SettingFragment;
-import ru.tp.buy_places.gcm.RegistrationIntentService;
 import ru.tp.buy_places.map.LocationApiConnectionListener;
 import ru.tp.buy_places.map.LocationProvider;
 import ru.tp.buy_places.service.ServiceHelper;
@@ -65,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int PLAYER_LOADER_ID = 0;
     private static final String KEY_PLAYER_ID = "KEY_PLAYER_ID";
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -79,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements
     private TextView mHeaderUsername;
     private TextView mHeaderCash;
     private long mLogoutRequestId;
-    private LogoutReceiver mLogoutReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,26 +105,6 @@ public class MainActivity extends AppCompatActivity implements
         Bundle args = new Bundle();
         args.putLong(KEY_PLAYER_ID, playerId);
         getLoaderManager().initLoader(PLAYER_LOADER_ID, args, this);
-        if (checkPlayServices()) {
-            // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
-        }
-
-        IntentFilter intentFilter = new IntentFilter(ServiceHelper.ACTION_REQUEST_RESULT);
-        mLogoutReceiver = new LogoutReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mLogoutReceiver, intentFilter);
-
-
-        String android_id = Settings.Secure.getString(getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-        Log.e("ANDROID_ID", android_id);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mLogoutReceiver);
     }
 
     @Override
@@ -306,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLogoutClick() {
-        mLogoutRequestId = ServiceHelper.get(this).logout();
+        AccountManagerHelper.removeAccount(MainActivity.this);
     }
 
     public enum Page {
@@ -316,34 +286,5 @@ public class MainActivity extends AppCompatActivity implements
         DEALS,
         RATING,
         SETTINGS
-    }
-
-
-    private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else {
-                Log.i(LOG_TAG, "This device is not supported.");
-                finish();
-            }
-            return false;
-        }
-        return true;
-    }
-
-
-    private class LogoutReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            long requestId = intent.getLongExtra(ServiceHelper.EXTRA_REQUEST_ID, 0);
-            int status = intent.getIntExtra(ServiceHelper.EXTRA_RESULT_CODE, 0);
-            if (requestId == mLogoutRequestId && status == 200) {
-                AccountManagerHelper.removeAccount(MainActivity.this);
-            }
-        }
     }
 }

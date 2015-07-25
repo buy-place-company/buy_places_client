@@ -88,12 +88,6 @@ public class VKOAuthActivity extends Activity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mWebView.destroy();
-    }
-
-    @Override
     public void onBackPressed() {
         super.onBackPressed();
         setResult(RESULT_CANCELED);
