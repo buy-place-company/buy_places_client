@@ -27,6 +27,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -308,18 +309,16 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
             public void onClick(View view) {
                 dialogBuilder.setTitle(DIALOG);
                 dialogBuilder.setMessage("Выкупить за:");
-                final EditText input = new EditText(VenueActivity.this);
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT);
-                input.setLayoutParams(lp);
-                dialogBuilder.setView(input);
+                TextInputLayout textInputLayout = (TextInputLayout)LayoutInflater.from(VenueActivity.this).inflate(R.layout.suggest_deal_dialog_view, null);
+                dialogBuilder.setView(textInputLayout);
                 dialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        // if(!TextUtils.isEmpty(input.getText())) {
-                            ServiceHelper.get(VenueActivity.this).suggestDeal(mPlace.getId(), Integer.valueOf(input.getText().toString()));
+                        TextInputLayout input = (TextInputLayout)((Dialog) dialog).findViewById(R.id.text_input_layout_amount);
+                        if(!TextUtils.isEmpty(input.getEditText().getText().toString())) {
+                            long amount = Long.parseLong(input.getEditText().getText().toString());
+                            ServiceHelper.get(VenueActivity.this).suggestDeal(mPlace.getId(), amount);
                             Toast.makeText(VenueActivity.this, "Запрос на заключение сделки отправлен", Toast.LENGTH_LONG).show();
-                        //} else Toast.makeText(VenueActivity.this, "Вы не ввели сумму", Toast.LENGTH_LONG).show();
+                        } else Toast.makeText(VenueActivity.this, "Вы не ввели сумму", Toast.LENGTH_LONG).show();
                     }
                 });
                 dialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
@@ -402,8 +401,12 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
                 suggestDealDialogBuilder.setTitle(DIALOG);
                 suggestDealDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        long amount = Long.parseLong(((TextInputLayout)((Dialog) dialog).findViewById(R.id.text_input_layout_amount)).getEditText().getText().toString());
-                        mSuggestDealRequestId = ServiceHelper.get(VenueActivity.this).suggestDeal(mPlace.getId(), amount);
+                        TextInputLayout input = (TextInputLayout)((Dialog) dialog).findViewById(R.id.text_input_layout_amount);
+                        if(!TextUtils.isEmpty(input.getEditText().getText().toString())) {
+                            long amount = Long.parseLong(input.getEditText().getText().toString());
+                            mSuggestDealRequestId = ServiceHelper.get(VenueActivity.this).suggestDeal(mPlace.getId(), amount);
+                        } else Toast.makeText(VenueActivity.this, "Вы не ввели сумму", Toast.LENGTH_LONG).show();
+
                     }
                 });
                 suggestDealDialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {

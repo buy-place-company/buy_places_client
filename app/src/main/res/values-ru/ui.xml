@@ -60,6 +60,7 @@
 
     <string name="complited">Сделка завершена</string>
     <string name="wantbuy">хочет купить</string>
+    <string name="exit">нажмите кнопку еще раз чтобы выйти</string>
 
 
 </resources>

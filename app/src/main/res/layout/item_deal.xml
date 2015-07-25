@@ -3,17 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:background="?android:attr/selectableItemBackground">
 
-    >
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="88dp"
-        android:background="@color/light_primary"
-        android:alpha="0.7"
-        android:id="@+id/relativeLayout2"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
-
+        style="@style/BackgroundStyleItem">
     </RelativeLayout>
 
     <ImageView

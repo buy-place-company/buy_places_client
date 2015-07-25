@@ -27,6 +27,7 @@ public abstract class Processor {
         if (response.getStatus() == 200) {
             updateContentProviderAfterExecutingRequest(response);
         }
+
         mListener.send(response);
     }
 
