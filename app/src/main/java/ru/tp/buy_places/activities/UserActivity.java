@@ -113,6 +113,8 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
                 userVenueMax.setText(Integer.toString(mPlayer.getMaxPlaces()));
                 userLevel.setText(Integer.toString(mPlayer.getLevel()));
                 userCash.setText(Long.toString(mPlayer.getCash()));
+                if(mPlayer.getCash() == 0)
+                    userCash.setVisibility(View.GONE);
                 userScore.setText(Long.toString(mPlayer.getScore()));
                 //avatar.setBackgroundResource(R.drawable.circle_background);
 
