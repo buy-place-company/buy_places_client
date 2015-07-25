@@ -9,8 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:background="@color/light_primary"
-        android:alpha="0.7"></RelativeLayout>
+        style="@style/BackgroundStyleItem"></RelativeLayout>
 
     <ImageView
         android:layout_centerVertical="true"

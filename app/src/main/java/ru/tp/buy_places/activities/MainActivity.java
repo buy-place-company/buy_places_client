@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements
                 Picasso.with(this).load(player.getAvatar()).into(mHeaderAvatar);
             }
             mHeaderUsername.setText(player.getUsername());
-            mHeaderCash.setText(Long.toString(player.getScore()));
+            mHeaderCash.setText(Long.toString(player.getCash()));
             mHeaderView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
