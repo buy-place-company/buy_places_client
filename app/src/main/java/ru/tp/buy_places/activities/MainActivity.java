@@ -11,6 +11,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
@@ -123,6 +124,11 @@ public class MainActivity extends AppCompatActivity implements
         IntentFilter intentFilter = new IntentFilter(ServiceHelper.ACTION_REQUEST_RESULT);
         mLogoutReceiver = new LogoutReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(mLogoutReceiver, intentFilter);
+
+
+        String android_id = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        Log.e("ANDROID_ID", android_id);
     }
 
     @Override

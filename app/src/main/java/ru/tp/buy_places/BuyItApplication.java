@@ -1,6 +1,7 @@
 package ru.tp.buy_places;
 
 import android.app.Application;
+import android.webkit.CookieSyncManager;
 
 import com.google.android.gms.maps.MapsInitializer;
 
@@ -19,6 +20,7 @@ public class BuyItApplication extends Application {
     public void onCreate() {
         super.onCreate();
         MapsInitializer.initialize(this);
+        CookieSyncManager.createInstance(this);
         CookieStore cookieStore = new PersistentCookieStore(this);
         CookieManager cookieManager = new CookieManager(cookieStore, null);
         CookieManager.setDefault(cookieManager);
