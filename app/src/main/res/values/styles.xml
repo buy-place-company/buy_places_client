@@ -59,4 +59,9 @@
     <style name="Montaga">
         <item name="fontFamily">montaga</item>
     </style>
+
+    <style name="BackgroundStyle">
+        <item name="android:background">@drawable/login_background</item>
+        <item name="android:alpha">0.7</item>
+    </style>
 </resources>

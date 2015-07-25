@@ -21,8 +21,7 @@
             xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context="ru.tp.buy_places.fragments.objects.ObjectFragment"
-            android:background="@drawable/nabrosok"
-            android:alpha="0.5">
+            style="@style/BackgroundStyle">
             </RelativeLayout>
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
