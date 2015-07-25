@@ -88,9 +88,9 @@ public class VKOAuthActivity extends Activity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
+    protected void onDestroy() {
+        super.onDestroy();
+        mWebView.destroy();
     }
 
     @Override

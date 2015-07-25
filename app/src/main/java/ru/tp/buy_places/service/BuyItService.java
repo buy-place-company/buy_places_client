@@ -265,6 +265,7 @@ public class BuyItService extends IntentService {
                 final String code = intent.getStringExtra(EXTRA_CODE);
                 Processor authenticationProcessor = new AuthenticationProcessorCreator(this, new AuthenticationProcessorResultListener(intent, resultReceiver), code).createProcessor();
                 authenticationProcessor.process();
+
                 break;
             case ACTION_VENUE:
                 final String id = intent.getStringExtra(EXTRA_VENUE_ID);

@@ -89,7 +89,8 @@ public class BuyItAuthenticator extends AbstractAccountAuthenticator {
         Bundle result = super.getAccountRemovalAllowed(response, account);
         ((CookieManager)CookieManager.getDefault()).getCookieStore().removeAll();
         android.webkit.CookieManager cookieManager = android.webkit.CookieManager.getInstance();
-        cookieManager.removeAllCookie();
+        if (cookieManager.hasCookies())
+            cookieManager.removeAllCookie();
         mContext.getContentResolver().delete(BuyPlacesContract.Deals.CONTENT_URI, null, null);
         mContext.getContentResolver().delete(BuyPlacesContract.Places.CONTENT_URI, null, null);
         mContext.getContentResolver().delete(BuyPlacesContract.Players.CONTENT_URI, null, null);
