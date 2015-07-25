@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.activities.DealActivity;
+import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.resourses.Deal;
 
 /**
@@ -51,6 +52,7 @@ public class BuyItGcmListenerService extends GcmListenerService {
                     Deal deal = Deal.fromJSONObject(dealJsonObject);
                     long rowId = deal.writeToDatabase(this);
                     deal.setRowId(rowId);
+                    getContentResolver().notifyChange(BuyPlacesContract.Deals.CONTENT_URI, null);
                     sendNewDealNotification(deal);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -76,9 +78,7 @@ public class BuyItGcmListenerService extends GcmListenerService {
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_cash_multiple_white_18dp))
                 .setSound(defaultSoundUri)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(message)
-                        .setBigContentTitle("Предложение сделки")
-                        .setSummaryText("Summary"));
+                        .bigText(message));
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
