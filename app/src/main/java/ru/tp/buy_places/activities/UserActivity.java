@@ -31,6 +31,7 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
     private TextView userVenueCount;
     private TextView userVenueMax;
     private TextView userCash;
+    private TextView userScore;
     private TextView userLevel;
     private ImageView avatar;
 
@@ -53,7 +54,8 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
         userName = (TextView)findViewById(R.id.text_view_user_name);
         userVenueCount = (TextView)findViewById(R.id.tv_object_count);
         userVenueMax = (TextView)findViewById(R.id.tv_maxobject);
-        userCash = (TextView)findViewById(R.id.tv_score);
+        userCash = (TextView)findViewById(R.id.tv_cash);
+        userScore = (TextView)findViewById(R.id.tv_score);
         userLevel = (TextView)findViewById(R.id.tv_level);
         Intent intent = getIntent();
         final long userId = intent.getLongExtra(EXTRA_USER_ID, -1);
@@ -111,6 +113,7 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
                 userVenueMax.setText(Integer.toString(mPlayer.getMaxPlaces()));
                 userLevel.setText(Integer.toString(mPlayer.getLevel()));
                 userCash.setText(Long.toString(mPlayer.getCash()));
+                userScore.setText(Long.toString(mPlayer.getScore()));
                 //avatar.setBackgroundResource(R.drawable.circle_background);
 
             }

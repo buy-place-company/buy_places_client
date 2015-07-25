@@ -30,13 +30,14 @@
             >
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="170dp"
-                android:layout_height="170dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="38dp"
                 android:id="@+id/image_view_user"
                 android:src="@drawable/ava"
+
                 android:alpha="1"
                 android:background="@drawable/shadow_circle"/>
 
@@ -62,27 +63,18 @@
                 android:id="@+id/text_view_user_name"
                 android:text="Юзернейм"
                 android:layout_marginStart="39dp"
-                android:layout_alignBottom="@+id/tv_level"
-                android:layout_toEndOf="@+id/image_view_user" />
+                android:layout_toEndOf="@+id/image_view_user"
+                android:layout_alignBottom="@+id/tv_level" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="10000"
-                android:id="@+id/tv_score"
+                android:id="@+id/tv_cash"
                 android:layout_below="@+id/text_view_user_name"
-                android:layout_alignStart="@+id/text_view_user_name" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/dollar_message"
-                android:id="@+id/textView3"
-                android:layout_alignTop="@+id/tv_score"
-                android:layout_toEndOf="@+id/tv_score"
-                android:layout_marginLeft="5dp" />
+                android:layout_alignStart="@+id/text_view_user_name"
+                android:drawableLeft="@mipmap/cash_usd_green_24"/>
 
             <LinearLayout
                 android:orientation="vertical"
@@ -135,6 +127,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/tv_score"
+                android:layout_below="@+id/tv_cash"
+                android:drawableLeft="@mipmap/cash_usd_red_24"
+                android:layout_alignStart="@+id/tv_cash"
+                android:text="hbh" />
 
         </RelativeLayout>
         </RelativeLayout>
