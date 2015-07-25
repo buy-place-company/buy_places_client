@@ -31,7 +31,7 @@ import ru.tp.buy_places.utils.AccountManagerHelper;
  */
 public class DealActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String EXTRA_DEAL_ROW_ID = "EXTRA_DEAL_ROW_ID";
+    public static final String EXTRA_DEAL_ROW_ID = "EXTRA_DEAL_ROW_ID";
     private static final String ARG_DEAL_ROW_ID = "ARG_DEAL_ROW_ID";
     private static final int DEAL_LOADER_ID = 0;
 

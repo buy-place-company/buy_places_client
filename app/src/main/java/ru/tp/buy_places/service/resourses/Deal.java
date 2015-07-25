@@ -204,6 +204,10 @@ public class Deal implements Resource{
         return mId;
     }
 
+    public void setRowId(long rowId) {
+        mRowId = rowId;
+    }
+
     public enum DealType {
         INCOMING,
         OUTGOING,
