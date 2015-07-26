@@ -21,7 +21,7 @@
             app:expandedTitleMarginStart="16dp"
             app:expandedTitleMarginEnd="16dp"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Giant.Colored"
-            android:theme="@style/TransparentActionBarTheme">
+            android:theme="@style/TransparentActionBar">
             <FrameLayout
                 android:id="@+id/map_container"
                 android:layout_width="match_parent"

@@ -106,7 +106,6 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_object);
-
         final long venuesRowId = getIntent().getLongExtra(EXTRA_VENUES_ROW_ID, 0);
         final LatLng venuesPosition = getIntent().getParcelableExtra(EXTRA_VENUES_LOCATION);
         final int zoomLevel = getResources().getInteger(R.integer.google_map_default_zoom_level);
@@ -134,7 +133,6 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-
         }
         Bundle args = new Bundle();
         args.putLong(EXTRA_VENUES_ROW_ID, venuesRowId);
@@ -187,7 +185,6 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
 
 
     }
-
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
