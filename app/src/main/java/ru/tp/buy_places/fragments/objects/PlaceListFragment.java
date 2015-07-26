@@ -10,13 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.andraskindler.parallaxviewpager.ParallaxViewPager;
+
 import ru.tp.buy_places.R;
 
 public class PlaceListFragment extends Fragment {
 
 
     private PlacePagerAdapter mPlacePagerAdapter;
-    private ViewPager mViewPager;
+    private ParallaxViewPager mViewPager;
     private TabLayout mTabLayout;
     private CoordinatorLayout mCoordinatorLayout;
     private AppBarLayout mAppBarLayout;
@@ -37,8 +39,9 @@ public class PlaceListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_placelist, container, false);
         mTabLayout = (TabLayout) inflater.inflate(R.layout.tab_layout, null);
-        mViewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
-
+        mViewPager = (ParallaxViewPager) rootView.findViewById(R.id.view_pager);
+        mViewPager.setScaleType(ParallaxViewPager.FIT_WIDTH);
+        mViewPager.setBackgroundResource(R.drawable.mainback_1);
         return rootView;
     }
 
