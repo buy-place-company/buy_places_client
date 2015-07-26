@@ -3,11 +3,14 @@ package ru.tp.buy_places.fragments.raiting;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +67,8 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
 
             holder.mTitle.setText(mData.get(position).getUsername());
             holder.mScore.setText(Long.toString(mData.get(position).getScore()));
-            //Picasso.with(activity).load(mData.get(position).getAvatar()).error(R.drawable.ic_launcher).into(holder.mIcon);
+            if(!TextUtils.isEmpty(mData.get(position).getAvatar()))
+                Picasso.with(activity).load(mData.get(position).getAvatar()).error(R.drawable.ava).into(holder.mIcon);
             holder.mRating.setText(Long.toString(mData.get(position).getPosition()));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

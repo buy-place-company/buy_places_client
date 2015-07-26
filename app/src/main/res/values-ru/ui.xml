@@ -58,8 +58,9 @@
     <string name="price_message">1000</string>
     <string name="divider_message">,</string>
 
-    <string name="complited">Сделка завершена</string>
-    <string name="wantbuy">хочет купить</string>
+    <string name="wantbuy">Хочет купить</string>
+    <string name="rebuy">хотите выкупить</string>
+    <string name="you">Вы</string>
     <string name="exit">нажмите кнопку еще раз чтобы выйти</string>
 
 

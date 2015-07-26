@@ -3,62 +3,94 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    style="@style/BackgroundStyle">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ActionBarTheme"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#1e000000"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:orientation="vertical"
-        android:gravity="center">
+        android:padding="5dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Сделка от:"
+            android:id="@+id/tv_deal_message"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="[date]"
             android:id="@+id/tv_date"
             android:layout_gravity="left|center_horizontal"
-            android:visibility="invisible" />
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/tv_deal_message"
+            android:layout_marginLeft="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="[name]"
-            android:id="@+id/tv_user" />
+            android:id="@+id/tv_user"
+            android:layout_centerVertical="true"
+            android:layout_alignStart="@+id/tv_what_want" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="[type]"
-            android:id="@+id/tv_type"
-            android:visibility="invisible" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="180dp"
+            android:layout_height="25dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="[venue]"
-            android:id="@+id/tv_venue" />
+            android:id="@+id/tv_venue"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@+id/tv_user"
+            android:layout_toEndOf="@+id/tv_what_want" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="[amount]"
-            android:id="@+id/tv_amount" />
+            android:id="@+id/tv_amount"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@+id/tv_what_want"
+            android:layout_toEndOf="@+id/tv_price_message" />
 
-    </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="[what want]"
+            android:id="@+id/tv_what_want"
+            android:layout_alignTop="@+id/tv_venue"
+            android:layout_alignStart="@+id/tv_deal_message"
+            android:layout_marginStart="50dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="за"
+            android:id="@+id/tv_price_message"
+            android:layout_below="@+id/tv_what_want"
+            android:layout_alignStart="@+id/tv_what_want" />
+
+
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/button_container"

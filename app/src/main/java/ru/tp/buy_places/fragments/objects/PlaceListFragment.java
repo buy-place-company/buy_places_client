@@ -41,7 +41,7 @@ public class PlaceListFragment extends Fragment {
         mTabLayout = (TabLayout) inflater.inflate(R.layout.tab_layout, null);
         mViewPager = (ParallaxViewPager) rootView.findViewById(R.id.view_pager);
         mViewPager.setScaleType(ParallaxViewPager.FIT_WIDTH);
-        mViewPager.setBackgroundResource(R.drawable.mainback_1);
+        mViewPager.setBackgroundResource(R.drawable.login_background);
         return rootView;
     }
 

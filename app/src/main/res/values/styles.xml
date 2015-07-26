@@ -61,7 +61,7 @@
     </style>
 
     <style name="BackgroundStyle">
-        <item name="android:background">@drawable/mainback_1</item>
+        <item name="android:background">@drawable/login_background</item>
         <item name="android:alpha">1</item>
     </style>
     <style name="BackgroundStyleItem">

@@ -56,6 +56,8 @@
     <string name="level_message">Уровень 12</string>
     <string name="price_label_message">Цена:</string>
     <string name="price_message">1000:</string>
-
+    <string name="wantbuy">want to buy</string>
+    <string name="rebuy">want to rebuy</string>
+    <string name="you">You are</string>
     <string name="exit">Please click BACK again to exit"</string>
 </resources>

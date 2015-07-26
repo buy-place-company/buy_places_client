@@ -1,5 +1,6 @@
 package ru.tp.buy_places.activities;
 
+import android.accounts.AccountManager;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -12,17 +13,21 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.fragments.objects.MyPlacesFragment;
 import ru.tp.buy_places.service.ServiceHelper;
 import ru.tp.buy_places.service.resourses.Player;
+import ru.tp.buy_places.utils.AccountManagerHelper;
 
 public class UserActivity extends AppCompatActivity implements  LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -56,6 +61,7 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
         userVenueMax = (TextView)findViewById(R.id.tv_maxobject);
         userCash = (TextView)findViewById(R.id.tv_cash);
         userScore = (TextView)findViewById(R.id.tv_score);
+        userLevel = (TextView)findViewById(R.id.tv_level);
         userLevel = (TextView)findViewById(R.id.tv_level);
         Intent intent = getIntent();
         final long userId = intent.getLongExtra(EXTRA_USER_ID, -1);
@@ -113,11 +119,11 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
                 userVenueMax.setText(Integer.toString(mPlayer.getMaxPlaces()));
                 userLevel.setText(Integer.toString(mPlayer.getLevel()));
                 userCash.setText(Long.toString(mPlayer.getCash()));
-                if(mPlayer.getCash() == 0)
+                if(mPlayer.getId() != AccountManagerHelper.getPlayerId(this))
                     userCash.setVisibility(View.GONE);
                 userScore.setText(Long.toString(mPlayer.getScore()));
-                //avatar.setBackgroundResource(R.drawable.circle_background);
-
+                if(!TextUtils.isEmpty(mPlayer.getAvatar()))
+                    Picasso.with(this).load(mPlayer.getAvatar()).error(R.mipmap.ava).into(avatar);
             }
         }
 
