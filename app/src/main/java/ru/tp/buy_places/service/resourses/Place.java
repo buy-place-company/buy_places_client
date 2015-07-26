@@ -43,7 +43,6 @@ public class Place implements Resource {
     private boolean mIsAroundThePlayerIsSet = false;
     private boolean mIsInOwnershipIsSet = false;
     private boolean mStateUpdatingIsSet = false;
-    private boolean mFavourite;
 
     private Place(String id, long checkinsCount, long usersCount, long tipCount, String name, String category, int level, Player owner, Long buyPrice, Long sellPrice, Long upgradePrice, Long loot, Long maxLoot, Long income, Long expense, double latitude, double longitude, boolean isFavourite) {
         mId = id;
@@ -282,7 +281,7 @@ public class Place implements Resource {
         values.put(BuyPlacesContract.Places.COLUMN_LATITUDE, mLatitude);
         values.put(BuyPlacesContract.Places.COLUMN_LONGITUDE, mLongitude);
         values.put(BuyPlacesContract.Places.COLUMN_OWNER, ownersRowId);
-        values.put(BuyPlacesContract.Places.COLUMN_FAVOURITE, mFavourite);
+        values.put(BuyPlacesContract.Places.COLUMN_FAVOURITE, mIsFavourite);
         if (mIsAroundThePointIsSet)
             values.put(BuyPlacesContract.Places.COLUMN_IS_AROUND_THE_POINT, mIsAroundThePoint);
         if (mIsAroundThePlayerIsSet)
@@ -303,10 +302,6 @@ public class Place implements Resource {
             cursor.close();
         }
         return id;
-    }
-
-    public void setFavourite(boolean favourite) {
-        mFavourite = favourite;
     }
 
     public boolean isFavourite() {

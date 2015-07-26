@@ -104,7 +104,7 @@ public class ServiceHelper {
         } else {
             requestId = mRequestIdGenerator.incrementAndGet();
             mPendingRequests.put(POST_VENUE, requestId);
-            ResultReceiver serviceCallback = new GetVenuesResultReceiver(null, MY_VENUES);
+            ResultReceiver serviceCallback = new GetVenuesResultReceiver(null, POST_VENUE);
             BuyItService.startAddVenueToFavouriteService(mContext, serviceCallback, requestId, venueId);
         }
         return requestId;
@@ -117,7 +117,7 @@ public class ServiceHelper {
         } else {
             requestId = mRequestIdGenerator.incrementAndGet();
             mPendingRequests.put(POST_VENUE, requestId);
-            ResultReceiver serviceCallback = new VenueResultReceiver(null, MY_VENUES);
+            ResultReceiver serviceCallback = new VenueResultReceiver(null, POST_VENUE);
             BuyItService.startRemoveVenueFromFavouriteService(mContext, serviceCallback, requestId, venueId);
         }
         return requestId;

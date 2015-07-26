@@ -203,9 +203,9 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
             if (mMenu != null) {
                 MenuItem favouriteMenuItem = mMenu.findItem(R.id.venue_favourite);
                 if (mPlace.isFavourite())
-                    favouriteMenuItem.setIcon(R.drawable.ic_star_outline_white_18dp);
-                else {
                     favouriteMenuItem.setIcon(R.drawable.ic_star_white_18dp);
+                else {
+                    favouriteMenuItem.setIcon(R.drawable.ic_star_outline_white_18dp);
                 }
             }
             mCollapsingToolbarLayout.setTitle(mPlace.getName());
@@ -221,11 +221,11 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
                 statisticsHeaderPositionBasePosition++;
             }
             if (mPlace.getSellPrice() != null) {
-                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_sell_price), InfoType.PRICE, Long.toString(mPlace.getBuyPrice())));
+                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_sell_price), InfoType.PRICE, Long.toString(mPlace.getSellPrice())));
                 statisticsHeaderPositionBasePosition++;
             }
-            if (mPlace.getSellPrice() != null) {
-                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_upgrade_price), InfoType.PRICE, Long.toString(mPlace.getBuyPrice())));
+            if (mPlace.getUpgradePrice() != null) {
+                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_upgrade_price), InfoType.PRICE, Long.toString(mPlace.getUpgradePrice())));
                 statisticsHeaderPositionBasePosition++;
             }
             if (mPlace.getLoot() != null && mPlace.getMaxLoot() != null) {

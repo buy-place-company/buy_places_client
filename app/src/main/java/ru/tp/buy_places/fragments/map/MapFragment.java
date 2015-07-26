@@ -71,6 +71,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
     private PlayerLocationMarkerOptionsCreator mPlayerLocationMarkerOptionsCreator;
     private Player mPlayer;
     private ArrayList<Integer> mSelectedFilterItems = new ArrayList<>();
+    private Menu mMenu;
 
 
     public MapFragment() {
@@ -110,6 +111,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
+        mMenu = menu;
     }
 
     @Override
@@ -144,8 +146,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
                                     Bundle args = new Bundle();
                                     args.putIntegerArrayList(ARG_FILTER, mSelectedFilterItems);
                                     getLoaderManager().restartLoader(ALL_PLACES_LOADER_ID, args, MapFragment.this);
+                                    mMenu.findItem(R.id.action_filter).setIcon(R.drawable.ic_filter_white_18dp);
                                 } else {
                                     getLoaderManager().restartLoader(ALL_PLACES_LOADER_ID, null, MapFragment.this);
+                                    mMenu.findItem(R.id.action_filter).setIcon(R.drawable.ic_filter_outline_white_18dp);
                                 }
                                 mSelectedFilterItems = items;
                             }
