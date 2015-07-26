@@ -13,14 +13,15 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.andraskindler.parallaxviewpager.ParallaxViewPager;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.service.BuyItService;
 import ru.tp.buy_places.service.ServiceHelper;
+import ru.tp.buy_places.service.network.Response;
 
 /**
  * Created by Ivan on 20.05.2015.
@@ -78,25 +79,36 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Login
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            final long requestId = intent.getLongExtra(BuyItService.EXTRA_REQUEST_ID, 0);
+            final long requestId = intent.getLongExtra(ServiceHelper.EXTRA_REQUEST_ID, 0);
+            final int status = intent.getIntExtra(ServiceHelper.EXTRA_RESULT_CODE, 0);
             if (mAuthenticationRequestId == requestId) {
-                long id = intent.getLongExtra(BuyItService.EXTRA_ID, 0);
-                String username = intent.getStringExtra(BuyItService.EXTRA_USERNAME);
+                switch (status) {
+                    case Response.RESULT_OK:
+                        long id = intent.getLongExtra(BuyItService.EXTRA_ID, 0);
+                        String username = intent.getStringExtra(BuyItService.EXTRA_USERNAME);
 
-                AccountManager accountManager = AccountManager.get(context);
-                Account account = new BuyItAccount(username);
+                        AccountManager accountManager = AccountManager.get(context);
+                        Account account = new BuyItAccount(username);
 
-                Bundle result = new Bundle();
-                if (accountManager.addAccountExplicitly(account, null, null)) {
-                    accountManager.setUserData(account, BuyItAccount.KEY_ID, Long.toString(id));
-                    result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-                    result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-                } else {
-                    result.putString(AccountManager.KEY_ERROR_MESSAGE, "Failed to add user");
+                        Bundle result = new Bundle();
+                        if (accountManager.addAccountExplicitly(account, null, null)) {
+                            accountManager.setUserData(account, BuyItAccount.KEY_ID, Long.toString(id));
+                            result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+                            result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+                        } else {
+                            result.putString(AccountManager.KEY_ERROR_MESSAGE, "Failed to add user");
+                        }
+                        LoginActivity.this.setAccountAuthenticatorResult(result);
+                        LoginActivity.this.setResult(RESULT_OK);
+                        LoginActivity.this.finish();
+                        break;
+                    case Response.RESULT_LOGIN_FAILED:
+                        Toast.makeText(LoginActivity.this, "В процессе логина произошла ошибка", Toast.LENGTH_LONG).show();
+                        break;
+                    case Response.RESULT_UNAVAILABLE:
+                        Toast.makeText(LoginActivity.this, "Сервис недоступен, проверьте подключение к сети", Toast.LENGTH_LONG).show();
+                        break;
                 }
-                LoginActivity.this.setAccountAuthenticatorResult(result);
-                LoginActivity.this.setResult(RESULT_OK);
-                LoginActivity.this.finish();
             }
         }
     }

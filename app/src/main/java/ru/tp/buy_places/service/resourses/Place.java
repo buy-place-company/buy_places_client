@@ -32,7 +32,7 @@ public class Place implements Resource {
     private final Long mExpense;
     private final double mLatitude;
     private final double mLongitude;
-    private final boolean mIsFavoutite;
+    private final boolean mIsFavourite;
     private long mRowId;
     private boolean mIsAroundThePoint;
     private boolean mIsAroundThePlayer;
@@ -63,7 +63,7 @@ public class Place implements Resource {
         mExpense = expense;
         mLatitude = latitude;
         mLongitude = longitude;
-        mIsFavoutite = isFavourite;
+        mIsFavourite = isFavourite;
     }
 
     public Place(long rowId, String id, long checkinsCount, long usersCount, long tipCount, String name, String category, int level, Player owner, Long buyPrice, Long sellPrice, Long upgradePrice, Long loot, Long maxLoot, Long income, Long expense, double latitude, double longitude, boolean isFavourite) {
