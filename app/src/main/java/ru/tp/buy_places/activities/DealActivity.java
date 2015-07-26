@@ -67,10 +67,6 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_DEAL_ROW_ID, dealRowId);
         getLoaderManager().initLoader(DEAL_LOADER_ID, arguments, this);
-        venueBuyPrice = (TextView)findViewById(R.id.tv_buy_amount);
-        venueSellPrice = (TextView)findViewById(R.id.tv_sell_amount);
-        venueLootAmount = (TextView)findViewById(R.id.tv_loot_amount);
-
         mUser = (TextView) findViewById(R.id.tv_user);
         mVenue = (TextView) findViewById(R.id.tv_venue);
         mAmount = (TextView) findViewById(R.id.tv_amount);
@@ -116,9 +112,6 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
                     mUser.setText(mDeal.getPlayerFrom().getUsername());
                     mVenue.setText(mDeal.getVenue().getName());
                     mAmount.setText(Long.toString(mDeal.getAmount()));
-                    venueBuyPrice.setText(Long.toString(mDeal.getVenue().getBuyPrice()));
-                    venueSellPrice.setText(Long.toString(mDeal.getVenue().getSellPrice()));
-                    venueLootAmount.setText(Long.toString(mDeal.getVenue().getMaxLoot()));
                     mType.setText(R.string.wantbuy);
                     switch (dealState) {
                         case COMPLETED:
@@ -141,8 +134,6 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
                     mUser.setText(mDeal.getPlayerTo().getUsername());
                     mVenue.setText(mDeal.getVenue().getName());
                     mAmount.setText(Long.toString(mDeal.getAmount()));
-                    venueLootAmount.setVisibility(View.GONE);
-                    venueSellPrice.setVisibility(View.GONE);
                     switch (dealState) {
                         case COMPLETED:
                             break;

@@ -13,11 +13,14 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
@@ -119,8 +122,8 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
                 if(mPlayer.getId() != AccountManagerHelper.getPlayerId(this))
                     userCash.setVisibility(View.GONE);
                 userScore.setText(Long.toString(mPlayer.getScore()));
-                //avatar.setBackgroundResource(R.drawable.circle_background);
-
+                if(!TextUtils.isEmpty(mPlayer.getAvatar()))
+                    Picasso.with(this).load(mPlayer.getAvatar()).error(R.mipmap.ava).into(avatar);
             }
         }
 
