@@ -37,10 +37,13 @@ public class SplashScreenActivity extends AppCompatActivity {
     private boolean mMyDealsLoaded = false;
     private boolean mGCMRegistrationCompleted = false;
     private BroadcastReceiver mSplashScreenBroadcastReceiver;
+    private long mFavouriteVenuesRequestId;
+    private boolean mFavouriteVenuesLoaded = false;
 
     public static void startClearTask(Context context) {
         Intent intent = new Intent(context, SplashScreenActivity.class);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
@@ -49,7 +52,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         mProgressbar = (ProgressBar) findViewById(R.id.progress_bar);
-        mProgressbar.setMax(3);
+        mProgressbar.setMax(4);
         mSplashScreenBroadcastReceiver = new SplashScreenBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter(ServiceHelper.ACTION_REQUEST_RESULT);
         IntentFilter gcmIntentFilter = new IntentFilter(RegistrationIntentService.GCM_REGISTRATION_COMPLETED);
@@ -66,9 +69,15 @@ public class SplashScreenActivity extends AppCompatActivity {
         if (accounts.length == 0) {
             AccountManagerHelper.addNewAccount(this, accountManager);
         } else {
+            mProfileLoaded = false;
+            mMyVenuesLoaded = false;
+            mMyDealsLoaded = false;
+            mGCMRegistrationCompleted = false;
+            mFavouriteVenuesLoaded = false;
             mProfileRequestId = ServiceHelper.get(this).getProfile();
             mMyVenuesRequestId = ServiceHelper.get(this).getMyVenues();
             mMyDealsRequestId = ServiceHelper.get(this).getDeals();
+            mFavouriteVenuesRequestId = ServiceHelper.get(this).getFavouriteVenues();
             if (checkPlayServices()) {
                 RegistrationIntentService.startGCMRegistrationService(this);
             }
@@ -99,21 +108,27 @@ public class SplashScreenActivity extends AppCompatActivity {
                     if (requestId == mProfileRequestId) {
                         mProfileLoaded = true;
                         mProgressbar.incrementProgressBy(1);
-                    }
-                    if (requestId == mMyVenuesRequestId) {
+                    } else if (requestId == mMyVenuesRequestId) {
                         mMyVenuesLoaded = true;
                         mProgressbar.incrementProgressBy(1);
-                    }
-                    if (requestId == mMyDealsRequestId) {
+                    } else if (requestId == mMyDealsRequestId) {
                         mMyDealsLoaded = true;
+                        mProgressbar.incrementProgressBy(1);
+                    } else if (requestId == mFavouriteVenuesRequestId) {
+                        mFavouriteVenuesLoaded = true;
                         mProgressbar.incrementProgressBy(1);
                     }
                     break;
                 case RegistrationIntentService.GCM_REGISTRATION_COMPLETED:
                     mGCMRegistrationCompleted = true;
             }
-            if (mProfileLoaded && mMyVenuesLoaded && mMyDealsLoaded && mGCMRegistrationCompleted) {
+            if (mProfileLoaded && mMyVenuesLoaded && mMyDealsLoaded && mFavouriteVenuesLoaded && mGCMRegistrationCompleted) {
                 MainActivity.start(SplashScreenActivity.this);
+                mProfileLoaded = false;
+                mMyVenuesLoaded = false;
+                mMyDealsLoaded = false;
+                mGCMRegistrationCompleted = false;
+                mFavouriteVenuesLoaded = false;
                 Log.e(LOG_TAG, "MainActivity.start()");
             }
 

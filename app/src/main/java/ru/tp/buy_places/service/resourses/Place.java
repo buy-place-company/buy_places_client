@@ -69,7 +69,6 @@ public class Place implements Resource {
     public Place(long rowId, String id, long checkinsCount, long usersCount, long tipCount, String name, String category, int level, Player owner, Long buyPrice, Long sellPrice, Long upgradePrice, Long loot, Long maxLoot, Long income, Long expense, double latitude, double longitude, boolean isFavourite) {
         this(id, checkinsCount, usersCount, tipCount, name, category, level, owner, buyPrice, sellPrice, upgradePrice, loot, maxLoot, income, expense, latitude, longitude, isFavourite);
         mRowId = rowId;
-        mFavourite = isFavourite;
     }
 
     public static Place fromJSONObject(JSONObject placeData) {
@@ -94,7 +93,7 @@ public class Place implements Resource {
         Long maxLoot = placeData.has("max_loot")?placeData.optLong("max_loot"):null;
         Long income = placeData.has("income")?placeData.optLong("income"):null;
         Long expense = placeData.has("consumption")?placeData.optLong("consumption"):null;
-        Boolean isFavourite = placeData.optBoolean("");
+        Boolean isFavourite = placeData.optBoolean("is_favorite");
         return new Place(id, checkinsCount, usersCount, tipCount, name, category, level, owner, buyPrice, sellPrice, upgradePrice, loot, maxLoot, income, expense, latitude, longitude, isFavourite);
     }
 
@@ -308,5 +307,9 @@ public class Place implements Resource {
 
     public void setFavourite(boolean favourite) {
         mFavourite = favourite;
+    }
+
+    public boolean isFavourite() {
+        return mIsFavourite;
     }
 }

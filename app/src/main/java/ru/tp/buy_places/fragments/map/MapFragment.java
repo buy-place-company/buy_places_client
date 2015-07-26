@@ -31,9 +31,8 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.activities.VenueActivity;
@@ -57,6 +56,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
     private static final int PLAYER_LOADER_ID = 1;
 
     private static final String EXTRA_PLAYER_ID = "EXTRA_PLAYER_ROW_ID";
+    private static final String ARG_FILTER = "ARG_FILTER";
 
     private ClusterManager<VenueClusterItem> mClusterManager;
     private CustomInfoWindowAdapter mInfoWindowAdapter;
@@ -69,6 +69,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
 
     private LocationProvider mLocationProvider;
     private PlayerLocationMarkerOptionsCreator mPlayerLocationMarkerOptionsCreator;
+    private Player mPlayer;
+    private ArrayList<Integer> mSelectedFilterItems = new ArrayList<>();
 
 
     public MapFragment() {
@@ -111,22 +113,41 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_filter:
-                final Map<Integer, Boolean> currentState = new HashMap<>();
+                final String [] filterItems = getResources().getStringArray(R.array.filter);
+                boolean[] selected = new boolean[filterItems.length];
+                for (Integer i : mSelectedFilterItems) {
+                    selected[i] = true;
+                }
+
+                final ArrayList<Integer> items = mSelectedFilterItems;
                 AlertDialog d = new AlertDialog.Builder(getActivity())
                         .setTitle(R.string.places_filter_dialog_title)
-                        .setMultiChoiceItems(getResources().getStringArray(R.array.filter), null, new DialogInterface.OnMultiChoiceClickListener() {
+                        .setMultiChoiceItems(filterItems, selected, new DialogInterface.OnMultiChoiceClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-
+                                if (isChecked) {
+                                    // If the user checked the item, add it to the selected items
+                                    items.add(which);
+                                } else if (items.contains(which)) {
+                                    // Else, if the item is already in the array, remove it
+                                    items.remove(Integer.valueOf(which));
+                                }
                             }
                         })
                         .setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                if (!items.isEmpty()) {
+                                    Bundle args = new Bundle();
+                                    args.putIntegerArrayList(ARG_FILTER, mSelectedFilterItems);
+                                    getLoaderManager().restartLoader(ALL_PLACES_LOADER_ID, args, MapFragment.this);
+                                } else {
+                                    getLoaderManager().restartLoader(ALL_PLACES_LOADER_ID, null, MapFragment.this);
+                                }
+                                mSelectedFilterItems = items;
                             }
                         })
                         .setNeutralButton(R.string.dialog_cancel_button_title, null)
@@ -243,7 +264,33 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case ALL_PLACES_LOADER_ID:
-                return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, BuyPlacesContract.Places.IMPORTANT_SELECTION, null, null);
+                if (args != null) {
+                    ArrayList<Integer> selected  = args.getIntegerArrayList(ARG_FILTER);
+                    StringBuilder selectionBuilder = new StringBuilder();
+                    ArrayList<String> selectionArgs = new ArrayList<>();
+                    Iterator<Integer> iterator = selected.iterator();
+                    while (iterator.hasNext()) {
+                        Integer i = iterator.next();
+                        switch (i) {
+                            case 0:
+                                selectionBuilder.append(BuyPlacesContract.Places.WITH_HIGH_BUY_PRICE_LIMIT);
+                                selectionArgs.add(String.valueOf(mPlayer.getCash()));
+                                break;
+                            case 1:
+                                selectionBuilder.append(BuyPlacesContract.Places.IS_IN_OWNERSHIP_SELECTION);
+                                break;
+                            case 2:
+                                selectionBuilder.append(BuyPlacesContract.Places.FAVOURITE_SELECTION);
+                                break;
+                        }
+                        if (iterator.hasNext())
+                            selectionBuilder.append(" OR ");
+                    }
+                    String[] selectionArgsArray = selectionArgs.toArray(new String[selectionArgs.size()]);
+                    return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, "(" + BuyPlacesContract.Places.IMPORTANT_SELECTION + ")" + " AND " + "(" + selectionBuilder.toString() + ")", selectionArgsArray, null);
+                } else {
+                    return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, BuyPlacesContract.Places.IMPORTANT_SELECTION, null, null);
+                }
             case PLAYER_LOADER_ID:
                 final long playerId = args.getLong(EXTRA_PLAYER_ID);
                 return new CursorLoader(getActivity(), BuyPlacesContract.Players.CONTENT_URI, null, BuyPlacesContract.Players.WITH_SPECIFIED_ID_SELECTION, new String[]{Long.toString(playerId)}, null);
@@ -269,8 +316,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, LoaderM
                 break;
             case PLAYER_LOADER_ID:
                 if (data.moveToFirst()) {
-                    Player player = Player.fromCursor(data);
-                    player.toString();
+                    mPlayer = Player.fromCursor(data);
                 }
                 // Todo Update UI interface
         }

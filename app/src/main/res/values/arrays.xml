@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="filter">
-        <item>@string/filter_all_venues</item>
-        <item>@string/filter_mine_venues</item>
-        <item>@string/filter_visited_venues</item>
+        <item>@string/filter_available_venues</item>
+        <item>@string/filter_my_venues</item>
+        <item>@string/filter_favourite_venues</item>
     </string-array>
 </resources>

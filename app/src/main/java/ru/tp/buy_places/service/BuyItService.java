@@ -9,6 +9,7 @@ import android.os.ResultReceiver;
 import com.google.android.gms.maps.model.LatLng;
 
 import ru.tp.buy_places.service.action_with_place.ActionWithPlaceProcessorCreator;
+import ru.tp.buy_places.service.action_with_place.RemoveVenueFromFavouriteProcessorCreator;
 import ru.tp.buy_places.service.authentication.AuthenticationProcessor;
 import ru.tp.buy_places.service.authentication.AuthenticationProcessorCreator;
 import ru.tp.buy_places.service.authentication.BaseLoginProcessorCreator;
@@ -20,6 +21,7 @@ import ru.tp.buy_places.service.deals.RejectDealProcessorCreator;
 import ru.tp.buy_places.service.deals.RevokeDealProcessorCreator;
 import ru.tp.buy_places.service.deals.SuggestDealProcessorCreator;
 import ru.tp.buy_places.service.network.Response;
+import ru.tp.buy_places.service.action_with_place.AddVenueToFavouriteProcessorCreator;
 import ru.tp.buy_places.service.places.GetFavouriteVenuesProcessorCreator;
 import ru.tp.buy_places.service.places.GetMyVenuesProcessorCreator;
 import ru.tp.buy_places.service.places.GetPlayerVenuesProcessorCreator;
@@ -261,6 +263,17 @@ public class BuyItService extends IntentService {
             case ACTION_GET_FAVOURITE_VENUES:
                 Processor getFavouriteVenuesProcessor = new GetFavouriteVenuesProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver)).createProcessor();
                 getFavouriteVenuesProcessor.process();
+                break;
+            case ACTION_ADD_VENUE_TO_FAVOURITE:
+                final String venueToAddId = intent.getStringExtra(EXTRA_VENUE_ID);
+                Processor addVenueToFavouriteProcessor = new AddVenueToFavouriteProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver), venueToAddId).createProcessor();
+                addVenueToFavouriteProcessor.process();
+                break;
+            case ACTION_REMOVE_VENUE_FROM_FAVOURITE:
+                final String venueToRemoveId = intent.getStringExtra(EXTRA_VENUE_ID);
+                Processor removeVenueFromFavouriteProcessor = new RemoveVenueFromFavouriteProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver), venueToRemoveId).createProcessor();
+                removeVenueFromFavouriteProcessor.process();
+                break;
             case ACTION_GET_MY_VENUES:
                 Processor getMyVenuesProcessor = new GetMyVenuesProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver)).createProcessor();
                 getMyVenuesProcessor.process();
@@ -278,7 +291,6 @@ public class BuyItService extends IntentService {
                 final String code = intent.getStringExtra(EXTRA_CODE);
                 Processor authenticationProcessor = new AuthenticationProcessorCreator(this, new AuthenticationProcessorResultListener(intent, resultReceiver), code).createProcessor();
                 authenticationProcessor.process();
-
                 break;
             case ACTION_VENUE:
                 final String id = intent.getStringExtra(EXTRA_VENUE_ID);

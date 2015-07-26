@@ -43,9 +43,9 @@
     <string name="common_wait_message">Подождите</string>
     <string name="common_request_executes_message">Выполняется запрос</string>
 
-    <string name="filter_all_venues">Все</string>
-    <string name="filter_mine_venues">Мои</string>
-    <string name="filter_visited_venues">Посещенные</string>
+    <string name="filter_available_venues">Доступные</string>
+    <string name="filter_my_venues">Мои</string>
+    <string name="filter_favourite_venues">Избранное</string>
 
     <string name="menu_settings">Настройки</string>
 

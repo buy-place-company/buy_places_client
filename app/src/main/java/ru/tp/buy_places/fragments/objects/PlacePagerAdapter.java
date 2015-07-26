@@ -40,7 +40,7 @@ public class PlacePagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return "Поблизости";
             case 2:
-                return "Доступные";
+                return "Избранное";
             default:
                 return "Мои";
         }

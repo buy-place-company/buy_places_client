@@ -60,7 +60,7 @@ public class VisitedPlacesFragment extends Fragment implements LoaderManager.Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, null, null, null);
+        return new CursorLoader(getActivity(), BuyPlacesContract.Places.CONTENT_URI, null, BuyPlacesContract.Places.FAVOURITE_SELECTION, null, null);
     }
 
     @Override

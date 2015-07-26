@@ -29,6 +29,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -73,10 +74,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
     private long mSuggestDealRequestId = 0;
     private CoordinatorLayout mCoordinatorLayout;
     private BroadcastReceiver mServiceResultReceiver;
-
-
-
-    private FloatingActionButton mUpgradeVenueButton;
+    private Menu mMenu;
 
 
     public static void start(Fragment fragment, long venuesRowId, LatLng venuesLocation, VenueType type) {
@@ -118,7 +116,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
         mVenueInfoListAdapter = new VenueInfoListAdapter(this);
         mInfoList.setAdapter(mVenueInfoListAdapter);
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
-        mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.app_bar_layout);
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.app_bar_layout);
         mMapContainer = (FrameLayout) findViewById(R.id.map_container);
         GoogleMapOptions googleMapOptions = new GoogleMapOptions()
                 .liteMode(true)
@@ -152,6 +150,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
         mServiceResultReceiver = new VenueBroadcastReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(mServiceResultReceiver, intentFilter);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -172,12 +171,21 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.venue_favourite:
+                if (mPlace.isFavourite())
+                    ServiceHelper.get(this).removeVenueFromFavourites(mPlace.getId());
+                else
+                    ServiceHelper.get(this).addVenuesToFavourite(mPlace.getId());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+
     }
 
 
@@ -192,6 +200,14 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.moveToFirst()) {
             mPlace = Place.fromCursor(data);
+            if (mMenu != null) {
+                MenuItem favouriteMenuItem = mMenu.findItem(R.id.venue_favourite);
+                if (mPlace.isFavourite())
+                    favouriteMenuItem.setIcon(R.drawable.ic_star_outline_white_18dp);
+                else {
+                    favouriteMenuItem.setIcon(R.drawable.ic_star_white_18dp);
+                }
+            }
             mCollapsingToolbarLayout.setTitle(mPlace.getName());
             int commonHeaderPositionBasePosition = 0;
             int statisticsHeaderPositionBasePosition = commonHeaderPositionBasePosition;
@@ -213,7 +229,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
                 statisticsHeaderPositionBasePosition++;
             }
             if (mPlace.getLoot() != null && mPlace.getMaxLoot() != null) {
-                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_loot), InfoType.PRICE, Long.toString(mPlace.getLoot())+" / "+Long.toString(mPlace.getMaxLoot())));
+                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_loot), InfoType.PRICE, Long.toString(mPlace.getLoot()) + " / " + Long.toString(mPlace.getMaxLoot())));
                 statisticsHeaderPositionBasePosition++;
             }
             if (mPlace.getCheckinsCount() > 0) {
@@ -244,7 +260,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
             //Add your adapter to the sectionAdapter
             SimpleSectionedRecyclerViewAdapter.Section[] dummy = new SimpleSectionedRecyclerViewAdapter.Section[sections.size()];
             SimpleSectionedRecyclerViewAdapter mSectionedAdapter = new
-                    SimpleSectionedRecyclerViewAdapter(this,R.layout.section,R.id.section_text,mVenueInfoListAdapter);
+                    SimpleSectionedRecyclerViewAdapter(this, R.layout.section, R.id.section_text, mVenueInfoListAdapter);
             mSectionedAdapter.setSections(sections.toArray(dummy));
 
             //Apply this adapter to the RecyclerView
@@ -307,16 +323,17 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
             public void onClick(View view) {
                 dialogBuilder.setTitle(DIALOG);
                 dialogBuilder.setMessage("Выкупить за:");
-                TextInputLayout textInputLayout = (TextInputLayout)LayoutInflater.from(VenueActivity.this).inflate(R.layout.suggest_deal_dialog_view, null);
+                TextInputLayout textInputLayout = (TextInputLayout) LayoutInflater.from(VenueActivity.this).inflate(R.layout.suggest_deal_dialog_view, null);
                 dialogBuilder.setView(textInputLayout);
                 dialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        TextInputLayout input = (TextInputLayout)((Dialog) dialog).findViewById(R.id.text_input_layout_amount);
-                        if(!TextUtils.isEmpty(input.getEditText().getText().toString())) {
+                        TextInputLayout input = (TextInputLayout) ((Dialog) dialog).findViewById(R.id.text_input_layout_amount);
+                        if (!TextUtils.isEmpty(input.getEditText().getText().toString())) {
                             long amount = Long.parseLong(input.getEditText().getText().toString());
                             ServiceHelper.get(VenueActivity.this).suggestDeal(mPlace.getId(), amount);
                             Toast.makeText(VenueActivity.this, "Запрос на заключение сделки отправлен", Toast.LENGTH_LONG).show();
-                        } else Toast.makeText(VenueActivity.this, "Вы не ввели сумму", Toast.LENGTH_LONG).show();
+                        } else
+                            Toast.makeText(VenueActivity.this, "Вы не ввели сумму", Toast.LENGTH_LONG).show();
                     }
                 });
                 dialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
@@ -341,7 +358,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
         FloatingActionButton upgradeVenueButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_upgrade_place);
         FloatingActionButton sellVenueButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_sell_place);
         FloatingActionButton collectLootButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_collect_loot);
-        FloatingActionButton suggestDealButton = (FloatingActionButton)mineVenueButtons.findViewById(R.id.button_suggest_deal);
+        FloatingActionButton suggestDealButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_suggest_deal);
         upgradeVenueButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -399,11 +416,12 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
                 suggestDealDialogBuilder.setTitle(DIALOG);
                 suggestDealDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        TextInputLayout input = (TextInputLayout)((Dialog) dialog).findViewById(R.id.text_input_layout_amount);
-                        if(!TextUtils.isEmpty(input.getEditText().getText().toString())) {
+                        TextInputLayout input = (TextInputLayout) ((Dialog) dialog).findViewById(R.id.text_input_layout_amount);
+                        if (!TextUtils.isEmpty(input.getEditText().getText().toString())) {
                             long amount = Long.parseLong(input.getEditText().getText().toString());
                             mSuggestDealRequestId = ServiceHelper.get(VenueActivity.this).suggestDeal(mPlace.getId(), amount);
-                        } else Toast.makeText(VenueActivity.this, "Вы не ввели сумму", Toast.LENGTH_LONG).show();
+                        } else
+                            Toast.makeText(VenueActivity.this, "Вы не ввели сумму", Toast.LENGTH_LONG).show();
 
                     }
                 });
@@ -418,7 +436,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
                 });
 
                 suggestDealDialogBuilder.setMessage("Выставить на продажу за:");
-                TextInputLayout textInputLayout = (TextInputLayout)LayoutInflater.from(VenueActivity.this).inflate(R.layout.suggest_deal_dialog_view, null);
+                TextInputLayout textInputLayout = (TextInputLayout) LayoutInflater.from(VenueActivity.this).inflate(R.layout.suggest_deal_dialog_view, null);
                 suggestDealDialogBuilder.setView(textInputLayout);
                 suggestDealDialogBuilder.show();
             }
@@ -486,7 +504,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
                     holder.itemView.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            UserActivity.start(mContext, (Player)mInfoItems.get(position).getOnClickModel());
+                            UserActivity.start(mContext, (Player) mInfoItems.get(position).getOnClickModel());
                         }
                     });
                     break;
@@ -503,7 +521,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
 
         public void setInfoItems(List<InfoItem> infoItems) {
             mInfoItems.clear();
-            if(infoItems != null)
+            if (infoItems != null)
                 mInfoItems.addAll(infoItems);
             notifyDataSetChanged();
         }
@@ -570,7 +588,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
                     public void onClick(View v) {
                     }
                 }).show();
-            } else if (requestId == mBuyVenueRequestId){
+            } else if (requestId == mBuyVenueRequestId) {
                 String buyVenueMessage = getBuyVenueMessage(VenueActivity.this, status);
                 Snackbar.make(mCoordinatorLayout, buyVenueMessage, Snackbar.LENGTH_LONG).setAction("OK", new OnClickListener() {
                     @Override
@@ -629,5 +647,20 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
                     return context.getString(R.string.message_sell_venue_failure);
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_venue, menu);
+        mMenu = menu;
+        if (mPlace != null) {
+            MenuItem favouriteMenuItem = mMenu.findItem(R.id.venue_favourite);
+            if (mPlace.isFavourite())
+                favouriteMenuItem.setIcon(R.drawable.ic_star_white_18dp);
+            else {
+                favouriteMenuItem.setIcon(R.drawable.ic_star_outline_white_18dp);
+            }
+        }
+        return true;
     }
 }

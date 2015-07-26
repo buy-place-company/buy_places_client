@@ -30,7 +30,6 @@ public class GetFavouriteVenuesProcessor extends GetVenuesProcessor {
     @Override
     protected void updateContentProviderAfterExecutingRequest(Response response) {
         Places places = (Places) response.getData().get(KEY_VENUES);
-        places.setFavourite(true);
         places.writeToDatabase(mContext);
     }
 }

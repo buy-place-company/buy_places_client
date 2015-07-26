@@ -46,8 +46,6 @@ public class CustomInfoWindowAdapter implements  GoogleMap.InfoWindowAdapter, Ve
                 if (clusterItem.getName() != null)
                     nameTextView.setText(clusterItem.getName());
                 iconImageView.setImageResource(R.mipmap.ic_object);
-                if (clusterItem.getBuyPrice() >= 0)
-                    priceTextView.setText(Long.toString(clusterItem.getBuyPrice()));
                 if (clusterItem.getLevel() >= 0)
                     levelTextView.setText(Integer.toString(clusterItem.getLevel()));
                 if (clusterItem.getCheckinsCount() >= 0)

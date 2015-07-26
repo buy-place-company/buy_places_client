@@ -44,9 +44,9 @@ public class BuyItGcmListenerService extends GcmListenerService {
 
 
         final String pushType = data.getString("push_type");
+        JSONObject dealJsonObject = null;
         switch (pushType) {
             case "deal_new":
-                JSONObject dealJsonObject = null;
                 try {
                     dealJsonObject = new JSONObject(data.getString("deal"));
                     Deal deal = Deal.fromJSONObject(dealJsonObject);
@@ -57,8 +57,122 @@ public class BuyItGcmListenerService extends GcmListenerService {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                break;
 
+            case "deal_accept":
+                try {
+                    dealJsonObject = new JSONObject(data.getString("deal"));
+                    Deal deal = Deal.fromJSONObject(dealJsonObject);
+                    long rowId = deal.writeToDatabase(this);
+                    deal.setRowId(rowId);
+                    getContentResolver().notifyChange(BuyPlacesContract.Deals.CONTENT_URI, null);
+                    sendDealAcceptedNotification(deal);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+
+            case "deal_reject":
+                try {
+                    dealJsonObject = new JSONObject(data.getString("deal"));
+                    Deal deal = Deal.fromJSONObject(dealJsonObject);
+                    long rowId = deal.writeToDatabase(this);
+                    deal.setRowId(rowId);
+                    getContentResolver().notifyChange(BuyPlacesContract.Deals.CONTENT_URI, null);
+                    sendDealRejectedNotification(deal);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+
+            case "deal_revoke":
+                try {
+                    dealJsonObject = new JSONObject(data.getString("deal"));
+                    Deal deal = Deal.fromJSONObject(dealJsonObject);
+                    long rowId = deal.writeToDatabase(this);
+                    deal.setRowId(rowId);
+                    getContentResolver().notifyChange(BuyPlacesContract.Deals.CONTENT_URI, null);
+                    sendDealRevokedNotification(deal);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
+    }
+
+    private void sendDealRevokedNotification(Deal deal) {
+        Intent intent = new Intent(this, DealActivity.class);
+        intent.putExtra(DealActivity.EXTRA_DEAL_ROW_ID, deal.getRowId());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String message = deal.getPlayerFrom().getUsername() + " больше не хочет выкупать " + deal.getVenue().getName();
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setAutoCancel(true)
+                .setContentTitle("Предложение сделки отозвали")
+                .setContentText(message)
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.ic_cash_usd_white_18dp)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_cash_multiple_white_48dp))
+                .setSound(defaultSoundUri)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(message));
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+    }
+
+    private void sendDealRejectedNotification(Deal deal) {
+        Intent intent = new Intent(this, DealActivity.class);
+        intent.putExtra(DealActivity.EXTRA_DEAL_ROW_ID, deal.getRowId());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String message = deal.getPlayerTo().getUsername() + " отклонил Ваше предложение выкупить " + deal.getVenue().getName() + " за " + deal.getAmount();
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setAutoCancel(true)
+                .setContentTitle("В сделке отказано")
+                .setContentText(message)
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.ic_cash_usd_white_18dp)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_cash_multiple_white_48dp))
+                .setSound(defaultSoundUri)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(message));
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+    }
+
+    private void sendDealAcceptedNotification(Deal deal) {
+        Intent intent = new Intent(this, DealActivity.class);
+        intent.putExtra(DealActivity.EXTRA_DEAL_ROW_ID, deal.getRowId());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String message = deal.getPlayerFrom().getUsername() + " принял Ваше предложение выкупить " + deal.getVenue().getName() + " за " + deal.getAmount();
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setAutoCancel(true)
+                .setContentTitle("Сделка принята")
+                .setContentText(message)
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.ic_cash_usd_white_18dp)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_cash_multiple_white_48dp))
+                .setSound(defaultSoundUri)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(message));
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
 
     private void sendNewDealNotification(Deal deal) {
@@ -75,7 +189,7 @@ public class BuyItGcmListenerService extends GcmListenerService {
                 .setContentText(message)
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(R.drawable.ic_cash_usd_white_18dp)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_cash_multiple_white_18dp))
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_cash_multiple_white_48dp))
                 .setSound(defaultSoundUri)
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(message));

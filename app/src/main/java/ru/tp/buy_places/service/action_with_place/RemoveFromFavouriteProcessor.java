@@ -34,7 +34,6 @@ public class RemoveFromFavouriteProcessor extends VenueProcessor {
     @Override
     protected void updateContentProviderAfterExecutingRequest(Response response) {
         Place place = (Place) response.getData().get(KEY_VENUE);
-        place.setFavourite(false);
         place.writeToDatabase(mContext);
         mContext.getContentResolver().notifyChange(BuyPlacesContract.Places.CONTENT_URI, null);
     }

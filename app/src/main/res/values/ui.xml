@@ -30,9 +30,9 @@
     <string name="common_wait_message">Wait</string>
     <string name="common_request_executes_message">Request executes</string>
 
-    <string name="filter_all_venues">All</string>
-    <string name="filter_mine_venues">My</string>
-    <string name="filter_visited_venues">Visited</string>
+    <string name="filter_available_venues">Available</string>
+    <string name="filter_my_venues">My</string>
+    <string name="filter_favourite_venues">Favourite</string>
 
     <string name="menu_settings">Settings</string>
 

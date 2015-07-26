@@ -81,9 +81,4 @@ public class Places implements Resource, Iterable<Place> {
         return mPlaces.iterator();
     }
 
-    public void setFavourite(boolean favourite) {
-        for (Place place: mPlaces) {
-            place.setFavourite(favourite);
-        }
-    }
 }
