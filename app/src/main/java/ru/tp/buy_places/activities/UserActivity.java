@@ -74,6 +74,7 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
            if (toolbar != null)
               setSupportActionBar(toolbar);
         ServiceHelper.get(this).getPlayerVenues(userId);
+        getSupportActionBar().setTitle(R.string.profile_action_bar);
     }
 
 

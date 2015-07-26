@@ -58,9 +58,8 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mButtonsContainer = (FrameLayout) findViewById(R.id.button_container);
         setSupportActionBar(mToolbar);
-
+        getSupportActionBar().setTitle(R.string.navigation_deals);
         final long dealRowId = getIntent().getLongExtra(EXTRA_DEAL_ROW_ID, 0);
-
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_DEAL_ROW_ID, dealRowId);
         getLoaderManager().initLoader(DEAL_LOADER_ID, arguments, this);

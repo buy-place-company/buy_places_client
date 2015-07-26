@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements
     private View mHeaderView;
     private CircleImageView mHeaderAvatar;
     private TextView mHeaderUsername;
+    private TextView mHeaderScore;
     private TextView mHeaderCash;
     private long mLogoutRequestId;
 
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements
         mHeaderView = LayoutInflater.from(this).inflate(R.layout.header, null);
         mHeaderAvatar = (CircleImageView) mHeaderView.findViewById(R.id.image);
         mHeaderCash = (TextView) mHeaderView.findViewById(R.id.text_view_cash);
+        mHeaderScore = (TextView) mHeaderView.findViewById(R.id.text_view_score);
         mHeaderUsername = (TextView) mHeaderView.findViewById(R.id.name);
         mNavigationView.addHeaderView(mHeaderView);
 
@@ -181,21 +183,27 @@ public class MainActivity extends AppCompatActivity implements
                     startActivity(intent);
                 case MAP:
                     fragment = new MapFragment();
+                    getSupportActionBar().setTitle(R.string.navigation_map);
                     break;
                 case MY_OBJECTS:
                     fragment = new PlaceListFragment();
+                    getSupportActionBar().setTitle(R.string.navigation_venues);
                     break;
                 case DEALS:
                     fragment = new DealsFragment();
+                    getSupportActionBar().setTitle(R.string.navigation_deals);
                     break;
                 case RATING:
+                    getSupportActionBar().setTitle(R.string.navigation_rating);
                     fragment = new RaitingFragment();
                     break;
                 case SETTINGS:
                     fragment = new SettingFragment();
+                    getSupportActionBar().setTitle(R.string.navigation_settings);
                     break;
                 default:
                     fragment = new MapFragment();
+                    getSupportActionBar().setTitle(R.string.navigation_map);
                     break;
             }
             getFragmentManager().beginTransaction().replace(R.id.content, fragment, page.name()).commit();
@@ -287,6 +295,7 @@ public class MainActivity extends AppCompatActivity implements
             }
             mHeaderUsername.setText(player.getUsername());
             mHeaderCash.setText(Long.toString(player.getCash()));
+            mHeaderScore.setText(Long.toString(player.getScore()));
             mHeaderView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

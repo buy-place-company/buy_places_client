@@ -9,6 +9,8 @@
     <string name="login_page_name">Логин</string>
     <string name="registration_page_name">Регистрация</string>
 
+    <string name="profile_action_bar">Личный кабинет</string>
+
     <string name="username">Имя пользователя</string>
     <string name="password">Пароль</string>
     <string name="email">Email</string>

@@ -10,7 +10,8 @@
         android:orientation="vertical">
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:background="@color/primary"
+            android:theme="@style/ActionBarTheme"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"/>
@@ -136,7 +137,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:id="@+id/tv_score"
                 android:layout_below="@+id/tv_cash"
-                android:drawableLeft="@mipmap/cash_usd_red_24"
+                android:drawableLeft="@drawable/chart_line_green_24"
                 android:layout_alignStart="@+id/tv_cash"
                 android:text="hbh" />
 
