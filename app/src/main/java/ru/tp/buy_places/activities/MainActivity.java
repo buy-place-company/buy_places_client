@@ -314,4 +314,13 @@ public class MainActivity extends AppCompatActivity implements
         RATING,
         SETTINGS
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getPreferences(MODE_PRIVATE).edit()
+                .remove(DealsFragment.KEY_DEALS_PAGE)
+                .remove(PlaceListFragment.KEY_VENUES_PAGE)
+                .apply();
+    }
 }

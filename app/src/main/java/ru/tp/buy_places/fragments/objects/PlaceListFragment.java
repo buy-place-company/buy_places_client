@@ -1,24 +1,25 @@
 package ru.tp.buy_places.fragments.objects;
 
+import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
-import android.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.andraskindler.parallaxviewpager.ParallaxViewPager;
-
 import ru.tp.buy_places.R;
 
-public class PlaceListFragment extends Fragment {
+public class PlaceListFragment extends Fragment implements ViewPager.OnPageChangeListener {
 
 
+    public static final String KEY_VENUES_PAGE = "KEY_VENUES_PAGE";
     private PlacePagerAdapter mPlacePagerAdapter;
-    private ParallaxViewPager mViewPager;
+    private ViewPager mViewPager;
     private TabLayout mTabLayout;
     private CoordinatorLayout mCoordinatorLayout;
     private AppBarLayout mAppBarLayout;
@@ -39,9 +40,8 @@ public class PlaceListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_placelist, container, false);
         mTabLayout = (TabLayout) inflater.inflate(R.layout.tab_layout, null);
-        mViewPager = (ParallaxViewPager) rootView.findViewById(R.id.view_pager);
-        mViewPager.setScaleType(ParallaxViewPager.FIT_WIDTH);
-        mViewPager.setBackgroundResource(R.drawable.login_background);
+        mViewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
+        mViewPager.addOnPageChangeListener(this);
         return rootView;
     }
 
@@ -57,6 +57,9 @@ public class PlaceListFragment extends Fragment {
         mViewPager.setAdapter(mPlacePagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
         mAppBarLayout.addView(mTabLayout);
+        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        int position = preferences.getInt(KEY_VENUES_PAGE, 0);
+        mViewPager.setCurrentItem(position);
 
     }
 
@@ -64,5 +67,21 @@ public class PlaceListFragment extends Fragment {
     public void onStop() {
         super.onStop();
         mAppBarLayout.removeView(mTabLayout);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        preferences.edit().putInt(KEY_VENUES_PAGE, position).apply();
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }

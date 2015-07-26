@@ -1,22 +1,26 @@
 package ru.tp.buy_places.fragments.deals;
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.andraskindler.parallaxviewpager.ParallaxViewPager;
+
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.service.ServiceHelper;
 
-public class DealsFragment extends Fragment {
+public class DealsFragment extends Fragment implements ViewPager.OnPageChangeListener {
 
 
+    public static final String KEY_DEALS_PAGE = "KEY_DEALS_PAGE";
     private DealsPagerAdapter mDealsPagerAdapter;
-    private ParallaxViewPager mViewPager;
+    private ViewPager mViewPager;
     private TabLayout mTabLayout;
     private CoordinatorLayout mCoordinatorLayout;
     private AppBarLayout mAppBarLayout;
@@ -42,9 +46,8 @@ public class DealsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_deals, container, false);
         mTabLayout = (TabLayout) inflater.inflate(R.layout.tab_layout, null);
-        mViewPager = (ParallaxViewPager) rootView.findViewById(R.id.view_pager);
-        mViewPager.setScaleType(ParallaxViewPager.FIT_WIDTH);
-        mViewPager.setBackgroundResource(R.drawable.login_background);
+        mViewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
+        mViewPager.addOnPageChangeListener(this);
         return rootView;
     }
 
@@ -60,12 +63,30 @@ public class DealsFragment extends Fragment {
         mViewPager.setAdapter(mDealsPagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
         mAppBarLayout.addView(mTabLayout);
-
+        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        int position = preferences.getInt(KEY_DEALS_PAGE, 0);
+        mViewPager.setCurrentItem(position);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mAppBarLayout.removeView(mTabLayout);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        preferences.edit().putInt(KEY_DEALS_PAGE, position).apply();
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }
