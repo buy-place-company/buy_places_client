@@ -16,6 +16,8 @@ import com.google.android.gms.gcm.GcmListenerService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.activities.DealActivity;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
@@ -26,6 +28,7 @@ import ru.tp.buy_places.service.resourses.Deal;
  */
 public class BuyItGcmListenerService extends GcmListenerService {
     private static final String TAG = "MyGcmListenerService";
+    private AtomicInteger mNotificationCounter = new AtomicInteger();
 
     /**
      * Called when message is received.
@@ -97,7 +100,81 @@ public class BuyItGcmListenerService extends GcmListenerService {
                     e.printStackTrace();
                 }
                 break;
+            case "deal_no_place_other":
+                try {
+                    dealJsonObject = new JSONObject(data.getString("deal"));
+                    Deal deal = Deal.fromJSONObject(dealJsonObject);
+                    long rowId = deal.writeToDatabase(this);
+                    deal.setRowId(rowId);
+                    getContentResolver().notifyChange(BuyPlacesContract.Deals.CONTENT_URI, null);
+                    sendDealNoPlaceOtherNotification(deal);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "deal_no_money_other":
+                try {
+                    dealJsonObject = new JSONObject(data.getString("deal"));
+                    Deal deal = Deal.fromJSONObject(dealJsonObject);
+                    long rowId = deal.writeToDatabase(this);
+                    deal.setRowId(rowId);
+                    getContentResolver().notifyChange(BuyPlacesContract.Deals.CONTENT_URI, null);
+                    sendDealNoMoneyOtherNotification(deal);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
+    }
+
+    private void sendDealNoMoneyOtherNotification(Deal deal) {
+        Intent intent = new Intent(this, DealActivity.class);
+        intent.putExtra(DealActivity.EXTRA_DEAL_ROW_ID, deal.getRowId());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String message = "Сделка с игроком " + deal.getPlayerTo().getUsername() + " не может быть осуществлена, так кака у Вас не хватает средств";
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setAutoCancel(true)
+                .setContentTitle("Сделка невозможна")
+                .setContentText(message)
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.ic_cash_usd_white_18dp)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_cash_multiple_white_48dp))
+                .setSound(defaultSoundUri)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(message));
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(mNotificationCounter.incrementAndGet(), notificationBuilder.build());
+    }
+
+    private void sendDealNoPlaceOtherNotification(Deal deal) {
+        Intent intent = new Intent(this, DealActivity.class);
+        intent.putExtra(DealActivity.EXTRA_DEAL_ROW_ID, deal.getRowId());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String message = "Сделка с игроком " + deal.getPlayerTo().getUsername() + " не может быть осуществлена, так кака у Вас превышен лимит зданий";
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setAutoCancel(true)
+                .setContentTitle("Сделка невозможна")
+                .setContentText(message)
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.ic_cash_usd_white_18dp)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_cash_multiple_white_48dp))
+                .setSound(defaultSoundUri)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(message));
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(mNotificationCounter.incrementAndGet() /* ID of notification */, notificationBuilder.build());
     }
 
     private void sendDealRevokedNotification(Deal deal) {
@@ -122,7 +199,7 @@ public class BuyItGcmListenerService extends GcmListenerService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(mNotificationCounter.incrementAndGet() /* ID of notification */, notificationBuilder.build());
     }
 
     private void sendDealRejectedNotification(Deal deal) {
@@ -147,7 +224,7 @@ public class BuyItGcmListenerService extends GcmListenerService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(mNotificationCounter.incrementAndGet() /* ID of notification */, notificationBuilder.build());
     }
 
     private void sendDealAcceptedNotification(Deal deal) {
@@ -172,7 +249,7 @@ public class BuyItGcmListenerService extends GcmListenerService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(mNotificationCounter.incrementAndGet() /* ID of notification */, notificationBuilder.build());
     }
 
     private void sendNewDealNotification(Deal deal) {
@@ -197,6 +274,6 @@ public class BuyItGcmListenerService extends GcmListenerService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(mNotificationCounter.incrementAndGet() /* ID of notification */, notificationBuilder.build());
     }
 }
