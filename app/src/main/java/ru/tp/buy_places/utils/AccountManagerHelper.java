@@ -12,7 +12,7 @@ import android.os.Bundle;
 
 import java.io.IOException;
 
-import ru.tp.buy_places.activities.MainActivity;
+import ru.tp.buy_places.activities.SplashScreenActivity;
 import ru.tp.buy_places.authentication.BuyItAccount;
 
 /**
@@ -50,7 +50,6 @@ public final class AccountManagerHelper {
                     public void run(AccountManagerFuture<Bundle> future) {
                         try {
                             future.getResult();
-                            MainActivity.start(activity);
                         } catch (OperationCanceledException | IOException | AuthenticatorException e) {
                             activity.finish();
                         }
@@ -67,7 +66,7 @@ public final class AccountManagerHelper {
             public void run(AccountManagerFuture<Boolean> future) {
                 try {
                     if (future.getResult()) {
-                        AccountManagerHelper.addNewAccount(activity, accountManager);
+                        SplashScreenActivity.startClearTask(activity);
                     }
                 } catch (OperationCanceledException | IOException | AuthenticatorException e) {
                     e.printStackTrace();

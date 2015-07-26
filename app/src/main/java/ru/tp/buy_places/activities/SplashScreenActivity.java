@@ -2,8 +2,6 @@ package ru.tp.buy_places.activities;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +19,7 @@ import ru.tp.buy_places.R;
 import ru.tp.buy_places.authentication.BuyItAccount;
 import ru.tp.buy_places.gcm.RegistrationIntentService;
 import ru.tp.buy_places.service.ServiceHelper;
+import ru.tp.buy_places.utils.AccountManagerHelper;
 
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -38,6 +37,12 @@ public class SplashScreenActivity extends AppCompatActivity {
     private boolean mMyDealsLoaded = false;
     private boolean mGCMRegistrationCompleted = false;
     private BroadcastReceiver mSplashScreenBroadcastReceiver;
+
+    public static void startClearTask(Context context) {
+        Intent intent = new Intent(context, SplashScreenActivity.class);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,7 +64,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         final AccountManager accountManager = AccountManager.get(this);
         Account[] accounts = accountManager.getAccountsByType(BuyItAccount.TYPE);
         if (accounts.length == 0) {
-            addNewAccount(accountManager);
+            AccountManagerHelper.addNewAccount(this, accountManager);
         } else {
             mProfileRequestId = ServiceHelper.get(this).getProfile();
             mMyVenuesRequestId = ServiceHelper.get(this).getMyVenues();
@@ -74,21 +79,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mSplashScreenBroadcastReceiver);
-    }
-
-    private void addNewAccount(AccountManager accountManager) {
-        accountManager.addAccount(BuyItAccount.TYPE, BuyItAccount.TOKEN_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
-            @Override
-            public void run(AccountManagerFuture<Bundle> future) {
-                try {
-                    Bundle result = future.getResult();
-                    //ServiceHelper.get(SplashScreenActivity.this).getProfile();
-                    //MainActivity.start(SplashScreenActivity.this);
-                } catch (Exception e) {
-                    SplashScreenActivity.this.finish();
-                }
-            }
-        }, null);
     }
 
 
@@ -122,10 +112,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                 case RegistrationIntentService.GCM_REGISTRATION_COMPLETED:
                     mGCMRegistrationCompleted = true;
             }
-
             if (mProfileLoaded && mMyVenuesLoaded && mMyDealsLoaded && mGCMRegistrationCompleted) {
                 MainActivity.start(SplashScreenActivity.this);
-                finish();
+                Log.e(LOG_TAG, "MainActivity.start()");
             }
 
         }

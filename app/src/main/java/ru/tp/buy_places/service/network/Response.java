@@ -11,6 +11,7 @@ public class Response {
     public static final int RESULT_OK = 200;
     public static final int RESULT_LOGIN_FAILED = 602;
     public static final int RESULT_UNAVAILABLE = 0;
+    public static final int RESULT_USER_ALREADY_EXISTS = 601;
     private final int mStatus;
     private final String mMessage;
     private final Map<String, Resource> mData;

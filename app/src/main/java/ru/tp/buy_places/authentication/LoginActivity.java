@@ -108,6 +108,9 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Login
                     case Response.RESULT_UNAVAILABLE:
                         Toast.makeText(LoginActivity.this, "Сервис недоступен, проверьте подключение к сети", Toast.LENGTH_LONG).show();
                         break;
+                    case Response.RESULT_USER_ALREADY_EXISTS:
+                        Toast.makeText(LoginActivity.this, "Пользователь с таким Email уже существует", Toast.LENGTH_LONG).show();
+                        break;
                 }
             }
         }
