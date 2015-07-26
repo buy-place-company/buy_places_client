@@ -61,11 +61,11 @@
     </style>
 
     <style name="BackgroundStyle">
-        <item name="android:background">@drawable/login_background</item>
+        <item name="android:background">@drawable/mainback_1</item>
         <item name="android:alpha">1</item>
     </style>
     <style name="BackgroundStyleItem">
         <item name="android:background">@color/light_primary</item>
-        <item name="android:alpha">0.5</item>
+        <item name="android:alpha">0.3</item>
     </style>
 </resources>

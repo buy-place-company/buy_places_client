@@ -5,11 +5,10 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import com.andraskindler.parallaxviewpager.ParallaxViewPager;
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.service.ServiceHelper;
 
@@ -17,7 +16,7 @@ public class DealsFragment extends Fragment {
 
 
     private DealsPagerAdapter mDealsPagerAdapter;
-    private ViewPager mViewPager;
+    private ParallaxViewPager mViewPager;
     private TabLayout mTabLayout;
     private CoordinatorLayout mCoordinatorLayout;
     private AppBarLayout mAppBarLayout;
@@ -43,7 +42,9 @@ public class DealsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_deals, container, false);
         mTabLayout = (TabLayout) inflater.inflate(R.layout.tab_layout, null);
-        mViewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
+        mViewPager = (ParallaxViewPager) rootView.findViewById(R.id.view_pager);
+        mViewPager.setScaleType(ParallaxViewPager.FIT_WIDTH);
+        mViewPager.setBackgroundResource(R.drawable.mainback_1);
         return rootView;
     }
 

@@ -16,6 +16,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
+import com.andraskindler.parallaxviewpager.ParallaxViewPager;
+
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.service.BuyItService;
 import ru.tp.buy_places.service.ServiceHelper;
@@ -29,7 +31,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Login
     private long mAuthenticationRequestId;
     private LoginPagerAdapter mPagerAdapter;
     private TabLayout mTabLayout;
-    private ViewPager mViewPager;
+    private ParallaxViewPager mViewPager;
 
 
     @Override
@@ -39,10 +41,12 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Login
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mTabLayout = (TabLayout)findViewById(R.id.tab_layout);
         mTabLayout.setBackgroundColor(getResources().getColor(R.color.primary));
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
-        setSupportActionBar(toolbar);
         mPagerAdapter = new LoginPagerAdapter(this, getFragmentManager());
+        mViewPager = (ParallaxViewPager) findViewById(R.id.view_pager);
+        mViewPager.setScaleType(ParallaxViewPager.FIT_WIDTH);
+        mViewPager.setBackgroundResource(R.drawable.login_background);
         mViewPager.setAdapter(mPagerAdapter);
+        setSupportActionBar(toolbar);
         mTabLayout.setupWithViewPager(mViewPager);
         LocalBroadcastManager.getInstance(this).registerReceiver(mAuthenticationCompletedReceiver, new IntentFilter(ServiceHelper.ACTION_REQUEST_RESULT));
     }
