@@ -68,7 +68,7 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
             holder.mTitle.setText(mData.get(position).getUsername());
             holder.mScore.setText(Long.toString(mData.get(position).getScore()));
             if(!TextUtils.isEmpty(mData.get(position).getAvatar()))
-                Picasso.with(activity).load(mData.get(position).getAvatar()).error(R.mipmap.ava).into(holder.mIcon);
+                Picasso.with(activity).load(mData.get(position).getAvatar()).error(R.drawable.ava).into(holder.mIcon);
             holder.mRating.setText(Long.toString(mData.get(position).getPosition()));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

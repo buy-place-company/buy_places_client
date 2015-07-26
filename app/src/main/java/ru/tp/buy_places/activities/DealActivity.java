@@ -43,9 +43,6 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
     private TextView mAmount;
     private TextView mDate;
     private TextView mType;
-    private TextView venueBuyPrice;
-    private TextView venueSellPrice;
-    private TextView venueLootAmount;
 
 
     public static void start(Context context, long dealRowId) {
@@ -70,8 +67,8 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
         mUser = (TextView) findViewById(R.id.tv_user);
         mVenue = (TextView) findViewById(R.id.tv_venue);
         mAmount = (TextView) findViewById(R.id.tv_amount);
-        mType = (TextView) findViewById(R.id.tv_type);
         mDate = (TextView) findViewById(R.id.tv_date);
+        mType = (TextView) findViewById(R.id.tv_what_want);
         mUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,10 +106,11 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
             mButtonsContainer.removeAllViews();
             switch (dealType) {
                 case INCOMING:
+                    mDate.setText(mDeal.getDateAdded());
                     mUser.setText(mDeal.getPlayerFrom().getUsername());
                     mVenue.setText(mDeal.getVenue().getName());
                     mAmount.setText(Long.toString(mDeal.getAmount()));
-                    mType.setText(R.string.wantbuy);
+                    mType.setText(getString(R.string.wantbuy));
                     switch (dealState) {
                         case COMPLETED:
                             mDate.setText(mDeal.getDateExpired());
@@ -130,10 +128,13 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
                     }
                     break;
                 case OUTGOING:
+                    mType.setText(getString(R.string.rebuy));
+                    //findViewById(R.id.tv_user_message).setVisibility(View.GONE);
                     //venueBuyPrice.setText(Long.toString(mDeal.getVenue().getBuyPrice()));
-                    mUser.setText(mDeal.getPlayerTo().getUsername());
+                    mUser.setText(getString(R.string.you));
                     mVenue.setText(mDeal.getVenue().getName());
                     mAmount.setText(Long.toString(mDeal.getAmount()));
+                    mDate.setText(mDeal.getDateAdded());
                     switch (dealState) {
                         case COMPLETED:
                             break;
