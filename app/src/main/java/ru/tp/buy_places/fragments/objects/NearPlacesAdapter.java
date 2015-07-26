@@ -82,7 +82,12 @@ public class NearPlacesAdapter extends RecyclerView.Adapter<NearPlacesAdapter.Vi
                 holder.mTitle.setText(mData.get(position).getName()); // Setting the Text with the array of our Titles
                 holder.mIcon.setImageResource(R.mipmap.ic_object);
                 holder.mLevel.setText(Integer.toString(mData.get(position).getLevel()));
-                holder.mPrice.setText(Long.toString(mData.get(position).getBuyPrice()));
+                if (mData.get(position).getBuyPrice() != null) {
+                    holder.mPrice.setVisibility(View.VISIBLE);
+                    holder.mPrice.setText(Long.toString(mData.get(position).getBuyPrice()));
+                } else {
+                    holder.mPrice.setVisibility(View.INVISIBLE);
+                }
                 holder.mCheckin.setText(Long.toString(mData.get(position).getCheckinsCount()));
             }
         } catch (Exception e) {
