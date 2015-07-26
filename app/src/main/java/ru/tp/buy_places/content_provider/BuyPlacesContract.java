@@ -40,6 +40,7 @@ public final class BuyPlacesContract {
         public static final String COLUMN_IS_AROUND_THE_PLAYER = "is_around_the_player";
         public static final String COLUMN_IS_IN_OWNERSHIP = "is_in_ownership";
         public static final String COLUMN_STATE_UPDATING = "state_updating";
+        public static final String COLUMN_FAVOURITE = "is_favourite";
 
         public static final String COLUMN_FULL_ROW_ID = TABLE_NAME + "." + _ID;
         public static final String COLUMN_FULL_ID = TABLE_NAME + "." + COLUMN_ID;
@@ -63,6 +64,7 @@ public final class BuyPlacesContract {
         public static final String COLUMN_FULL_IS_AROUND_THE_PLAYER = TABLE_NAME + "." + COLUMN_IS_AROUND_THE_PLAYER;
         public static final String COLUMN_FULL_IS_IN_OWNERSHIP = TABLE_NAME + "." + COLUMN_IS_IN_OWNERSHIP;
         public static final String COLUMN_FULL_STATE_UPDATING = TABLE_NAME + "." + COLUMN_STATE_UPDATING;
+        public static final String COLUMN_FULL_IS_FAVOURITE = TABLE_NAME + "." + COLUMN_FAVOURITE;
 
         public static final String COLUMN_ALIAS_ROW_ID = Places._ID;
         public static final String COLUMN_ALIAS_ID = "places_id";
@@ -87,7 +89,7 @@ public final class BuyPlacesContract {
         public static final String COLUMN_ALIAS_IS_AROUND_THE_PLAYER = "places_is_around_the_player";
         public static final String COLUMN_ALIAS_IS_IN_OWNERSHIP = "places_is_in_ownership";
         public static final String COLUMN_ALIAS_STATE_UPDATING = "places_state_updating";
-
+        public static final String COLUMN_ALIAS_IS_FAVOURITE = "places_is_favourite";
 
 
         public static final String[] ALL_COLUMNS_PROJECTION = {
@@ -112,7 +114,8 @@ public final class BuyPlacesContract {
                 COLUMN_IS_AROUND_THE_POINT,
                 COLUMN_IS_AROUND_THE_PLAYER,
                 COLUMN_IS_IN_OWNERSHIP,
-                COLUMN_STATE_UPDATING};
+                COLUMN_STATE_UPDATING,
+                COLUMN_FAVOURITE};
 
         static final String SQL_CREATE = "CREATE TABLE " + TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT" + "," +
@@ -137,11 +140,12 @@ public final class BuyPlacesContract {
                 COLUMN_IS_AROUND_THE_PLAYER + " INTEGER DEFAULT 0" + "," +
                 COLUMN_IS_IN_OWNERSHIP + " INTEGER DEFAULT 0" + "," +
                 COLUMN_STATE_UPDATING + " INTEGER DEFAULT 0" + "," +
+                COLUMN_FAVOURITE + " INTEGER DEFAULT 0" + "," +
                 "FOREIGN KEY" + "(" + COLUMN_OWNER + ")" + " REFERENCES " + Players.TABLE_NAME + "(" + Players._ID + ")" +
                 ");";
 
         public static final String[] WITH_OWNERS_COLUMNS_PROJECTION = {
-                Places.COLUMN_FULL_ROW_ID + " AS " +  Places.COLUMN_ALIAS_ROW_ID,
+                Places.COLUMN_FULL_ROW_ID + " AS " + Places.COLUMN_ALIAS_ROW_ID,
                 Places.COLUMN_FULL_ID + " AS " + Places.COLUMN_ALIAS_ID,
                 Places.COLUMN_FULL_CHECKINS_COUNT + " AS " + Places.COLUMN_ALIAS_CHECKINS_COUNT,
                 Places.COLUMN_FULL_USERS_COUNT + " AS " + Places.COLUMN_ALIAS_USERS_COUNT,
@@ -162,6 +166,7 @@ public final class BuyPlacesContract {
                 Places.COLUMN_FULL_IS_AROUND_THE_PLAYER + " AS " + Places.COLUMN_ALIAS_IS_AROUND_THE_PLAYER,
                 Places.COLUMN_FULL_IS_IN_OWNERSHIP + " AS " + Places.COLUMN_ALIAS_IS_IN_OWNERSHIP,
                 Places.COLUMN_FULL_STATE_UPDATING + " AS " + Places.COLUMN_ALIAS_STATE_UPDATING,
+                Places.COLUMN_FULL_IS_FAVOURITE + " AS " + Places.COLUMN_ALIAS_IS_FAVOURITE,
                 Players.COLUMN_FULL_ROW_ID + " AS " + Players.COLUMN_ALIAS_ROW_ID,
                 Players.COLUMN_FULL_ID + " AS " + Players.COLUMN_ALIAS_ID,
                 Players.COLUMN_FULL_USERNAME + " AS " + Players.COLUMN_ALIAS_USERNAME,
@@ -181,7 +186,7 @@ public final class BuyPlacesContract {
         public static final String ONLY_AROUND_THE_POINT_SELECTION =
                 COLUMN_FULL_IS_AROUND_THE_POINT + "=1 AND " +
                         COLUMN_FULL_IS_AROUND_THE_PLAYER + "=0";
-        public static final String WITH_SPECIFIED_ROW_ID_SELECTION =COLUMN_FULL_ROW_ID + "=?";
+        public static final String WITH_SPECIFIED_ROW_ID_SELECTION = COLUMN_FULL_ROW_ID + "=?";
         public static final String WITH_SPECIFIED_ID_SELECTION = COLUMN_FULL_ID + "=?";
         public static final String AROUND_THE_POINT_SELECTION = COLUMN_FULL_IS_AROUND_THE_POINT + "=1";
         public static final String AROUND_THE_PLAYER_SELECTION = COLUMN_FULL_IS_AROUND_THE_PLAYER + "=1";
@@ -190,7 +195,7 @@ public final class BuyPlacesContract {
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, TABLE_NAME);
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.buy_places." + TABLE_NAME;
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.buy_places." + TABLE_NAME;
-        public static final String IMPORTANT_SELECTION = COLUMN_FULL_IS_AROUND_THE_POINT +"=1 OR " + COLUMN_FULL_IS_AROUND_THE_PLAYER + "=1 OR " + COLUMN_FULL_IS_IN_OWNERSHIP + "=1";
+        public static final String IMPORTANT_SELECTION = COLUMN_FULL_IS_AROUND_THE_POINT + "=1 OR " + COLUMN_FULL_IS_AROUND_THE_PLAYER + "=1 OR " + COLUMN_FULL_IS_IN_OWNERSHIP + "=1";
         public static final String WITH_SPECIFIED_OWNER_ID_SELECTION = Players.COLUMN_ALIAS_ID + "=?";
     }
 
@@ -229,7 +234,7 @@ public final class BuyPlacesContract {
         public static final String COLUMN_ALIAS_MAX_PLACES = "players_max_places";
         public static final String COLUMN_ALIAS_POSITION = "position";
 
-        public static final String [] ALL_COLUMNS_PROJECTION = {
+        public static final String[] ALL_COLUMNS_PROJECTION = {
                 _ID,
                 COLUMN_ID,
                 COLUMN_USERNAME,
@@ -302,7 +307,7 @@ public final class BuyPlacesContract {
 
         public static final String WITH_RELATED_ENTITIES_TABLE_NAME = TABLE_NAME + " JOIN " + Players.TABLE_NAME + " AS " + PLAYER_FROM_ALIAS + " ON " + COLUMN_PLAYER_FROM + "=" + PLAYER_FROM_ALIAS + "." + Players._ID +
                 " LEFT JOIN " + Players.TABLE_NAME + " AS " + PLAYER_TO_ALIAS + " ON " + COLUMN_PLAYER_TO + "=" + PLAYER_TO_ALIAS + "." + Players._ID +
-                " JOIN " + Places.TABLE_NAME + " AS " + VENUE_ALIAS + " ON " + COLUMN_VENUE+"="+ VENUE_ALIAS + "." + Places._ID +
+                " JOIN " + Places.TABLE_NAME + " AS " + VENUE_ALIAS + " ON " + COLUMN_VENUE + "=" + VENUE_ALIAS + "." + Places._ID +
                 " JOIN " + Players.TABLE_NAME + " AS " + VENUE_OWNER_ALIAS + " ON " + VENUE_ALIAS + "." + Places.COLUMN_OWNER + "=" + VENUE_OWNER_ALIAS + "." + Players._ID;
 
         public static final String COLUMN_ALIAS_ROW_ID = _ID;
@@ -354,6 +359,7 @@ public final class BuyPlacesContract {
         public static final String COLUMN_ALIAS_VENUE_IS_AROUND_THE_PLAYER = "venue_is_around_the_player";
         public static final String COLUMN_ALIAS_VENUE_IS_IN_OWNERSHIP = "venue_is_in_ownership";
         public static final String COLUMN_ALIAS_VENUE_STATE_UPDATING = "venue_state_updating";
+        public static final String COLUMN_ALIAS_VENUE_IS_FAVOURITE = "venue_is_favourite";
 
         public static final String COLUMN_ALIAS_VENUE_OWNER_ROW_ID = "venue_owner_row_id";
         public static final String COLUMN_ALIAS_VENUE_OWNER_ID = "venue_owner_id";
@@ -415,6 +421,7 @@ public final class BuyPlacesContract {
                 VENUE_ALIAS + "." + Places.COLUMN_IS_AROUND_THE_PLAYER + " AS " + COLUMN_ALIAS_VENUE_IS_AROUND_THE_PLAYER,
                 VENUE_ALIAS + "." + Places.COLUMN_IS_IN_OWNERSHIP + " AS " + COLUMN_ALIAS_VENUE_IS_IN_OWNERSHIP,
                 VENUE_ALIAS + "." + Places.COLUMN_STATE_UPDATING + " AS " + COLUMN_ALIAS_VENUE_STATE_UPDATING,
+                VENUE_ALIAS + "." + Places.COLUMN_FAVOURITE + " AS " + COLUMN_ALIAS_VENUE_IS_FAVOURITE,
 
                 VENUE_OWNER_ALIAS + "." + Players._ID + " AS " + COLUMN_ALIAS_VENUE_OWNER_ROW_ID,
                 VENUE_OWNER_ALIAS + "." + Players.COLUMN_ID + " AS " + COLUMN_ALIAS_VENUE_OWNER_ID,
@@ -438,9 +445,8 @@ public final class BuyPlacesContract {
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, TABLE_NAME);
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.buy_places." + TABLE_NAME;
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.buy_places." + TABLE_NAME;
-        public static final String WITH_SPECIFIED_ID_SELECTION = TABLE_NAME + "." + COLUMN_ID +"=?";
+        public static final String WITH_SPECIFIED_ID_SELECTION = TABLE_NAME + "." + COLUMN_ID + "=?";
         public static final String WITH_SPECIFIED_ROW_ID_SELECTION = TABLE_NAME + "." + _ID + "=?";
-
 
 
         public static final String WITH_SPECIFIED_PLAYER_TO_ID_AND_STATUS = PLAYER_TO_ALIAS + "." + Players.COLUMN_ID + "=? AND " + TABLE_NAME + "." + COLUMN_STATUS + "=?";

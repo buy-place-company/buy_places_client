@@ -31,11 +31,9 @@ public class Places implements Resource, Iterable<Place> {
         if (placesJSONArray == null)
             return null;
         Places places = new Places();
-        if (placesJSONArray != null) {
-            for (int i = 0; i < placesJSONArray.length(); i++) {
-                Place place = Place.fromJSONObject(placesJSONArray.optJSONObject(i));
-                places.add(place);
-            }
+        for (int i = 0; i < placesJSONArray.length(); i++) {
+            Place place = Place.fromJSONObject(placesJSONArray.optJSONObject(i));
+            places.add(place);
         }
         return places;
     }
@@ -70,7 +68,7 @@ public class Places implements Resource, Iterable<Place> {
 
     public void setIsInOwnership(boolean isInOwnership) {
         for (Place place: mPlaces) {
-            place.setIsInOwnership(true);
+            place.setIsInOwnership(isInOwnership);
         }
     }
 
@@ -81,5 +79,11 @@ public class Places implements Resource, Iterable<Place> {
     @Override
     public Iterator<Place> iterator() {
         return mPlaces.iterator();
+    }
+
+    public void setFavourite(boolean favourite) {
+        for (Place place: mPlaces) {
+            place.setFavourite(favourite);
+        }
     }
 }

@@ -20,6 +20,7 @@ import ru.tp.buy_places.service.deals.RejectDealProcessorCreator;
 import ru.tp.buy_places.service.deals.RevokeDealProcessorCreator;
 import ru.tp.buy_places.service.deals.SuggestDealProcessorCreator;
 import ru.tp.buy_places.service.network.Response;
+import ru.tp.buy_places.service.places.GetFavouriteVenuesProcessorCreator;
 import ru.tp.buy_places.service.places.GetMyVenuesProcessorCreator;
 import ru.tp.buy_places.service.places.GetPlayerVenuesProcessorCreator;
 import ru.tp.buy_places.service.places.GetVenuesAroundThePlayerProcessorCreator;
@@ -55,6 +56,9 @@ public class BuyItService extends IntentService {
     private static final String EXTRA_EMAIL = "EXTRA_EMAIL";
     private static final String ACTION_REGISTRATION = "ru.mail.buy_it.service.ACTION_REGISTRATION";
     private static final String ACTION_LOGOUT = "ru.mail.buy_it.service.ACTION_LOGOUT";
+    private static final String ACTION_GET_FAVOURITE_VENUES = "ru.mail.buy_it.service.ACTION_GET_FAVOURITE_VENUES";
+    private static final String ACTION_ADD_VENUE_TO_FAVOURITE = "ru.mail.buy_it.service.ACTION_ADD_VENUE_TO_FAVOURITE";
+    private static final String ACTION_REMOVE_VENUE_FROM_FAVOURITE = "ru.mail.buy_it.service.ACTION_REMOVE_VENUE_FROM_FAVOURITE";
 
     public BuyItService() {
         super("BuyItService");
@@ -99,6 +103,12 @@ public class BuyItService extends IntentService {
         context.startService(intent);
     }
 
+    public static void startGetFavouriteVenuesService(Context context, ResultReceiver serviceCallback, long requestId) {
+        Intent intent = new Intent(ACTION_GET_FAVOURITE_VENUES, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        context.startService(intent);
+    }
     public static void startGetPlayerVenuesService(Context context, ResultReceiver serviceCallback, long requestId, long playerId) {
         Intent intent = new Intent(ACTION_GET_PLAYER_VENUES, null, context, BuyItService.class);
         intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
@@ -248,6 +258,9 @@ public class BuyItService extends IntentService {
                 Processor getVenuesAroundThePointProcessor = new GetVenuesAroundThePointProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver), pointPosition).createProcessor();
                 getVenuesAroundThePointProcessor.process();
                 break;
+            case ACTION_GET_FAVOURITE_VENUES:
+                Processor getFavouriteVenuesProcessor = new GetFavouriteVenuesProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver)).createProcessor();
+                getFavouriteVenuesProcessor.process();
             case ACTION_GET_MY_VENUES:
                 Processor getMyVenuesProcessor = new GetMyVenuesProcessorCreator(this, new DefaultProcessorResultListener(intent, resultReceiver)).createProcessor();
                 getMyVenuesProcessor.process();
@@ -322,6 +335,22 @@ public class BuyItService extends IntentService {
                 logoutProcessor.process();
                 break;
         }
+    }
+
+    public static void startAddVenueToFavouriteService(Context context, ResultReceiver serviceCallback, long requestId, String venueId) {
+        Intent intent = new Intent(ACTION_ADD_VENUE_TO_FAVOURITE, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        intent.putExtra(EXTRA_VENUE_ID, venueId);
+        context.startService(intent);
+    }
+
+    public static void startRemoveVenueFromFavouriteService(Context context, ResultReceiver serviceCallback, long requestId, String venueId) {
+        Intent intent = new Intent(ACTION_REMOVE_VENUE_FROM_FAVOURITE, null, context, BuyItService.class);
+        intent.putExtra(EXTRA_SERVICE_CALLBACK, serviceCallback);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        intent.putExtra(EXTRA_VENUE_ID, venueId);
+        context.startService(intent);
     }
 
     public enum VenueAction {

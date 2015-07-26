@@ -32,6 +32,7 @@ public class Place implements Resource {
     private final Long mExpense;
     private final double mLatitude;
     private final double mLongitude;
+    private final boolean mIsFavoutite;
     private long mRowId;
     private boolean mIsAroundThePoint;
     private boolean mIsAroundThePlayer;
@@ -42,8 +43,9 @@ public class Place implements Resource {
     private boolean mIsAroundThePlayerIsSet = false;
     private boolean mIsInOwnershipIsSet = false;
     private boolean mStateUpdatingIsSet = false;
+    private boolean mFavourite;
 
-    private Place(String id, long checkinsCount, long usersCount, long tipCount, String name, String category, int level, Player owner, Long buyPrice, Long sellPrice, Long upgradePrice, Long loot, Long maxLoot, Long income, Long expense, double latitude, double longitude) {
+    private Place(String id, long checkinsCount, long usersCount, long tipCount, String name, String category, int level, Player owner, Long buyPrice, Long sellPrice, Long upgradePrice, Long loot, Long maxLoot, Long income, Long expense, double latitude, double longitude, boolean isFavourite) {
         mId = id;
         mCheckinsCount = checkinsCount;
         mUsersCount = usersCount;
@@ -61,11 +63,13 @@ public class Place implements Resource {
         mExpense = expense;
         mLatitude = latitude;
         mLongitude = longitude;
+        mIsFavoutite = isFavourite;
     }
 
-    public Place(long rowId, String id, long checkinsCount, long usersCount, long tipCount, String name, String category, int level, Player owner, Long buyPrice, Long sellPrice, Long upgradePrice, Long loot, Long maxLoot, Long income, Long expense, double latitude, double longitude) {
-        this(id, checkinsCount, usersCount, tipCount, name, category, level, owner, buyPrice, sellPrice, upgradePrice, loot, maxLoot, income, expense, latitude, longitude);
+    public Place(long rowId, String id, long checkinsCount, long usersCount, long tipCount, String name, String category, int level, Player owner, Long buyPrice, Long sellPrice, Long upgradePrice, Long loot, Long maxLoot, Long income, Long expense, double latitude, double longitude, boolean isFavourite) {
+        this(id, checkinsCount, usersCount, tipCount, name, category, level, owner, buyPrice, sellPrice, upgradePrice, loot, maxLoot, income, expense, latitude, longitude, isFavourite);
         mRowId = rowId;
+        mFavourite = isFavourite;
     }
 
     public static Place fromJSONObject(JSONObject placeData) {
@@ -82,7 +86,7 @@ public class Place implements Resource {
         double latitude = placeData.optDouble("latitude");
         double longitude = placeData.optDouble("longitude");
         Player owner = placeData.isNull("owner") ? null : Player.fromJSONObject(placeData.optJSONObject("owner"));
-        Long buyPrice = placeData.has("buy_price")?placeData.optLong("buy_price"):null;
+        Long buyPrice = placeData.has("buy_price") ? placeData.optLong("buy_price"):null;
 
         Long sellPrice = placeData.has("sell_price")?placeData.optLong("sell_price"):null;
         Long upgradePrice = placeData.has("upgrade_price")?placeData.optLong("upgrade_price"):null;
@@ -90,7 +94,8 @@ public class Place implements Resource {
         Long maxLoot = placeData.has("max_loot")?placeData.optLong("max_loot"):null;
         Long income = placeData.has("income")?placeData.optLong("income"):null;
         Long expense = placeData.has("consumption")?placeData.optLong("consumption"):null;
-        return new Place(id, checkinsCount, usersCount, tipCount, name, category, level, owner, buyPrice, sellPrice, upgradePrice, loot, maxLoot, income, expense, latitude, longitude);
+        Boolean isFavourite = placeData.optBoolean("");
+        return new Place(id, checkinsCount, usersCount, tipCount, name, category, level, owner, buyPrice, sellPrice, upgradePrice, loot, maxLoot, income, expense, latitude, longitude, isFavourite);
     }
 
     public static Place fromCursor(Cursor row) {
@@ -134,7 +139,8 @@ public class Place implements Resource {
         final boolean isAroundThePlayer = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_ALIAS_IS_AROUND_THE_PLAYER)) != 0;
         final boolean isInOwnership = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_ALIAS_IS_IN_OWNERSHIP)) != 0;
         final boolean stateUpdating = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_ALIAS_STATE_UPDATING)) != 0;
-        Place place = new Place(rowId, id, checkinsCount, usersCount, tipCount, name, category, level, owner, buyPrice, sellPrice, upgradePrice, loot, maxLoot, income, expense, latitude, longitude);
+        final boolean isFavourite = row.getInt(row.getColumnIndex(BuyPlacesContract.Places.COLUMN_ALIAS_IS_FAVOURITE)) != 0;
+        Place place = new Place(rowId, id, checkinsCount, usersCount, tipCount, name, category, level, owner, buyPrice, sellPrice, upgradePrice, loot, maxLoot, income, expense, latitude, longitude, isFavourite);
         place.setIsAroundThePoint(isAroundThePoint);
         place.setIsAroundThePlayer(isAroundThePlayer);
         place.setIsInOwnership(isInOwnership);
@@ -277,6 +283,7 @@ public class Place implements Resource {
         values.put(BuyPlacesContract.Places.COLUMN_LATITUDE, mLatitude);
         values.put(BuyPlacesContract.Places.COLUMN_LONGITUDE, mLongitude);
         values.put(BuyPlacesContract.Places.COLUMN_OWNER, ownersRowId);
+        values.put(BuyPlacesContract.Places.COLUMN_FAVOURITE, mFavourite);
         if (mIsAroundThePointIsSet)
             values.put(BuyPlacesContract.Places.COLUMN_IS_AROUND_THE_POINT, mIsAroundThePoint);
         if (mIsAroundThePlayerIsSet)
@@ -297,5 +304,9 @@ public class Place implements Resource {
             cursor.close();
         }
         return id;
+    }
+
+    public void setFavourite(boolean favourite) {
+        mFavourite = favourite;
     }
 }

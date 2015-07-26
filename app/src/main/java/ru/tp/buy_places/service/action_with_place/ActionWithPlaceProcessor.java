@@ -24,6 +24,7 @@ import static ru.tp.buy_places.service.BuyItService.VenueAction;
 public class ActionWithPlaceProcessor extends Processor {
     private static final String KEY_VENUE = "KEY_VENUE";
     private static final String KEY_PLAYER = "KEY_PLAYER";
+
     private final String mId;
     private final VenueAction mVenueAction;
 

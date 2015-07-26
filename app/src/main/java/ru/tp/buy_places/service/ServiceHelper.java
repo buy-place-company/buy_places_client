@@ -36,6 +36,7 @@ public class ServiceHelper {
     private static final String POST_AUTHENTICATE = "POST_AUTHENTICATE";
     private static final String RATING = "RATING";
     private static final String PROFILE = "PROFILE";
+    private static final String FAVOURITE_VENUES = "FAVOURITE_VENUES";
 
     private static ServiceHelper instance;
     private final Context mContext;
@@ -73,12 +74,51 @@ public class ServiceHelper {
     public long getVenuesAroundThePlayer(LatLng playerPosition) {
         long requestId;
         if (mPendingRequests.containsKey(VENUES_AROUND_THE_PLAYER)) {
-            return mPendingRequests.get(VENUES_AROUND_THE_PLAYER);
+            requestId = mPendingRequests.get(VENUES_AROUND_THE_PLAYER);
         } else {
             requestId = mRequestIdGenerator.incrementAndGet();
             mPendingRequests.put(GET_VENUES_AROUND_THE_PLAYER, requestId);
             ResultReceiver serviceCallback = new GetVenuesResultReceiver(null, VENUES_AROUND_THE_PLAYER);
             BuyItService.startGetVenuesAroundThePlayerService(mContext, serviceCallback, requestId, playerPosition);
+        }
+        return requestId;
+    }
+
+    public long getFavouriteVenues() {
+        long requestId;
+        if (mPendingRequests.containsKey(FAVOURITE_VENUES)) {
+            requestId = mPendingRequests.get(FAVOURITE_VENUES);
+        } else {
+            requestId = mRequestIdGenerator.incrementAndGet();
+            mPendingRequests.put(FAVOURITE_VENUES, requestId);
+            ResultReceiver serviceCallback = new GetVenuesResultReceiver(null, FAVOURITE_VENUES);
+            BuyItService.startGetFavouriteVenuesService(mContext, serviceCallback, requestId);
+        }
+        return requestId;
+    }
+
+    public long addVenuesToFavourite(String venueId) {
+        long requestId;
+        if (mPendingRequests.containsKey(MY_VENUES)) {
+            requestId = mPendingRequests.get(POST_VENUE);
+        } else {
+            requestId = mRequestIdGenerator.incrementAndGet();
+            mPendingRequests.put(POST_VENUE, requestId);
+            ResultReceiver serviceCallback = new GetVenuesResultReceiver(null, MY_VENUES);
+            BuyItService.startAddVenueToFavouriteService(mContext, serviceCallback, requestId, venueId);
+        }
+        return requestId;
+    }
+
+    public long removeVenueFromFavourites(String venueId) {
+        long requestId;
+        if (mPendingRequests.containsKey(MY_VENUES)) {
+            requestId = mPendingRequests.get(POST_VENUE);
+        } else {
+            requestId = mRequestIdGenerator.incrementAndGet();
+            mPendingRequests.put(POST_VENUE, requestId);
+            ResultReceiver serviceCallback = new VenueResultReceiver(null, MY_VENUES);
+            BuyItService.startRemoveVenueFromFavouriteService(mContext, serviceCallback, requestId, venueId);
         }
         return requestId;
     }

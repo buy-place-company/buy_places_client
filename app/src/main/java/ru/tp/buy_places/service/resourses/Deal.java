@@ -142,7 +142,8 @@ public class Deal implements Resource{
         Long venueExpense = !row.isNull(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_VENUE_EXPENSE))?row.getLong(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_VENUE_EXPENSE)):null;
         double venueLatitude = row.getDouble(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_VENUE_LATITUDE));
         double venueLongitude = row.getDouble(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_VENUE_LONGITUDE));
-        Place venue = new Place(venueRowId, venueId, venueCheckinsCount, venueUsersCount, venueTipCount, venueName, venueCategory, venueLevel, venueOwner, venueBuyPrice, venueSellPrice, venueUpgradePrice, venueLoot, venueMaxLoot, venueIncome, venueExpense, venueLatitude, venueLongitude);
+        boolean isFavourite = row.getInt(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_VENUE_IS_FAVOURITE)) != 0;
+        Place venue = new Place(venueRowId, venueId, venueCheckinsCount, venueUsersCount, venueTipCount, venueName, venueCategory, venueLevel, venueOwner,venueBuyPrice, venueSellPrice, venueUpgradePrice, venueLoot, venueMaxLoot, venueIncome, venueExpense, venueLatitude, venueLongitude, isFavourite);
 
 
         String dateExpired = row.getString(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_DATE_EXPIRED));
