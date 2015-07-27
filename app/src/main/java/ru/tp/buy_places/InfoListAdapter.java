@@ -70,7 +70,7 @@ public class InfoListAdapter extends RecyclerView.Adapter<InfoListAdapter.ViewHo
                 });
                 break;
             case DATE:
-                holder.venueInfoValue.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_calendar_grey600_18dp, 0,0,0);
+                //holder.venueInfoValue.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_calendar_grey600_18dp, 0,0,0);
                 break;
 
         }

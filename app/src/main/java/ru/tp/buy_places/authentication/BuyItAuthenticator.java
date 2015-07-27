@@ -11,11 +11,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
+
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.CookieManager;
 import java.util.HashMap;
+import java.util.Map;
 
+import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.network.Request;
 import ru.tp.buy_places.service.network.Response;
@@ -92,6 +98,19 @@ public class BuyItAuthenticator extends AbstractAccountAuthenticator {
     @Override
     public Bundle getAccountRemovalAllowed(AccountAuthenticatorResponse response, Account account) throws NetworkErrorException {
         Bundle result = super.getAccountRemovalAllowed(response, account);
+        InstanceID instanceID = InstanceID.getInstance(mContext);
+        String token = null;
+        try {
+            token = instanceID.getToken(mContext.getString(R.string.gcm_defaultSenderId),
+                    GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+            Map<String, String> params = new HashMap<>();
+            params.put("reg_id", token);
+            Request unregTokenRequest = new Request(mContext, "/push/unreg", Request.RequestMethod.POST, params);
+            unregTokenRequest.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         Request request = new Request(mContext, "/auth/logout", Request.RequestMethod.POST, new HashMap<String, String>());
         JSONObject responseJSONObject = request.execute();
         int status = responseJSONObject.optInt("status");

@@ -349,11 +349,11 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
     private void setMineVenueButtonsOnClickListeners(View mineVenueButtons) {
         final AlertDialog.Builder sellDialogBuilder = new AlertDialog.Builder(this);
         final AlertDialog.Builder upgradeDialogBuilder = new AlertDialog.Builder(this);
-        final AlertDialog.Builder suggestDealDialogBuilder = new AlertDialog.Builder(this);
+        //final AlertDialog.Builder suggestDealDialogBuilder = new AlertDialog.Builder(this);
         FloatingActionButton upgradeVenueButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_upgrade_place);
         FloatingActionButton sellVenueButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_sell_place);
         FloatingActionButton collectLootButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_collect_loot);
-        FloatingActionButton suggestDealButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_suggest_deal);
+        //FloatingActionButton suggestDealButton = (FloatingActionButton) mineVenueButtons.findViewById(R.id.button_suggest_deal);
         upgradeVenueButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -405,37 +405,37 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
                 mCollectLootRequestId = ServiceHelper.get(VenueActivity.this).collectLootFromPlace(mPlace.getId());
             }
         });
-        suggestDealButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                suggestDealDialogBuilder.setTitle("Сделка");
-                suggestDealDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int arg1) {
-                        TextInputLayout input = (TextInputLayout) ((Dialog) dialog).findViewById(R.id.text_input_layout_amount);
-                        if (!TextUtils.isEmpty(input.getEditText().getText().toString())) {
-                            long amount = Long.parseLong(input.getEditText().getText().toString());
-                            mSuggestDealRequestId = ServiceHelper.get(VenueActivity.this).suggestDeal(mPlace.getId(), amount);
-                        } else
-                            Toast.makeText(VenueActivity.this, "Вы не ввели сумму", Toast.LENGTH_LONG).show();
-
-                    }
-                });
-                suggestDealDialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int arg1) {
-                    }
-                });
-                suggestDealDialogBuilder.setCancelable(true);
-                suggestDealDialogBuilder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    public void onCancel(DialogInterface dialog) {
-                    }
-                });
-
-                suggestDealDialogBuilder.setMessage("Выставить на продажу за:");
-                TextInputLayout textInputLayout = (TextInputLayout) LayoutInflater.from(VenueActivity.this).inflate(R.layout.suggest_deal_dialog_view, null);
-                suggestDealDialogBuilder.setView(textInputLayout);
-                suggestDealDialogBuilder.show();
-            }
-        });
+//        suggestDealButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                suggestDealDialogBuilder.setTitle("Сделка");
+//                suggestDealDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int arg1) {
+//                        TextInputLayout input = (TextInputLayout) ((Dialog) dialog).findViewById(R.id.text_input_layout_amount);
+//                        if (!TextUtils.isEmpty(input.getEditText().getText().toString())) {
+//                            long amount = Long.parseLong(input.getEditText().getText().toString());
+//                            mSuggestDealRequestId = ServiceHelper.get(VenueActivity.this).suggestDeal(mPlace.getId(), amount);
+//                        } else
+//                            Toast.makeText(VenueActivity.this, "Вы не ввели сумму", Toast.LENGTH_LONG).show();
+//
+//                    }
+//                });
+//                suggestDealDialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int arg1) {
+//                    }
+//                });
+//                suggestDealDialogBuilder.setCancelable(true);
+//                suggestDealDialogBuilder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//                    public void onCancel(DialogInterface dialog) {
+//                    }
+//                });
+//
+//                suggestDealDialogBuilder.setMessage("Выставить на продажу за:");
+//                TextInputLayout textInputLayout = (TextInputLayout) LayoutInflater.from(VenueActivity.this).inflate(R.layout.suggest_deal_dialog_view, null);
+//                suggestDealDialogBuilder.setView(textInputLayout);
+//                suggestDealDialogBuilder.show();
+//            }
+//        });
     }
 
     @Override
