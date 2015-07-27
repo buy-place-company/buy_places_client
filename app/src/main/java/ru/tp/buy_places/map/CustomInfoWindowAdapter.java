@@ -50,6 +50,8 @@ public class CustomInfoWindowAdapter implements  GoogleMap.InfoWindowAdapter, Ve
                     levelTextView.setText(Integer.toString(clusterItem.getLevel()));
                 if (clusterItem.getCheckinsCount() >= 0)
                     checkinsCountTextView.setText(Long.toString(clusterItem.getCheckinsCount()));
+                if (clusterItem.getBuyPrice() != null)
+                    priceTextView.setText(Long.toString(clusterItem.getBuyPrice()));
                 return view;
             } else {
                 return null;

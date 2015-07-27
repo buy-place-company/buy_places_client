@@ -457,6 +457,9 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
         mGoogleMap = googleMap;
         final LatLng venuesLocation = getIntent().getParcelableExtra(EXTRA_VENUES_LOCATION);
         mGoogleMap.addMarker(new MarkerOptions().position(venuesLocation));
+        mGoogleMap.setOnMapClickListener(null);
+        mGoogleMap.setOnMapLongClickListener(null);
+        mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
     }
 
 
