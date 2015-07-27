@@ -186,6 +186,7 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
                     public void onClick(DialogInterface dialog, int arg1) {
                         ServiceHelper.get(DealActivity.this).revokeDeal(mDeal.getId());
                         Toast.makeText(DealActivity.this, "Запрос на заключение сделки отправлен", Toast.LENGTH_LONG).show();
+                        DealActivity.this.finish();
                     }
                 });
                 dialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
@@ -198,8 +199,9 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
                     }
                 });
 
-                dialogBuilder.setMessage("Вы действительно хотите отменить сделку с игроком " + mDeal.getPlayerTo().getUsername()+ "?");
+                dialogBuilder.setMessage("Вы действительно хотите отменить сделку с игроком " + mDeal.getPlayerTo().getUsername() + "?");
                 dialogBuilder.show();
+
             }
         });
 
@@ -215,6 +217,7 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
                     public void onClick(DialogInterface dialog, int arg1) {
                         ServiceHelper.get(DealActivity.this).acceptDeal(mDeal.getId());
                         Toast.makeText(DealActivity.this, "Запрос на заключение сделки отправлен", Toast.LENGTH_LONG).show();
+                        DealActivity.this.finish();
                     }
                 });
                 acceptDealDialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
@@ -229,6 +232,7 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
 
                 acceptDealDialogBuilder.setMessage("Вы действительно хотите принять предложение игрока " + mDeal.getPlayerFrom().getUsername() + "?");
                 acceptDealDialogBuilder.show();
+
             }
         });
 
@@ -241,6 +245,7 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
                     public void onClick(DialogInterface dialog, int arg1) {
                         ServiceHelper.get(DealActivity.this).rejectDeal(mDeal.getId());
                         Toast.makeText(DealActivity.this, "Запрос на заключение сделки отправлен", Toast.LENGTH_LONG).show();
+                        DealActivity.this.finish();
                     }
                 });
                 rejectDealDialogBuilder.setNegativeButton(R.string.dialog_negative_button_title, new DialogInterface.OnClickListener() {
@@ -255,6 +260,7 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
 
                 rejectDealDialogBuilder.setMessage("Вы действительно хотите отклонить предложение игрока " + mDeal.getPlayerFrom().getUsername() + "?");
                 rejectDealDialogBuilder.show();
+
             }
         });
     }

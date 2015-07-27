@@ -88,8 +88,10 @@ public class MainActivity extends AppCompatActivity implements
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.app_name, R.string.app_name);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
-            actionBar.setDisplayShowHomeEnabled(true);
+        if (actionBar != null) {
+            //actionBar.setDisplayShowHomeEnabled(true);
+            //actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mActionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);

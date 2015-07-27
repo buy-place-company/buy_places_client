@@ -20,15 +20,19 @@ public abstract class Processor {
     }
 
     public void process() {
-        Request request = prepareRequest();
-        updateContentProviderBeforeExecutingRequest(request);
-        JSONObject responseJSONObject = request.execute();
-        Response response = parseResponseJSONObject(responseJSONObject);
-        if (response.getStatus() == 200) {
-            updateContentProviderAfterExecutingRequest(response);
+        try {
+            Request request = prepareRequest();
+            updateContentProviderBeforeExecutingRequest(request);
+            JSONObject responseJSONObject = request.execute();
+            Response response = parseResponseJSONObject(responseJSONObject);
+            if (response.getStatus() == 200) {
+                updateContentProviderAfterExecutingRequest(response);
+            }
+            mListener.send(response);
+        } catch (Exception e) {
+            mListener.send(new Response(0, null, null));
         }
 
-        mListener.send(response);
     }
 
     abstract protected Response parseResponseJSONObject(JSONObject responseJSONObject);
