@@ -451,7 +451,7 @@ public final class BuyPlacesContract {
         public static final String WITH_SPECIFIED_ROW_ID_SELECTION = TABLE_NAME + "." + _ID + "=?";
 
 
-        public static final String WITH_SPECIFIED_PLAYER_TO_ID_AND_STATUS = PLAYER_TO_ALIAS + "." + Players.COLUMN_ID + "=? AND " + TABLE_NAME + "." + COLUMN_STATUS + "=?";
+        public static final String WITH_SPECIFIED_PLAYER_TO_ID_OR_NULL_AND_STATUS = "(" + PLAYER_TO_ALIAS + "." + Players.COLUMN_ID + "=? OR " + "(" + PLAYER_TO_ALIAS + "." + Players.COLUMN_ID + " IS NULL AND " + PLAYER_FROM_ALIAS + "." + Players.COLUMN_ID + "!=?" + "))" + " AND " + TABLE_NAME + "." + COLUMN_STATUS + "=?";
         public static final String WITH_SPECIFIED_PLAYER_FROM_ID_AND_STATUS = PLAYER_FROM_ALIAS + "." + Players.COLUMN_ID + "=? AND " + TABLE_NAME + "." + COLUMN_STATUS + "=?";
     }
 }

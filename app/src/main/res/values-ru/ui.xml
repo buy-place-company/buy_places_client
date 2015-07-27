@@ -25,6 +25,12 @@
     <string name="statistics_checkins">Чекины</string>
     <string name="statistics_level">Уровень</string>
     <string name="statistics_loot">Накопления</string>
+    <string name="statistics_player_from">От кого</string>
+    <string name="statistics_player_to">Кому</string>
+    <string name="statistics_venue">Здание</string>
+    <string name="statistics_amount">Цена</string>
+    <string name="statistics_date_added">Добавлена</string>
+    <string name="statistics_date_expires">Актуальна</string>
 
     <string name="venue_info_common">Общее</string>
     <string name="venue_info_stats">Статистика</string>

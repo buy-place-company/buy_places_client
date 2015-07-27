@@ -99,17 +99,21 @@ public class Deal implements Resource{
         long playerFromScore = row.getLong(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_FROM_SCORE));
         int playerFromVenuesCount = row.getInt(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_FROM_PLACES));
         int playerFromMaxPlaces = row.getInt(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_FROM_MAX_PLACES));
-
-        long playerToRowId = row.getLong(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_ROW_ID));
-        long playerToId = row.getLong(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_ID));
-        String playerToUsername = row.getString(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_USERNAME));
-        int playerToLevel = row.getInt(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_LEVEL));
-        String playerToAvatar = row.getString(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_AVATAR));
-        long playerToCash = row.getLong(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_CASH));
-        long playerToScore = row.getLong(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_SCORE));
-        int playerToVenuesCount = row.getInt(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_PLACES));
-        int playerToMaxPlaces = row.getInt(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_MAX_PLACES));
-
+        Player playerTo;
+        if (!row.isNull(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_ROW_ID))) {
+            long playerToRowId = row.getLong(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_ROW_ID));
+            long playerToId = row.getLong(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_ID));
+            String playerToUsername = row.getString(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_USERNAME));
+            int playerToLevel = row.getInt(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_LEVEL));
+            String playerToAvatar = row.getString(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_AVATAR));
+            long playerToCash = row.getLong(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_CASH));
+            long playerToScore = row.getLong(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_SCORE));
+            int playerToVenuesCount = row.getInt(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_PLACES));
+            int playerToMaxPlaces = row.getInt(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_PLAYER_TO_MAX_PLACES));
+            playerTo = new Player(playerToRowId, playerToId, playerToUsername, playerToLevel, playerToAvatar, playerToCash, playerToScore, playerToVenuesCount, playerToMaxPlaces);
+        } else {
+            playerTo = null;
+        }
         long venueOwnerRowId = row.getLong(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_VENUE_OWNER_ROW_ID));
         long venueOwnerId = row.getLong(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_VENUE_OWNER_ID));
         String venueOwnerUsername = row.getString(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_VENUE_OWNER_USERNAME));
@@ -129,7 +133,6 @@ public class Deal implements Resource{
         String venueCategory = row.getString(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_VENUE_CATEGORY));
 
         Player venueOwner = new Player(venueOwnerRowId, venueOwnerId, venueOwnerUsername, venueOwnerLevel, venueOwnerAvatar, venueOwnerCash, venueOwnerScore, venueOwnerVenuesCount, venueOwnerMaxPlaces);
-        Player playerTo = new Player(playerToRowId, playerToId, playerToUsername, playerToLevel, playerToAvatar, playerToCash, playerToScore, playerToVenuesCount, playerToMaxPlaces);
         Player playerFrom = new Player(playerFromRowId, playerFromId, playerFromUsername, playerFromLevel, playerFormAvatar, playerFromCash, playerFromScore, playerFromVenuesCount, playerFromMaxPlaces);
 
         int venueLevel = row.getInt(row.getColumnIndex(BuyPlacesContract.Deals.COLUMN_ALIAS_VENUE_LEVEL));

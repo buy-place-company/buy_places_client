@@ -8,18 +8,26 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import ru.tp.buy_places.InfoListAdapter;
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.ServiceHelper;
@@ -38,11 +46,8 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
     private Toolbar mToolbar;
     private FrameLayout mButtonsContainer;
     private Deal mDeal;
-    private TextView mUser;
-    private TextView mVenue;
-    private TextView mAmount;
-    private TextView mDate;
-    private TextView mType;
+    private RecyclerView mInfoList;
+    private InfoListAdapter mInfoListAdapter;
 
 
     public static void start(Context context, long dealRowId) {
@@ -58,33 +63,17 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mButtonsContainer = (FrameLayout) findViewById(R.id.button_container);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(R.string.navigation_deals);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+            actionBar.setDisplayHomeAsUpEnabled(true);
         final long dealRowId = getIntent().getLongExtra(EXTRA_DEAL_ROW_ID, 0);
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_DEAL_ROW_ID, dealRowId);
         getLoaderManager().initLoader(DEAL_LOADER_ID, arguments, this);
-        mUser = (TextView) findViewById(R.id.tv_user);
-        mVenue = (TextView) findViewById(R.id.tv_venue);
-        mAmount = (TextView) findViewById(R.id.tv_amount);
-        mDate = (TextView) findViewById(R.id.tv_date);
-        mType = (TextView) findViewById(R.id.tv_what_want);
-        mUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DealActivity.this, UserActivity.class);
-                intent.putExtra("EXTRA_USER_ID", mDeal.getPlayerFrom().getRowId());
-                startActivity(intent);
-            }
-        });
-        mVenue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final long venuesRowId = mDeal.getVenue().getRowId();
-                final LatLng venuesLocation = new LatLng(mDeal.getVenue().getLatitude(), mDeal.getVenue().getLongitude());
-                final VenueActivity.VenueType venuesType = VenueActivity.VenueType.fromVenue(mDeal.getVenue());
-                VenueActivity.start(DealActivity.this, venuesRowId, venuesLocation, venuesType);
-            }
-        });
+        mInfoList = (RecyclerView) findViewById(R.id.recycler_view_info);
+        mInfoList.setLayoutManager(new LinearLayoutManager(this));
+        mInfoListAdapter = new InfoListAdapter(this);
+        mInfoList.setAdapter(mInfoListAdapter);
 
     }
 
@@ -103,22 +92,62 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
             final Deal.DealState dealState = mDeal.getState();
             LayoutInflater inflater = LayoutInflater.from(this);
             mButtonsContainer.removeAllViews();
+
+            List<InfoListAdapter.InfoItem> infoItems = new ArrayList<>();
+            if (mDeal.getPlayerFrom() != null) {
+                infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_player_from), InfoListAdapter.InfoType.PLAYER, mDeal.getPlayerFrom().getUsername(), mDeal.getPlayerFrom()));
+            }
+            if (mDeal.getPlayerTo() != null) {
+                infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_player_to), InfoListAdapter.InfoType.PLAYER, mDeal.getPlayerTo().getUsername(), mDeal.getPlayerTo()));
+            }
+            if (mDeal.getVenue() != null) {
+                infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_venue), InfoListAdapter.InfoType.VENUE, mDeal.getVenue().getName(), mDeal.getVenue()));
+            }
+
+            if (mDeal.getAmount() >= 0) {
+                infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_amount), InfoListAdapter.InfoType.PRICE, Long.toString(mDeal.getAmount())));
+            }
+
+            if (mDeal.getDateAdded() != null) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date dateAdded;
+                String stringDateAdded;
+                try {
+                    dateAdded = format.parse(mDeal.getDateAdded());
+                    stringDateAdded = new SimpleDateFormat("dd/mm/yyyy").format(dateAdded);
+                } catch (ParseException e) {
+                    stringDateAdded = null;
+                    e.printStackTrace();
+                }
+                if (stringDateAdded != null)
+                    infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_date_added), InfoListAdapter.InfoType.DATE, stringDateAdded));
+            }
+
+            if (mDeal.getDateExpired() != null) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date dateExpired;
+                String stringDateExpired;
+                try {
+                    dateExpired = format.parse(mDeal.getDateExpired());
+                    stringDateExpired = new SimpleDateFormat("dd/mm/yyyy").format(dateExpired);
+                } catch (ParseException e) {
+                    stringDateExpired = null;
+                    e.printStackTrace();
+                }
+                if (stringDateExpired != null)
+                    infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_date_expires), InfoListAdapter.InfoType.DATE, stringDateExpired));
+            }
+
+            mInfoListAdapter.setInfoItems(infoItems);
             switch (dealType) {
                 case INCOMING:
-                    mDate.setText(mDeal.getDateAdded());
-                    mUser.setText(mDeal.getPlayerFrom().getUsername());
-                    mVenue.setText(mDeal.getVenue().getName());
-                    mAmount.setText(Long.toString(mDeal.getAmount()));
-                    mType.setText(getString(R.string.wantbuy));
+
                     switch (dealState) {
                         case COMPLETED:
-                            mDate.setText(mDeal.getDateExpired());
-                        //    mType.setText(R.string.complited);
                             break;
                         case UNCOMPLETED:
                             final View incomingDealButtons = inflater.inflate(R.layout.buttons_incoming_deal, mButtonsContainer);
                             setIncomingButtonsOnClickListeners(incomingDealButtons);
-                            mDate.setText(mDeal.getDateAdded());
                             break;
                         case REJECTED:
                             break;
@@ -127,13 +156,6 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
                     }
                     break;
                 case OUTGOING:
-                    mType.setText(getString(R.string.rebuy));
-                    //findViewById(R.id.tv_user_message).setVisibility(View.GONE);
-                    //venueBuyPrice.setText(Long.toString(mDeal.getVenue().getBuyPrice()));
-                    mUser.setText(getString(R.string.you));
-                    mVenue.setText(mDeal.getVenue().getName());
-                    mAmount.setText(Long.toString(mDeal.getAmount()));
-                    mDate.setText(mDeal.getDateAdded());
                     switch (dealState) {
                         case COMPLETED:
                             break;
@@ -240,5 +262,16 @@ public class DealActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

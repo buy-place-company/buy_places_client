@@ -24,7 +24,12 @@
     <string name="statistics_checkins">Checkins</string>
     <string name="statistics_level">Level</string>
     <string name="statistics_loot">Loot</string>
-
+    <string name="statistics_player_from">From</string>
+    <string name="statistics_player_to">To</string>
+    <string name="statistics_venue">Venue</string>
+    <string name="statistics_amount">Amount</string>
+    <string name="statistics_date_added">Added</string>
+    <string name="statistics_date_expires">Expires</string>
     <string name="dialog_positive_button_title">Yes</string>
     <string name="dialog_negative_button_title">No</string>
     <string name="dialog_cancel_button_title">Cancel</string>

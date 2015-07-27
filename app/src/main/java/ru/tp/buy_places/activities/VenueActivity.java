@@ -35,7 +35,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -51,10 +50,10 @@ import java.util.List;
 
 import ru.tp.buy_places.R;
 import ru.tp.buy_places.SimpleSectionedRecyclerViewAdapter;
+import ru.tp.buy_places.InfoListAdapter;
 import ru.tp.buy_places.content_provider.BuyPlacesContract;
 import ru.tp.buy_places.service.ServiceHelper;
 import ru.tp.buy_places.service.resourses.Place;
-import ru.tp.buy_places.service.resourses.Player;
 
 public class VenueActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, OnMapReadyCallback {
     public static final String EXTRA_VENUES_ROW_ID = "EXTRA_VENUES_ROW_ID";
@@ -62,7 +61,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
     public static final String EXTRA_VENUES_TYPE = "EXTRA_VENUES_TYPE";
     private static final String LOG_TAG = VenueActivity.class.getSimpleName();
     private RecyclerView mInfoList;
-    private VenueInfoListAdapter mVenueInfoListAdapter;
+    private InfoListAdapter mInfoListAdapter;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private FrameLayout mButtonsContainerLayout;
 
@@ -112,8 +111,8 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
         mVenueType = (VenueType) getIntent().getSerializableExtra(EXTRA_VENUES_TYPE);
         mInfoList = (RecyclerView) findViewById(R.id.recycler_view_info);
         mInfoList.setLayoutManager(new LinearLayoutManager(this));
-        mVenueInfoListAdapter = new VenueInfoListAdapter(this);
-        mInfoList.setAdapter(mVenueInfoListAdapter);
+        mInfoListAdapter = new InfoListAdapter(this);
+        mInfoList.setAdapter(mInfoListAdapter);
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.app_bar_layout);
         mMapContainer = (FrameLayout) findViewById(R.id.map_container);
@@ -208,46 +207,46 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
             mCollapsingToolbarLayout.setTitle(mPlace.getName());
             int commonHeaderPositionBasePosition = 0;
             int statisticsHeaderPositionBasePosition = commonHeaderPositionBasePosition;
-            List<VenueInfoListAdapter.InfoItem> infoItems = new ArrayList<>();
+            List<InfoListAdapter.InfoItem> infoItems = new ArrayList<>();
             if (mPlace.getOwner() != null) {
-                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_owner), InfoType.PLAYER, mPlace.getOwner().getUsername(), mPlace.getOwner()));
+                infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_owner), InfoListAdapter.InfoType.PLAYER, mPlace.getOwner().getUsername(), mPlace.getOwner()));
                 statisticsHeaderPositionBasePosition++;
             }
             if (mPlace.getBuyPrice() != null) {
-                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_buy_price), InfoType.PRICE, Long.toString(mPlace.getBuyPrice())));
+                infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_buy_price), InfoListAdapter.InfoType.PRICE, Long.toString(mPlace.getBuyPrice())));
                 statisticsHeaderPositionBasePosition++;
             }
             if (mPlace.getSellPrice() != null) {
-                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_sell_price), InfoType.PRICE, Long.toString(mPlace.getSellPrice())));
+                infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_sell_price), InfoListAdapter.InfoType.PRICE, Long.toString(mPlace.getSellPrice())));
                 statisticsHeaderPositionBasePosition++;
             }
             if (mPlace.getUpgradePrice() != null) {
-                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_upgrade_price), InfoType.PRICE, Long.toString(mPlace.getUpgradePrice())));
+                infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_upgrade_price), InfoListAdapter.InfoType.PRICE, Long.toString(mPlace.getUpgradePrice())));
                 statisticsHeaderPositionBasePosition++;
             }
             if (mPlace.getLoot() != null && mPlace.getMaxLoot() != null) {
-                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_loot), InfoType.PRICE, Long.toString(mPlace.getLoot()) + " / " + Long.toString(mPlace.getMaxLoot())));
+                infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_loot), InfoListAdapter.InfoType.PRICE, Long.toString(mPlace.getLoot()) + " / " + Long.toString(mPlace.getMaxLoot())));
                 statisticsHeaderPositionBasePosition++;
             }
             if (mPlace.getCheckinsCount() > 0) {
-                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_checkins), InfoType.CHECKINS, Long.toString(mPlace.getCheckinsCount())));
+                infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_checkins), InfoListAdapter.InfoType.CHECKINS, Long.toString(mPlace.getCheckinsCount())));
                 statisticsHeaderPositionBasePosition++;
             }
             if (mPlace.getLevel() >= 0) {
-                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_level), InfoType.LEVEL, String.valueOf(mPlace.getLevel())));
+                infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_level), InfoListAdapter.InfoType.LEVEL, String.valueOf(mPlace.getLevel())));
                 statisticsHeaderPositionBasePosition++;
             }
             if (mPlace.getIncome() != null) {
-                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_income), InfoType.PRICE, Long.toString(mPlace.getIncome())));
+                infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_income), InfoListAdapter.InfoType.PRICE, Long.toString(mPlace.getIncome())));
             }
             if (mPlace.getExpense() != null) {
-                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_outcome), InfoType.PRICE, Long.toString(mPlace.getExpense())));
+                infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_outcome), InfoListAdapter.InfoType.PRICE, Long.toString(mPlace.getExpense())));
             }
             if (mPlace.getIncome() != null && mPlace.getExpense() != null) {
-                infoItems.add(new VenueInfoListAdapter.InfoItem(getString(R.string.statistics_profit), InfoType.PRICE, Long.toString(mPlace.getIncome() - mPlace.getExpense())));
+                infoItems.add(new InfoListAdapter.InfoItem(getString(R.string.statistics_profit), InfoListAdapter.InfoType.PRICE, Long.toString(mPlace.getIncome() - mPlace.getExpense())));
             }
 
-            mVenueInfoListAdapter.setInfoItems(infoItems);
+            mInfoListAdapter.setInfoItems(infoItems);
 
             //This is the code to provide a sectioned list
             List<SimpleSectionedRecyclerViewAdapter.Section> sections = new ArrayList<>();
@@ -257,7 +256,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
             //Add your adapter to the sectionAdapter
             SimpleSectionedRecyclerViewAdapter.Section[] dummy = new SimpleSectionedRecyclerViewAdapter.Section[sections.size()];
             SimpleSectionedRecyclerViewAdapter mSectionedAdapter = new
-                    SimpleSectionedRecyclerViewAdapter(this, R.layout.section, R.id.section_text, mVenueInfoListAdapter);
+                    SimpleSectionedRecyclerViewAdapter(this, R.layout.section, R.id.section_text, mInfoListAdapter);
             mSectionedAdapter.setSections(sections.toArray(dummy));
 
             //Apply this adapter to the RecyclerView
@@ -290,7 +289,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
         buyVenueButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialogBuilder.setTitle(DIALOG);
+                dialogBuilder.setTitle("Покупка");
                 dialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         mBuyVenueRequestId = ServiceHelper.get(VenueActivity.this).buyVenue(mPlace.getId());
@@ -318,7 +317,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
         repurchaseVenueButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialogBuilder.setTitle(DIALOG);
+                dialogBuilder.setTitle("Сделка");
                 dialogBuilder.setMessage("Выкупить за:");
                 TextInputLayout textInputLayout = (TextInputLayout) LayoutInflater.from(VenueActivity.this).inflate(R.layout.suggest_deal_dialog_view, null);
                 dialogBuilder.setView(textInputLayout);
@@ -328,7 +327,6 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
                         if (!TextUtils.isEmpty(input.getEditText().getText().toString())) {
                             long amount = Long.parseLong(input.getEditText().getText().toString());
                             ServiceHelper.get(VenueActivity.this).suggestDeal(mPlace.getId(), amount);
-                            Toast.makeText(VenueActivity.this, "Запрос на заключение сделки отправлен", Toast.LENGTH_LONG).show();
                         } else
                             Toast.makeText(VenueActivity.this, "Вы не ввели сумму", Toast.LENGTH_LONG).show();
                     }
@@ -359,7 +357,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
         upgradeVenueButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                upgradeDialogBuilder.setTitle(DIALOG);
+                upgradeDialogBuilder.setTitle("Улучшение");
                 upgradeDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         mUpgradeVenueRequestId = ServiceHelper.get(VenueActivity.this).upgradeVenue(mPlace.getId());
@@ -381,7 +379,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
         sellVenueButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                sellDialogBuilder.setTitle(DIALOG);
+                sellDialogBuilder.setTitle("Продажа");
                 sellDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         mSellVenueRequestId = ServiceHelper.get(VenueActivity.this).sellVenue(mPlace.getId());
@@ -410,7 +408,7 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
         suggestDealButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                suggestDealDialogBuilder.setTitle(DIALOG);
+                suggestDealDialogBuilder.setTitle("Сделка");
                 suggestDealDialogBuilder.setPositiveButton(R.string.dialog_positive_button_title, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         TextInputLayout input = (TextInputLayout) ((Dialog) dialog).findViewById(R.id.text_input_layout_amount);
@@ -471,108 +469,6 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
         public static VenueType fromVenue(Place venue) {
             return venue.isInOwnership() ? MINE : venue.getOwner() == null ? NOBODYS : ANOTHERS;
         }
-    }
-
-    public static class VenueInfoListAdapter extends RecyclerView.Adapter<VenueInfoListAdapter.ViewHolder> {
-
-        private final Context mContext;
-        List<InfoItem> mInfoItems = new ArrayList<>();
-
-        public VenueInfoListAdapter(Context context) {
-            mContext = context;
-        }
-
-        @Override
-        public VenueInfoListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(mContext).inflate(R.layout.item_venues_info, parent, false);
-            return new ViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(VenueInfoListAdapter.ViewHolder holder, final int position) {
-            holder.venueInfoKey.setText(mInfoItems.get(position).getKey());
-            holder.venueInfoValue.setText(mInfoItems.get(position).getValue());
-            switch (mInfoItems.get(position).mType) {
-                case PRICE:
-                    holder.venueInfoValue.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cash_usd_grey600_18dp, 0, 0, 0);
-                    break;
-                case CHECKINS:
-                    holder.venueInfoValue.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_foursquare_grey600_18dp, 0, 0, 0);
-                    break;
-                case PLAYER:
-                    holder.venueInfoValue.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_grey600_18dp, 0, 0, 0);
-                    holder.itemView.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            UserActivity.start(mContext, (Player) mInfoItems.get(position).getOnClickModel());
-                        }
-                    });
-                    break;
-                case LEVEL:
-                    holder.venueInfoValue.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_crown_grey600_18dp, 0, 0, 0);
-                    break;
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return mInfoItems.size();
-        }
-
-        public void setInfoItems(List<InfoItem> infoItems) {
-            mInfoItems.clear();
-            if (infoItems != null)
-                mInfoItems.addAll(infoItems);
-            notifyDataSetChanged();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public TextView venueInfoKey;
-            public TextView venueInfoValue;
-
-            public ViewHolder(View itemView) {
-                super(itemView);
-                venueInfoKey = (TextView) itemView.findViewById(R.id.text_view_venues_info_key);
-                venueInfoValue = (TextView) itemView.findViewById(R.id.text_view_venues_info_value);
-            }
-        }
-
-        public static class InfoItem {
-            private String mKey;
-            public InfoType mType;
-            private String mValue;
-            private Object mOnClickModel;
-
-            public InfoItem(String key, InfoType type, String value, Object onClickModel) {
-                mKey = key;
-                mType = type;
-                mValue = value;
-                mOnClickModel = onClickModel;
-            }
-
-            public InfoItem(String key, InfoType type, String value) {
-                this(key, type, value, null);
-            }
-
-            public String getKey() {
-                return mKey;
-            }
-
-            public String getValue() {
-                return mValue;
-            }
-
-            public Object getOnClickModel() {
-                return mOnClickModel;
-            }
-        }
-    }
-
-    public enum InfoType {
-        PRICE,
-        CHECKINS,
-        PLAYER,
-        LEVEL
     }
 
     private class VenueBroadcastReceiver extends BroadcastReceiver {
