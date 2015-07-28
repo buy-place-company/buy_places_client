@@ -62,7 +62,6 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
         userCash = (TextView)findViewById(R.id.tv_cash);
         userScore = (TextView)findViewById(R.id.tv_score);
         userLevel = (TextView)findViewById(R.id.tv_level);
-        userLevel = (TextView)findViewById(R.id.tv_level);
         Intent intent = getIntent();
         final long userId = intent.getLongExtra(EXTRA_USER_ID, -1);
         Bundle args = new Bundle();
@@ -85,22 +84,6 @@ public class UserActivity extends AppCompatActivity implements  LoaderManager.Lo
         getMenuInflater().inflate(R.menu.menu_user, menu);
         return true;
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 
 
     @Override

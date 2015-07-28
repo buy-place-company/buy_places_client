@@ -266,21 +266,38 @@ public class VenueActivity extends AppCompatActivity implements LoaderManager.Lo
             LayoutInflater inflater = LayoutInflater.from(this);
             mVenueType = mPlace.isInOwnership() ? VenueType.MINE : mPlace.getOwner() == null ? VenueType.NOBODYS : VenueType.ANOTHERS;
             mButtonsContainerLayout.removeAllViews();
+            View buttons;
             switch (mVenueType) {
                 case MINE:
-                    View mineVenueButtons = inflater.inflate(R.layout.buttons_my_place, mButtonsContainerLayout);
-                    setMineVenueButtonsOnClickListeners(mineVenueButtons);
+                    buttons = inflater.inflate(R.layout.buttons_my_place, mButtonsContainerLayout);
+                    setMineVenueButtonsOnClickListeners(buttons);
                     break;
                 case ANOTHERS:
-                    View anothersVenueButtons = inflater.inflate(R.layout.buttons_player_place, mButtonsContainerLayout);
-                    setAnothersVenueButtonsOnClickListeners(anothersVenueButtons);
+                    buttons = inflater.inflate(R.layout.buttons_player_place, mButtonsContainerLayout);
+                    setAnothersVenueButtonsOnClickListeners(buttons);
                     break;
                 case NOBODYS:
-                    final View nobodysVenueButtons = inflater.inflate(R.layout.buttons_nobody_place, mButtonsContainerLayout);
-                    setNobodysVenueButtonsOnClickListeners(nobodysVenueButtons);
+                    buttons = inflater.inflate(R.layout.buttons_nobody_place, mButtonsContainerLayout);
+                    setNobodysVenueButtonsOnClickListeners(buttons);
                     break;
 
             }
+            FloatingActionButton button = (FloatingActionButton)findViewById(R.id.button_favorite);
+            int id;
+            if (mPlace.isFavourite())
+                id = R.drawable.ic_star_white_36dp;
+            else
+                id = R.drawable.ic_star_outline_white_36dp;
+            button.setImageResource(id);
+            button.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mPlace.isFavourite())
+                        ServiceHelper.get(VenueActivity.this).removeVenueFromFavourites(mPlace.getId());
+                    else
+                        ServiceHelper.get(VenueActivity.this).addVenuesToFavourite(mPlace.getId());
+                }
+            });
         }
     }
 

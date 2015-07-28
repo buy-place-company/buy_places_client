@@ -70,15 +70,15 @@
         <activity
             android:screenOrientation="portrait"
             android:name=".activities.UserActivity"
-            android:label="label"/>
+            android:label="Личный кабинет"/>
 
         <activity
 
             android:name=".authentication.LoginActivity"
-            android:label="label"/>
+            android:label="Вход"/>
 
         <activity android:name=".authentication.VKOAuthActivity"
-            android:label="label"/>
+            android:label="ВКонтакте"/>
 
         <service
             android:name=".authentication.BuyItAuthenticatorService"

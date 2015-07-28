@@ -40,6 +40,16 @@
         android:layout_centerVertical="true"
         android:layout_toStartOf="@+id/button_upgrade_place"/>
 
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="mini"
+        android:id="@+id/button_favorite"
+        app:borderWidth="0dp"
+        android:layout_margin="@dimen/fab_compat_margin"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/button_sell_place"/>
+
     <!--<android.support.design.widget.FloatingActionButton-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
